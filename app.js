@@ -181,12 +181,14 @@
   function initLenis() {
     if (prefersReduced || typeof Lenis === 'undefined') return;
 
+    const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+
     lenis = new Lenis({
-      duration: 1.28,
+      duration: isTouch ? 0.85 : 1.25,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo easing
       smoothWheel: true,
-      wheelMultiplier: 0.92,
-      touchMultiplier: 1.8,
+      wheelMultiplier: 0.95,
+      touchMultiplier: isTouch ? 1.05 : 1.8,
       infinite: false,
       autoResize: true,
     });
@@ -381,120 +383,147 @@
     const heroNarrBlock   = document.getElementById('heroNarrativeBlock');
     const heroScrollCue   = document.getElementById('heroScrollCue');
 
-    if (heroStage && isDesktop()) {
-      // Visual layer: clip-path unmasking
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: heroStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.2,
-        }
-      })
-      .fromTo(heroVisualLayer,
-        { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
-        { clipPath: 'inset(0% 0% 0% 0%)',     opacity: 1,   ease: 'none' }, 0
-      )
-      .fromTo(heroHoodieImg,
-        { scale: 1.0, y: 0 },
-        { scale: 1.22, y: 70, ease: 'none' }, 0
-      )
-      .fromTo(heroVisualScrim,
-        { opacity: 0.1 },
-        { opacity: 0.9, ease: 'none' }, 0.7
-      )
-      // Brand block: scale + float up
-      .fromTo(heroBrandBlock,
-        { y: 0, scale: 1, opacity: 1 },
-        { y: -180, scale: 0.64, opacity: 0, ease: 'none' }, 0
-      )
-      // Top meta: fade out
-      .fromTo(heroTopMeta,
-        { y: 0, opacity: 1 },
-        { y: -22, opacity: 0, ease: 'none' }, 0
-      )
-      // Narrative: rise in, then exit
-      .fromTo(heroNarrBlock,
-        { y: 55, opacity: 0 },
-        { y: 0,  opacity: 1, ease: 'none' }, 0.33
-      )
-      .fromTo(heroNarrBlock,
-        { y: 0,  opacity: 1 },
-        { y: -30, opacity: 0.1, ease: 'none' }, 0.8
-      )
-      .fromTo(heroScrollCue,
-        { opacity: 1 },
-        { opacity: 0, ease: 'none' }, 0
-      );
+    if (heroStage) {
+      if (isDesktop()) {
+        // Visual layer: clip-path unmasking
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.2,
+          }
+        })
+        .fromTo(heroVisualLayer,
+          { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
+          { clipPath: 'inset(0% 0% 0% 0%)',     opacity: 1,   ease: 'none' }, 0
+        )
+        .fromTo(heroHoodieImg,
+          { scale: 1.0, y: 0 },
+          { scale: 1.22, y: 70, ease: 'none' }, 0
+        )
+        .fromTo(heroVisualScrim,
+          { opacity: 0.1 },
+          { opacity: 0.9, ease: 'none' }, 0.7
+        )
+        // Brand block: scale + float up
+        .fromTo(heroBrandBlock,
+          { y: 0, scale: 1, opacity: 1 },
+          { y: -180, scale: 0.64, opacity: 0, ease: 'none' }, 0
+        )
+        // Top meta: fade out
+        .fromTo(heroTopMeta,
+          { y: 0, opacity: 1 },
+          { y: -22, opacity: 0, ease: 'none' }, 0
+        )
+        // Narrative: rise in, then exit
+        .fromTo(heroNarrBlock,
+          { y: 55, opacity: 0 },
+          { y: 0,  opacity: 1, ease: 'none' }, 0.33
+        )
+        .fromTo(heroNarrBlock,
+          { y: 0,  opacity: 1 },
+          { y: -30, opacity: 0.1, ease: 'none' }, 0.8
+        )
+        .fromTo(heroScrollCue,
+          { opacity: 1 },
+          { opacity: 0, ease: 'none' }, 0
+        );
+      } else if (heroNarrBlock) {
+        gsap.from(heroNarrBlock, {
+          scrollTrigger: { trigger: heroNarrBlock, start: 'top 85%', once: true },
+          y: 32, opacity: 0, duration: 0.9, ease: 'expo.out'
+        });
+      }
     }
 
-    // ── MANGA / STORY SCENE ──────────────────────────────────────────────────
+    // ── MANGA / STORY SCENE (ORIGIN → ACT I → ACT II → ACT III → ACT IV) ──────
     const mangaStage  = document.getElementById('story');
-    const mangaPanels = [1,2,3,4].map(n => document.getElementById(`mangaPanel${n}`));
-    const storyPhases = [1,2,3,4].map(n => document.getElementById(`storyPhase${n}`));
+    const mangaPanels = [0,1,2,3,4].map(n => document.getElementById(`mangaPanel${n}`));
+    const storyPhases = [0,1,2,3,4].map(n => document.getElementById(`storyPhase${n}`));
     const mangaCard   = document.getElementById('mangaViewportCard');
 
-    if (mangaStage && isDesktop()) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: mangaStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-        }
-      });
+    if (mangaStage) {
+      if (isDesktop()) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: mangaStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.1,
+          }
+        });
 
-      // Card breathe in on entry
-      tl.fromTo(mangaCard,
-        { scale: 0.92, opacity: 0.3 },
-        { scale: 1.0,  opacity: 1,  ease: 'none', duration: 0.12 }
-      );
-
-      // 4 acts across the remaining scroll
-      const actDur = 0.88 / 4;
-      mangaPanels.forEach((panel, idx) => {
-        if (!panel) return;
-        const start = 0.12 + idx * actDur;
-        const end   = start + actDur;
-        const mid   = start + actDur * 0.5;
-        const img   = panel.querySelector('img');
-
-        // Panel in
-        tl.fromTo(panel,
-          { opacity: 0, y: 40, scale: 0.93 },
-          { opacity: 1, y: 0,  scale: 1, ease: 'none', duration: actDur * 0.4 },
-          start
+        // Card breathe in on entry
+        tl.fromTo(mangaCard,
+          { scale: 0.92, opacity: 0.3 },
+          { scale: 1.0,  opacity: 1,  ease: 'none', duration: 0.1 }
         );
-        // Panel inner image zoom
-        if (img) {
-          tl.fromTo(img, { scale: 1.0 }, { scale: 1.06, ease: 'none', duration: actDur }, start);
-        }
-        // Panel out (except last)
-        if (idx < 3) {
-          tl.fromTo(panel,
-            { opacity: 1, y: 0,   scale: 1 },
-            { opacity: 0, y: -25, scale: 0.9, ease: 'none', duration: actDur * 0.35 },
-            mid
-          );
-        }
 
-        // Story phase sync
-        const phase = storyPhases[idx];
-        if (phase) {
-          tl.fromTo(phase,
-            { opacity: 0, x: 20 },
-            { opacity: 1, x: 0,  ease: 'none', duration: actDur * 0.4 },
-            start
-          );
-          if (idx < 3) {
-            tl.fromTo(phase,
-              { opacity: 1 },
-              { opacity: 0, ease: 'none', duration: actDur * 0.25 },
+        // 5 acts across the scroll track (ORIGIN -> ACT I -> ACT II -> ACT III -> ACT IV)
+        const totalActs = 5;
+        const actDur = 0.88 / totalActs;
+
+        mangaPanels.forEach((panel, idx) => {
+          if (!panel) return;
+          const start = 0.12 + idx * actDur;
+          const mid   = start + actDur * 0.5;
+          const img   = panel.querySelector('img');
+
+          // Panel visual in
+          if (idx === 0) {
+            gsap.set(panel, { autoAlpha: 1, y: 0, scale: 1 });
+          } else {
+            tl.fromTo(panel,
+              { autoAlpha: 0, y: 30, scale: 0.94 },
+              { autoAlpha: 1, y: 0,  scale: 1, ease: 'none', duration: actDur * 0.4 },
+              start
+            );
+          }
+
+          if (img) {
+            tl.fromTo(img, { scale: 1.0 }, { scale: 1.06, ease: 'none', duration: actDur }, start);
+          }
+
+          if (idx < totalActs - 1) {
+            tl.to(panel,
+              { autoAlpha: 0, y: -20, scale: 0.92, ease: 'none', duration: actDur * 0.35 },
               mid
             );
           }
-        }
-      });
+
+          // Story phase text sync
+          const phase = storyPhases[idx];
+          if (phase) {
+            if (idx === 0) {
+              gsap.set(phase, { autoAlpha: 1, y: 0 });
+            } else {
+              tl.fromTo(phase,
+                { autoAlpha: 0, y: 25 },
+                { autoAlpha: 1, y: 0,  ease: 'none', duration: actDur * 0.4 },
+                start
+              );
+            }
+
+            if (idx < totalActs - 1) {
+              tl.to(phase,
+                { autoAlpha: 0, y: -15, ease: 'none', duration: actDur * 0.35 },
+                mid
+              );
+            }
+          }
+        });
+      } else {
+        // Mobile story phase reveals
+        storyPhases.forEach(phase => {
+          if (!phase) return;
+          gsap.set(phase, { autoAlpha: 1, y: 0 });
+          gsap.from(phase, {
+            scrollTrigger: { trigger: phase, start: 'top 85%', once: true },
+            y: 28, opacity: 0, duration: 0.85, ease: 'expo.out'
+          });
+        });
+      }
     }
 
     // ── PROOF / TELEMETRY ────────────────────────────────────────────────────
@@ -502,31 +531,46 @@
     const proofHeroText = document.getElementById('proofHeroText');
     const telePods      = [1,2,3].map(n => document.getElementById(`telePod${n}`));
 
-    if (proofStage && isDesktop()) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: proofStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-          onEnter: triggerCount,
-        }
-      });
+    if (proofStage) {
+      if (isDesktop()) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: proofStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.1,
+            onEnter: triggerCount,
+          }
+        });
 
-      tl.fromTo(proofHeroText,
-        { y: 38, opacity: 0.25 },
-        { y: 0,  opacity: 1, ease: 'none', duration: 0.3 }
-      );
-
-      telePods.forEach((pod, idx) => {
-        if (!pod) return;
-        const start = 0.08 + idx * 0.12;
-        tl.fromTo(pod,
-          { scale: 0.88, y: 50, opacity: 0.12 },
-          { scale: 1,    y: 0,  opacity: 1,    ease: 'none', duration: 0.3 },
-          start
+        tl.fromTo(proofHeroText,
+          { y: 38, opacity: 0.25 },
+          { y: 0,  opacity: 1, ease: 'none', duration: 0.3 }
         );
-      });
+
+        telePods.forEach((pod, idx) => {
+          if (!pod) return;
+          const start = 0.08 + idx * 0.12;
+          tl.fromTo(pod,
+            { scale: 0.88, y: 50, opacity: 0.12 },
+            { scale: 1,    y: 0,  opacity: 1,    ease: 'none', duration: 0.3 },
+            start
+          );
+        });
+      } else {
+        if (proofHeroText) {
+          gsap.from(proofHeroText, {
+            scrollTrigger: { trigger: proofHeroText, start: 'top 85%', once: true, onEnter: triggerCount },
+            y: 28, opacity: 0, duration: 0.9, ease: 'expo.out'
+          });
+        }
+        if (telePods.length) {
+          gsap.from(telePods, {
+            scrollTrigger: { trigger: '#telemetryDeck', start: 'top 85%', once: true, onEnter: triggerCount },
+            y: 32, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'expo.out'
+          });
+        }
+      }
     }
 
     // ── GARMENT CINEMA ───────────────────────────────────────────────────────
@@ -536,33 +580,48 @@
     const cinemaBack    = document.getElementById('cinemaBackImg');
     const callouts      = document.querySelectorAll('.anatomy-callout-item');
 
-    if (garmentStage && isDesktop()) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: garmentStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.0,
-        }
-      });
+    if (garmentStage) {
+      if (isDesktop()) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: garmentStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.0,
+          }
+        });
 
-      tl.fromTo(cinemaVisual,
-        { scale: 0.86 },
-        { scale: 1.02, ease: 'none', duration: 0.45 }
-      );
-
-      // Auto flip front → back at 48%
-      tl.add(() => setGarmentView('back'),   0.48);
-      tl.add(() => setGarmentView('front'),  0.05);
-
-      callouts.forEach((c, idx) => {
-        const st = 0.14 + idx * 0.17;
-        tl.fromTo(c,
-          { x: 38, opacity: 0.08 },
-          { x: 0,  opacity: 1, ease: 'none', duration: 0.24 },
-          st
+        tl.fromTo(cinemaVisual,
+          { scale: 0.86 },
+          { scale: 1.02, ease: 'none', duration: 0.45 }
         );
-      });
+
+        // Auto flip front → back at 48%
+        tl.add(() => setGarmentView('back'),   0.48);
+        tl.add(() => setGarmentView('front'),  0.05);
+
+        callouts.forEach((c, idx) => {
+          const st = 0.14 + idx * 0.17;
+          tl.fromTo(c,
+            { x: 38, opacity: 0.08 },
+            { x: 0,  opacity: 1, ease: 'none', duration: 0.24 },
+            st
+          );
+        });
+      } else {
+        if (cinemaVisual) {
+          gsap.from(cinemaVisual, {
+            scrollTrigger: { trigger: cinemaVisual, start: 'top 85%', once: true },
+            scale: 0.94, opacity: 0, duration: 0.9, ease: 'expo.out'
+          });
+        }
+        if (callouts.length) {
+          gsap.from(callouts, {
+            scrollTrigger: { trigger: '#cinemaAnatomyDeck', start: 'top 85%', once: true },
+            y: 24, opacity: 0, duration: 0.8, stagger: 0.12, ease: 'expo.out'
+          });
+        }
+      }
     }
 
     // ── COLLECTION SECTION ───────────────────────────────────────────────────
@@ -655,8 +714,9 @@
 
     // Resize
     function resize() {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const scale = isDesktop() ? 1.0 : 0.65;
+      canvas.width  = Math.floor(window.innerWidth * scale);
+      canvas.height = Math.floor(window.innerHeight * scale);
       gl.viewport(0, 0, canvas.width, canvas.height);
     }
     resize();
@@ -824,6 +884,24 @@
         menuToggle.classList.remove('is-open');
         document.body.style.overflow = '';
       });
+    });
+  }
+
+  // Contact Popover Toggle
+  const contactDropdownWrap = document.getElementById('contactDropdownWrap');
+  const contactTriggerBtn = document.getElementById('contactTriggerBtn');
+  if (contactDropdownWrap && contactTriggerBtn) {
+    contactTriggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = contactDropdownWrap.classList.toggle('is-open');
+      contactTriggerBtn.setAttribute('aria-expanded', isOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!contactDropdownWrap.contains(e.target)) {
+        contactDropdownWrap.classList.remove('is-open');
+        contactTriggerBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 
