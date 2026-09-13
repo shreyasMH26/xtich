@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>XTICH — An Independent Fashion Brand</title>
+  <meta name="description" content="XTICH is an independent fashion brand told through an immersive digital editorial. Engineered student apparel, born in Davangere, tested through 300 days and 180+ washes.">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <!-- GSAP + ScrollTrigger (CDN) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+  <!-- Lenis Smooth Scroll (CDN) -->
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- =====================================================================
+       CINEMATIC XTICH LOADING SCREEN (Shopify Editions-style pre-loader)
+       ===================================================================== -->
+  <div id="xtich-loader" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Loading XTICH Editorial">
+    <div class="loader-bg"></div>
+    <canvas id="loader-canvas" aria-hidden="true"></canvas>
+    <div class="loader-content">
+      <div class="loader-logo-wrap">
+        <img src="assets/xtich-logo.png" alt="XTICH" class="loader-logo-img" id="loaderLogoImg">
+      </div>
+      <div class="loader-progress-bar">
+        <div class="loader-progress-fill" id="loaderProgressFill"></div>
+      </div>
+      <div class="loader-meta" id="loaderMeta">
+        <span>Vol. 01 — Edition 2026</span>
+        <span>Loading Editorial</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Accessibility Skip Link -->
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <!-- Atmospheric Film Grain Overlay -->
+
+  <div class="film-grain" aria-hidden="true"></div>
+
+  <!-- Global Fixed Editorial Header -->
+  <header class="editorial-nav" id="siteNav">
+    <div class="nav-inner">
+      <a class="brand-link" href="#hero" aria-label="XTICH Home">
+        <img src="assets/xtich-logo.png" alt="XTICH" class="nav-logo-img">
+      </a>
+
+      <nav class="nav-menu" id="navMenu" aria-label="Main Navigation">
+        <ul class="nav-list">
+          <li><a href="#story" class="nav-item"><span>01</span> Story</a></li>
+          <li><a href="#proof" class="nav-item"><span>02</span> Proof</a></li>
+          <li><a href="#garment" class="nav-item"><span>03</span> The Hoodie</a></li>
+          <li><a href="#collection" class="nav-item"><span>04</span> Versity Series</a></li>
+          <li><a href="#lookbook" class="nav-item"><span>05</span> Lookbook</a></li>
+          <li><a href="#shop" class="nav-item"><span>06</span> Archive</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="bag-trigger" id="openBagBtn" aria-haspopup="dialog" aria-controls="bagDrawer" aria-label="View Reservation Bag">
+          <span class="bag-label">Bag</span>
+          <span class="bag-count" id="navBagCount">0</span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Scroll Choreography Track -->
+  <main id="main-content">
+
+    <!-- =====================================================================
+         SCENE 1: HERO EDITORIAL AWAKENING
+         ===================================================================== -->
+    <section class="scene-stage hero-stage" id="hero" data-scene="hero" aria-label="XTICH Hero Editorial">
+      <div class="scene-pin hero-pin" id="heroPin">
+
+        <!-- WebGL Velocity-Reactive Canvas Overlay -->
+        <canvas id="hero-webgl-canvas" class="hero-webgl-canvas" aria-hidden="true"></canvas>
+
+        <!-- Layer 1: Full-Viewport Editorial Visual Canvas -->
+        <div class="hero-visual-layer" id="heroVisualLayer">
+          <img class="hero-visual-media" id="heroHoodieImg" src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie Campaign">
+          <div class="hero-visual-scrim" id="heroVisualScrim"></div>
+        </div>
+
+        <!-- Layer 2: Monumental Brand Typography & Progression -->
+        <div class="hero-brand-layer" id="heroBrandLayer">
+
+          <!-- Top Monospaced Metadata Bar -->
+          <div class="hero-top-meta" id="heroTopMeta">
+            <div class="meta-col-left">
+              <span class="meta-tag" data-split-word>Vol. 01 — Edition 2026</span>
+              <span class="meta-separator">/</span>
+              <span class="meta-tag" data-split-word>Davangere → Delhi</span>
+            </div>
+            <div class="meta-col-right">
+              <span class="meta-tag" data-split-word>An Independent Fashion Brand</span>
+            </div>
+          </div>
+
+          <!-- Central Dominant Brand Wordmark -->
+          <div class="hero-center-brand" id="heroBrandBlock">
+            <span class="hero-editorial-label" id="heroEditorialLabel" data-split-word>The Digital Editorial</span>
+            <div class="hero-logo-wrap">
+              <img src="assets/xtich-logo.png" alt="XTICH" class="hero-logo-img" id="heroLogoImg">
+            </div>
+          </div>
+
+          <!-- Bottom Editorial Reveal & Narrative -->
+          <div class="hero-bottom-grid" id="heroBottomGrid">
+
+            <div class="hero-narrative-block" id="heroNarrativeBlock">
+              <span class="statement-eyebrow">The Origin</span>
+              <h2 class="hero-statement-title" data-split-line>&ldquo;An independent fashion brand born out of a real uniform problem.&rdquo;</h2>
+              <p class="hero-statement-desc">Two students set out to fix apparel that never fit right. Tested through 300 consecutive days of wear and 180+ wash cycles before it ever carried a label.</p>
+              <div class="hero-spec-pills">
+                <span class="spec-pill">450 GSM Fleece</span>
+                <span class="spec-pill">Double-Layer Hood</span>
+                <span class="spec-pill">180+ Wash Proven</span>
+              </div>
+            </div>
+
+            <div class="hero-scroll-cue" id="heroScrollCue">
+              <span class="cue-label">Scroll to Explore Editorial</span>
+              <div class="cue-indicator-bar">
+                <div class="cue-indicator-dot"></div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 2: CINEMATIC MANGA STORYTELLING (480vh Continuous Multi-Act Stage)
+         ========================================================================== -->
+    <section class="scene-stage manga-stage" id="story" data-scene="manga" aria-label="Brand Story Pinned Exhibition">
+      <div class="scene-pin manga-pin">
+        
+        <!-- Pinned Stage Grid -->
+        <div class="manga-stage-grid">
+          
+          <!-- Column A: Dynamic Visual Frame (Transforms as user scrolls) -->
+          <div class="manga-visual-col">
+            <div class="manga-viewport-card" id="mangaViewportCard">
+              
+              <!-- Panel 1: The Dream / Spark -->
+              <div class="manga-panel active" data-panel="1" id="mangaPanel1">
+                <div class="panel-header">
+                  <span class="panel-num">PLATE 01 / 04</span>
+                  <span class="panel-tag">2023 · DAVANGERE</span>
+                </div>
+                <div class="panel-img-box" data-expand-manga="assets/manga_ch1_dream.jpg" data-caption="2023 · Davangere. Initial notebook sketches and tactile fabric tests.">
+                  <img src="assets/manga_ch1_dream.jpg" alt="Founder sketching the first XTICH hoodie design in a notebook">
+                </div>
+                <div class="panel-caption">The initial notebook entries and tactile swatch mapping.</div>
+              </div>
+
+              <!-- Panel 2: The Uniform Problem -->
+              <div class="manga-panel" data-panel="2" id="mangaPanel2">
+                <div class="panel-header">
+                  <span class="panel-num">PLATE 02 / 04</span>
+                  <span class="panel-tag">THE FRICTION</span>
+                </div>
+                <div class="panel-img-box" data-expand-manga="assets/manga_ch2_problem.jpg" data-caption="The Cardboard Box uniform crisis: scratchy polyester and boxy cuts.">
+                  <img src="assets/manga_ch2_problem.jpg" alt="Uncomfortable campus uniform fabric and questioning why uniforms cannot be better">
+                </div>
+                <div class="panel-caption">The &ldquo;Cardboard Box&rdquo; reality that restricted daily movement.</div>
+              </div>
+
+              <!-- Panel 3: The Founding Partnership -->
+              <div class="manga-panel" data-panel="3" id="mangaPanel3">
+                <div class="panel-header">
+                  <span class="panel-num">PLATE 03 / 04</span>
+                  <span class="panel-tag">THE COLLABORATION</span>
+                </div>
+                <div class="panel-img-box" data-expand-manga="assets/manga_ch3_partnership.jpg" data-caption="Founders Rathan and Shreyas reviewing the Versity Series blueprints.">
+                  <img src="assets/manga_ch3_partnership.jpg" alt="Founders Rathan and Shreyas collaborating over the brand plan">
+                </div>
+                <div class="panel-caption">Aligning vision, manufacturing logistics, and standards from day one.</div>
+              </div>
+
+              <!-- Panel 4: The Cut-Swatch Truth -->
+              <div class="manga-panel" data-panel="4" id="mangaPanel4">
+                <div class="panel-header">
+                  <span class="panel-num">PLATE 04 / 04</span>
+                  <span class="panel-tag">TACTILE VERIFICATION</span>
+                </div>
+                <div class="panel-img-box" data-expand-manga="assets/manga_ch4_pitch.jpg" data-caption="Passing physical cut swatches of the 300-day worn prototype directly to administrators.">
+                  <img src="assets/manga_ch4_pitch.jpg" alt="Founders passing cut swatches of the 300-day worn prototype hoodie to administrators">
+                </div>
+                <div class="panel-caption">&ldquo;Feel this.&rdquo; Direct tactile proof replaced sales presentations.</div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Column B: Dynamic Synchronized Story Narrative -->
+          <div class="manga-story-col">
+            
+            <!-- Narrative Phase 1 -->
+            <div class="story-phase active" data-phase="1" id="storyPhase1">
+              <span class="phase-badge">Act I — The Spark</span>
+              <h2 class="phase-title" data-split-line>The Dream in a Notebook.</h2>
+              <p class="phase-text">It began in high school in Davangere with a black notebook, a pen, and an obsession with physical clothing. Not software, not a pitch deck—something tactile you can actually hold.</p>
+              <p class="phase-text">Before factory orders or supply lines existed, the name was written repeatedly: <strong>xtich.</strong> Sketches of drop-shoulder silhouettes and tactile swatches tested by hand.</p>
+              <blockquote class="phase-quote">&ldquo;There is a specific moment where an idea stops being theoretical and becomes physical weight.&rdquo;</blockquote>
+            </div>
+
+            <!-- Narrative Phase 2 -->
+            <div class="story-phase" data-phase="2" id="storyPhase2">
+              <span class="phase-badge">Act II — The Friction</span>
+              <h2 class="phase-title" data-split-line>Same Stiff Cuts. Same Problem.</h2>
+              <p class="phase-text">For decades, institutional suppliers prioritized unit margins over daily wearability: scratchy polyester-heavy fabrics that trap heat, boxy cuts, and stiff garments described as &ldquo;cardboard boxes.&rdquo;</p>
+              <p class="phase-text">Students entering Pre-University rejected traditional uniforms because they felt childish and restrictive. XTICH was engineered as the architectural counter-standard: <strong>streetwear-influenced silhouettes built on high-density textile standards.</strong></p>
+            </div>
+
+            <!-- Narrative Phase 3 -->
+            <div class="story-phase" data-phase="3" id="storyPhase3">
+              <span class="phase-badge">Act III — The Partnership</span>
+              <h2 class="phase-title" data-split-line>&ldquo;People who are still building.&rdquo;</h2>
+              <p class="phase-text">Conversations that stretched past midnight in a room filled with notebooks and fabric swatches. Rathan and Shreyas united around a shared conviction: apparel should represent the identity of people in the middle of their journey.</p>
+              <p class="phase-text">They started treating XTICH like a serious company from the start. Establishing factory channels in Delhi, testing fiber blends, and drafting pattern cuts that could endure the rigor of campus life.</p>
+            </div>
+
+            <!-- Narrative Phase 4 -->
+            <div class="story-phase" data-phase="4" id="storyPhase4">
+              <span class="phase-badge">Act IV — The Proof</span>
+              <h2 class="phase-title" data-split-line>The Cut-Swatch Strategy.</h2>
+              <p class="phase-text">Instead of relying on digital pitch decks or paper brochures, the 300-day worn prototype hoodie was intentionally cut into physical fabric swatches. Administrators and deans were handed the actual cut pieces to feel the fiber density firsthand.</p>
+              <p class="phase-text">Direct tactile proof replaced sales presentations. When people felt the fabric, the conversation changed instantly.</p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 3: THE 300-DAY PROOF (280vh Scroll-Driven Proving Ground)
+         ========================================================================== -->
+    <section class="scene-stage proof-stage" id="proof" data-scene="proof" aria-label="Empirical Validation">
+      <div class="scene-pin proof-pin">
+        
+        <div class="proof-top-header">
+          <span class="section-label">Empirical Validation</span>
+          <h2 class="proof-hero-headline" id="proofHeroText">Tested under real daily load for 300 days before it ever carried a label.</h2>
+        </div>
+
+        <div class="telemetry-deck" id="telemetryDeck">
+          
+          <div class="telemetry-pod" id="telePod1">
+            <div class="pod-glow"></div>
+            <div class="pod-number" data-val="300">300+</div>
+            <div class="pod-label">Consecutive Days Worn</div>
+            <p class="pod-sub">Worn continuously throughout an entire academic year across high-movement campus environments.</p>
+          </div>
+
+          <div class="telemetry-pod" id="telePod2">
+            <div class="pod-glow"></div>
+            <div class="pod-number" data-val="180">180+</div>
+            <div class="pod-label">Machine Wash Cycles</div>
+            <p class="pod-sub">Repeated machine laundry cycles logged with zero structural fleece breakdown or seam tearing.</p>
+          </div>
+
+          <div class="telemetry-pod" id="telePod3">
+            <div class="pod-glow"></div>
+            <div class="pod-number" data-val="0">0%</div>
+            <div class="pod-label">Pilling &amp; Shape Loss</div>
+            <p class="pod-sub">Seam tensile strength, collar elasticity, and fleece density remained 100% intact through rigorous stress.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 4: GARMENT CINEMA (350vh Interactive Product Choreography)
+         ========================================================================== -->
+    <section class="scene-stage garment-cinema-stage" id="garment" data-scene="garment" aria-label="The Heavyweight Hoodie Cinema">
+      <div class="scene-pin garment-cinema-pin">
+        
+        <div class="cinema-header-row">
+          <div>
+            <span class="section-label">Flagship Piece · Versity Series</span>
+            <h2 class="cinema-title">The Heavyweight Hoodie</h2>
+          </div>
+          <div class="cinema-meta-tag">450 GSM Cotton-Poly Fleece · Obsidian Black</div>
+        </div>
+
+        <div class="cinema-stage-canvas">
+          
+          <!-- Central Interactive Garment 3D View -->
+          <div class="cinema-visual-stage" id="cinemaVisualStage">
+            <div class="cinema-img-layer front active" id="cinemaFrontImg">
+              <img src="assets/hoodie-black-front-hr.jpg" alt="XTICH Heavyweight Hoodie Front View">
+            </div>
+            <div class="cinema-img-layer back" id="cinemaBackImg">
+              <img src="assets/hoodie-black-back.jpg" alt="XTICH Heavyweight Hoodie Back View">
+            </div>
+
+            <!-- View Angle Switcher -->
+            <div class="cinema-view-toggle">
+              <button class="toggle-view-btn active" data-view="front" id="btnCinemaFront">Front View</button>
+              <button class="toggle-view-btn" data-view="back" id="btnCinemaBack">Back View</button>
+            </div>
+          </div>
+
+          <!-- Pinned Anatomical Callouts Deck -->
+          <div class="cinema-anatomy-deck" id="cinemaAnatomyDeck">
+            
+            <div class="anatomy-callout-item" data-callout="1">
+              <div class="callout-idx">01</div>
+              <div class="callout-body">
+                <h4>Double-Layered Hood</h4>
+                <p>Engineered without uncomfortable metallic eyelets or loose drawstrings. Retains its architectural drape standing or resting.</p>
+              </div>
+            </div>
+
+            <div class="anatomy-callout-item" data-callout="2">
+              <div class="callout-idx">02</div>
+              <div class="callout-body">
+                <h4>Reinforced Drop-Shoulder</h4>
+                <p>Patterned for active ergonomic freedom while maintaining an intentional, boxy streetwear profile.</p>
+              </div>
+            </div>
+
+            <div class="anatomy-callout-item" data-callout="3">
+              <div class="callout-idx">03</div>
+              <div class="callout-body">
+                <h4>High-Elasticity Ribbed Cuffs</h4>
+                <p>Dense elastane-threaded ribbing prevents sagging or cuff deformation after 180+ machine wash cycles.</p>
+              </div>
+            </div>
+
+            <div class="anatomy-cta-box">
+              <button class="editorial-primary-btn" data-open-product="hoodie">Reserve The Hoodie</button>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 5: VERSITY COLLECTION & ROADMAP
+         ========================================================================== -->
+    <section class="collection-section" id="collection" aria-label="Versity Series Collection">
+      <div class="collection-inner">
+        
+        <div class="collection-section-header">
+          <span class="section-label">Active Lineup</span>
+          <h2 class="collection-main-title">The Versity Series</h2>
+          <p class="collection-main-desc">Two signature heavyweight silhouettes developed for high-frequency wear. No unnecessary trims. Pure textile integrity.</p>
+        </div>
+
+        <div class="collection-duo-grid">
+          
+          <!-- Card 1: Heavyweight Hoodie -->
+          <article class="garment-card" data-product="hoodie">
+            <div class="garment-card-media" data-open-product="hoodie">
+              <img src="assets/hoodie-black-front-hr.jpg" alt="XTICH Heavyweight Hoodie in obsidian black">
+              <div class="garment-tag">Heavyweight · 450 GSM</div>
+            </div>
+            <div class="garment-card-content">
+              <div class="card-meta-line">
+                <span class="series-name">Versity Series</span>
+                <span class="status-badge">In Production</span>
+              </div>
+              <h3 class="card-item-title" data-open-product="hoodie">The Heavyweight Hoodie</h3>
+              <p class="card-item-desc">Structured oversized fit, double-layer hood, reinforced drop-shoulder seam, and fleece density engineered to withstand 180+ washes.</p>
+              
+              <div class="card-action-bar">
+                <div class="size-chip-group" data-size-group="hoodie">
+                  <button class="size-chip active">S</button>
+                  <button class="size-chip">M</button>
+                  <button class="size-chip">L</button>
+                  <button class="size-chip">XL</button>
+                </div>
+                <button class="card-reserve-btn" data-reserve-btn="hoodie">Reserve Size</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- Card 2: Versity Sweatshirt -->
+          <article class="garment-card" data-product="sweatshirt">
+            <div class="garment-card-media" data-open-product="sweatshirt">
+              <img src="assets/sweatshirt-black-front-hr.jpg" alt="XTICH Versity Crewneck Sweatshirt in obsidian black">
+              <div class="garment-tag">Heavyweight · 450 GSM</div>
+            </div>
+            <div class="garment-card-content">
+              <div class="card-meta-line">
+                <span class="series-name">Versity Series</span>
+                <span class="status-badge">In Production</span>
+              </div>
+              <h3 class="card-item-title" data-open-product="sweatshirt">The Versity Sweatshirt</h3>
+              <p class="card-item-desc">Architectural crewneck silhouette with heavy-ribbed collar, relaxed drop-shoulder drape, and breathable thermal retention.</p>
+              
+              <div class="card-action-bar">
+                <div class="size-chip-group" data-size-group="sweatshirt">
+                  <button class="size-chip active">S</button>
+                  <button class="size-chip">M</button>
+                  <button class="size-chip">L</button>
+                  <button class="size-chip">XL</button>
+                </div>
+                <button class="card-reserve-btn" data-reserve-btn="sweatshirt">Reserve Size</button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 6: ASYMMETRIC EDITORIAL LOOKBOOK (Interactive Horizontal Runway)
+         ========================================================================== -->
+    <section class="lookbook-stage" id="lookbook" aria-label="Editorial Lookbook">
+      <div class="lookbook-container">
+        
+        <div class="lookbook-header-bar">
+          <div>
+            <span class="section-label">Visual Journal</span>
+            <h2 class="lookbook-heading">Editorial Lookbook</h2>
+          </div>
+          <div class="lookbook-controls-wrap">
+            <span class="drag-hint">Drag or Scroll Track</span>
+            <div class="track-arrow-buttons">
+              <button class="track-btn prev" id="trackPrevBtn" aria-label="Previous Slide">←</button>
+              <button class="track-btn next" id="trackNextBtn" aria-label="Next Slide">→</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="lookbook-scroll-viewport" id="lookbookViewport">
+          <div class="lookbook-runway-track" id="lookbookRunwayTrack">
+            
+            <figure class="lookbook-slide tall-campaign-slide">
+              <div class="slide-media-box">
+                <img src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie editorial campaign in architectural concrete studio">
+              </div>
+              <figcaption>
+                <span class="slide-index">01 / 07</span>
+                <h4>Architectural Silhouette</h4>
+                <p>Minimalist drop-shoulder cut photographed in concrete studio lighting.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide">
+              <div class="slide-media-box">
+                <img src="assets/manga_ch1_dream.jpg" alt="The early notebook sketches">
+              </div>
+              <figcaption>
+                <span class="slide-index">02 / 07</span>
+                <h4>The Notebook Spark</h4>
+                <p>Davangere 2023. Where the initial silhouettes and tactile swatch tests began.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide wide-slide">
+              <div class="slide-media-box">
+                <img src="assets/hoodie-black-front-hr.jpg" alt="The Heavyweight Hoodie in studio lighting">
+              </div>
+              <figcaption>
+                <span class="slide-index">03 / 07</span>
+                <h4>The Heavyweight Silhouette</h4>
+                <p>Clean architectural drape. 450 GSM long-staple cotton-poly blend.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide macro-slide">
+              <div class="slide-media-box">
+                <img src="assets/editorial_fleece_macro.jpg" alt="Macro close-up of 450 GSM looped cotton fleece weave">
+              </div>
+              <figcaption>
+                <span class="slide-index">04 / 07</span>
+                <h4>450 GSM Tactile Weave</h4>
+                <p>Ultra-dense looped cotton fleece engineered against pilling and fraying.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide">
+              <div class="slide-media-box">
+                <img src="assets/manga_ch4_pitch.jpg" alt="Passing cut swatches hand to hand">
+              </div>
+              <figcaption>
+                <span class="slide-index">05 / 07</span>
+                <h4>Tactile Verification</h4>
+                <p>The 300-day worn prototype cut into pieces and proven in direct meetings.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide">
+              <div class="slide-media-box">
+                <img src="assets/sweatshirt-black-front-hr.jpg" alt="The Versity Sweatshirt minimal flat lay">
+              </div>
+              <figcaption>
+                <span class="slide-index">06 / 07</span>
+                <h4>The Versity Crewneck</h4>
+                <p>Ergonomic drop-shoulder cut designed for everyday campus movement.</p>
+              </figcaption>
+            </figure>
+
+            <figure class="lookbook-slide manifesto-slide">
+              <div class="manifesto-card-inner">
+                <div class="manifesto-crest">
+                  <img src="assets/xtich-logo.png" alt="XTICH" class="manifesto-logo-img">
+                </div>
+                <h3>&ldquo;Built for those who are still in the middle of building.&rdquo;</h3>
+                <p>XTICH was founded to prove that student apparel can rival international design houses in quality, fit, and durability.</p>
+                <div class="manifesto-authors">
+                  <span>Rathan &amp; Shreyas</span>
+                  <span>Founders, XTICH</span>
+                </div>
+              </div>
+            </figure>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 7: ARCHIVE / SHOP & RESERVATION
+         ========================================================================== -->
+    <section class="shop-section" id="shop" aria-label="XTICH Garment Reservation Archive">
+      <div class="shop-container">
+        
+        <div class="shop-header-row">
+          <div>
+            <span class="section-label">Garment Archive</span>
+            <h2 class="shop-title">Reserve Your Piece</h2>
+          </div>
+          <p class="shop-sub-info">Official ecommerce checkout opens with the upcoming academic batch launch. Reserve a size now to guarantee priority allocation.</p>
+        </div>
+
+        <div class="shop-cards-grid">
+          
+          <!-- Product 1: Hoodie -->
+          <div class="shop-item-card">
+            <div class="shop-item-thumb" data-open-product="hoodie">
+              <img src="assets/hoodie-black-front-hr.jpg" alt="The Heavyweight Hoodie">
+              <span class="thumb-pill">450 GSM</span>
+            </div>
+            <div class="shop-item-body">
+              <div class="item-title-row">
+                <h3>The Heavyweight Hoodie</h3>
+                <span class="item-color">Obsidian Black</span>
+              </div>
+              <p class="item-summary">Double-layer hood, reinforced cuffs, dropped shoulders. Stress-tested across 300 days and 180+ washes.</p>
+              
+              <div class="item-selection-form">
+                <div class="form-group">
+                  <label class="form-label">Select Size</label>
+                  <div class="size-chip-group" data-shop-size="hoodie">
+                    <button class="size-chip active">S</button>
+                    <button class="size-chip">M</button>
+                    <button class="size-chip">L</button>
+                    <button class="size-chip">XL</button>
+                  </div>
+                </div>
+
+                <div class="form-action-row">
+                  <div class="qty-stepper-box" data-qty-picker="hoodie">
+                    <button class="qty-btn" data-qty-act="dec" aria-label="Decrease quantity">−</button>
+                    <span class="qty-val" data-qty-display>1</span>
+                    <button class="qty-btn" data-qty-act="inc" aria-label="Increase quantity">+</button>
+                  </div>
+                  <button class="shop-add-btn" data-add-to-bag="hoodie">Reserve Allocation</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product 2: Sweatshirt -->
+          <div class="shop-item-card">
+            <div class="shop-item-thumb" data-open-product="sweatshirt">
+              <img src="assets/sweatshirt-black-front-hr.jpg" alt="The Versity Sweatshirt">
+              <span class="thumb-pill">450 GSM</span>
+            </div>
+            <div class="shop-item-body">
+              <div class="item-title-row">
+                <h3>The Versity Sweatshirt</h3>
+                <span class="item-color">Obsidian Black</span>
+              </div>
+              <p class="item-summary">Heavy-ribbed crewneck, ergonomic sleeve patterning, dense fleece knit retaining shape through recurring laundry cycles.</p>
+              
+              <div class="item-selection-form">
+                <div class="form-group">
+                  <label class="form-label">Select Size</label>
+                  <div class="size-chip-group" data-shop-size="sweatshirt">
+                    <button class="size-chip active">S</button>
+                    <button class="size-chip">M</button>
+                    <button class="size-chip">L</button>
+                    <button class="size-chip">XL</button>
+                  </div>
+                </div>
+
+                <div class="form-action-row">
+                  <div class="qty-stepper-box" data-qty-picker="sweatshirt">
+                    <button class="qty-btn" data-qty-act="dec" aria-label="Decrease quantity">−</button>
+                    <span class="qty-val" data-qty-display>1</span>
+                    <button class="qty-btn" data-qty-act="inc" aria-label="Increase quantity">+</button>
+                  </div>
+                  <button class="shop-add-btn" data-add-to-bag="sweatshirt">Reserve Allocation</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SCENE 8: GRAND EDITORIAL FINALE & BRAND STATEMENT
+         ========================================================================== -->
+    <section class="grand-finale-stage" id="finale" data-scene="finale" aria-label="Brand Philosophy Finale">
+      <div class="finale-curtain-glow"></div>
+      
+      <div class="finale-container">
+        <div class="finale-monument">
+          <div class="finale-logo-wrap">
+            <img src="assets/xtich-logo.png" alt="XTICH" class="finale-logo-img" id="finaleLogoImg">
+          </div>
+          <h2 class="finale-grand-title" id="finaleTitle" data-split-line>The Standard Has Changed.</h2>
+          <p class="finale-lead-text">
+            We didn&rsquo;t build XTICH to make another uniform. We built it because what you wear every single day should carry the dignity of real craftsmanship.
+          </p>
+
+          <!-- Architectural Typographic Founders Signature -->
+          <div class="finale-founders-duo">
+            <div class="duo-item">
+              <span class="duo-name">Rathan</span>
+              <span class="duo-role">Founder</span>
+            </div>
+            <div class="duo-divider">/</div>
+            <div class="duo-item">
+              <span class="duo-name">Shreyas</span>
+              <span class="duo-role">Founder</span>
+            </div>
+          </div>
+
+          <div class="finale-action-row">
+            <a href="#shop" class="editorial-primary-btn finale-cta-btn">Reserve Your Allocation</a>
+            <a href="#story" class="editorial-secondary-btn">Revisit The Story</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       GLOBAL FOOTER
+       ========================================================================== -->
+  <footer class="editorial-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        
+        <div class="footer-col brand-col">
+          <a class="footer-logo-link" href="#hero">
+            <img src="assets/xtich-logo.png" alt="XTICH" class="footer-logo-img">
+          </a>
+          <p class="footer-tagline">&ldquo;Started by one. Built by two.&rdquo;</p>
+          <p class="footer-mission">An independent fashion brand told through an immersive digital editorial. Engineered in Davangere and crafted in Delhi.</p>
+        </div>
+
+        <div class="footer-col">
+          <h5 class="col-title">Navigation</h5>
+          <ul class="col-links">
+            <li><a href="#story">Origin Story</a></li>
+            <li><a href="#proof">The 300-Day Proof</a></li>
+            <li><a href="#garment">The Hoodie</a></li>
+            <li><a href="#collection">Versity Series</a></li>
+            <li><a href="#lookbook">Lookbook</a></li>
+            <li><a href="#shop">Reserve Archive</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5 class="col-title">Principles</h5>
+          <ul class="col-links">
+            <li><span>Textile Engineering</span></li>
+            <li><span>Ergonomic Pattern Cuts</span></li>
+            <li><span>Pride Over Stigma</span></li>
+            <li><span>180+ Wash Durability</span></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5 class="col-title">Architecture</h5>
+          <ul class="col-links">
+            <li><span>Versity Series (Active)</span></li>
+            <li><span>Office Wear Series (Roadmap)</span></li>
+            <li><span>Utility Wear (Future)</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom-strip">
+        <span class="copyright-text">&copy; 2026 XTICH. All rights reserved.</span>
+        <span class="status-indicator">This is only the beginning.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       PRODUCT DETAIL MODAL
+       ========================================================================== -->
+  <div class="modal-overlay" id="productModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-box">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close product modal">✕</button>
+      
+      <div class="modal-layout-grid">
+        <div class="modal-media-pane">
+          <img id="modalProductImg" src="assets/hoodie-black-front-hr.jpg" alt="Product detail view">
+        </div>
+
+        <div class="modal-info-pane">
+          <div class="modal-series-tag" id="modalProductSeries">Versity Series</div>
+          <h3 class="modal-product-title" id="modalProductTitle">The Heavyweight Hoodie</h3>
+          <div class="modal-spec-badge" id="modalProductSpec">450 GSM Cotton-Poly Fleece · Obsidian Black</div>
+          
+          <p class="modal-product-desc" id="modalProductDesc">
+            Engineered specifically to solve the institutional uniform crisis. High-density long-staple cotton-poly blend tested across 300 consecutive days of daily wear and 180+ laundry cycles.
+          </p>
+
+          <div class="modal-specs-accordion-list">
+            <details class="spec-item-details" open>
+              <summary>Materials &amp; Construction</summary>
+              <div class="details-content">
+                <ul>
+                  <li>450 GSM heavyweight brushed fleece</li>
+                  <li>Long-staple cotton blended with high-tensile poly fibers</li>
+                  <li>Double-layered structured hood with drawstring elimination</li>
+                  <li>Elastic-ribbed cuffs and waistband engineered against sagging</li>
+                </ul>
+              </div>
+            </details>
+
+            <details class="spec-item-details">
+              <summary>Testing &amp; Validation</summary>
+              <div class="details-content">
+                <p>300+ days continuous prototype wear test, 180+ machine wash cycles. Retained color fastness, seam tensile strength, and zero fabric pilling.</p>
+              </div>
+            </details>
+
+            <details class="spec-item-details">
+              <summary>Allocation &amp; Priority Delivery</summary>
+              <div class="details-content">
+                <p>Allocations are reserved on a priority queue for the upcoming academic batch launch. Zero upfront payment required today.</p>
+              </div>
+            </details>
+          </div>
+
+          <div class="modal-actions-area">
+            <div class="size-chip-group" id="modalSizeGroup">
+              <button class="size-chip active">S</button>
+              <button class="size-chip">M</button>
+              <button class="size-chip">L</button>
+              <button class="size-chip">XL</button>
+            </div>
+            <button class="modal-confirm-btn" id="modalReserveBtn">Add to Reservation Bag</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MANGA LIGHTBOX MODAL
+       ========================================================================== -->
+  <div class="lightbox-overlay" id="mangaLightbox" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-box">
+      <button class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Close expanded view">✕</button>
+      <div class="lightbox-content">
+        <img id="lightboxImg" src="" alt="Expanded Manga Artwork">
+        <div class="lightbox-caption" id="lightboxCaption"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       RESERVATION BAG DRAWER
+       ========================================================================== -->
+  <div class="bag-overlay" id="bagOverlay" aria-hidden="true"></div>
+  <aside class="bag-drawer" id="bagDrawer" role="dialog" aria-modal="true" aria-label="Reservation Bag">
+    <div class="bag-header">
+      <h3>Your Reservation Bag</h3>
+      <button class="bag-close-btn" id="bagCloseBtn" aria-label="Close bag drawer">✕</button>
+    </div>
+
+    <div class="bag-items-list" id="bagItemsContainer">
+      <!-- Dynamically generated via app.js -->
+    </div>
+
+    <div class="bag-footer">
+      <div class="bag-notice-box">
+        <p><strong>Zero upfront payment today.</strong> You are reserving an allocation in the upcoming XTICH production batch. When official checkout opens on Shopify, you will receive priority access.</p>
+      </div>
+      <button class="bag-checkout-btn" id="bagCheckoutBtn">Confirm Priority Reservation</button>
+    </div>
+  </aside>
+
+  <!-- Notification Toast -->
+  <div class="toast-notification" id="siteToast" role="status" aria-live="polite"></div>
+
+  <!-- JavaScript Engine -->
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

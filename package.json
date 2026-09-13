@@ -1,0 +1,16 @@
+{
+  "name": "xtich-website",
+  "version": "5.0.0",
+  "description": "XTICH Digital Editorial Experience",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
