@@ -366,7 +366,7 @@
   }
 
   /* =========================================================================
-     5. GSAP SCROLLTRIGGER SCENE CHOREOGRAPHY
+     5. GSAP SCROLLTRIGGER SCENE CHOREOGRAPHY (DESKTOP & MOBILE MATCHMEDIA)
      ========================================================================= */
   function initScrollTriggerScenes() {
     if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
@@ -374,278 +374,242 @@
     gsap.registerPlugin(ScrollTrigger);
     ScrollTrigger.config({ ignoreMobileResize: true });
 
-    // ── HERO SCENE ──────────────────────────────────────────────────────────
+    const mm = gsap.matchMedia();
+
     const heroStage       = document.getElementById('hero');
     const heroVisualLayer = document.getElementById('heroVisualLayer');
-    const heroHoodieImg   = document.getElementById('heroHoodieImg');
     const heroVisualScrim = document.getElementById('heroVisualScrim');
     const heroBrandBlock  = document.getElementById('heroBrandBlock');
     const heroTopMeta     = document.getElementById('heroTopMeta');
     const heroNarrBlock   = document.getElementById('heroNarrativeBlock');
     const heroScrollCue   = document.getElementById('heroScrollCue');
 
-    if (heroStage) {
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: heroStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.2,
-        }
-      })
-      .fromTo(heroVisualLayer,
-        { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
-        { clipPath: 'inset(0% 0% 0% 0%)',     opacity: 1,   ease: 'none' }, 0
-      )
-      .fromTo('.hero-visual-media',
-        { scale: 1.0, y: 0 },
-        { scale: 1.22, y: 70, ease: 'none' }, 0
-      )
-      .fromTo(heroVisualScrim,
-        { opacity: 0.1 },
-        { opacity: 0.9, ease: 'none' }, 0.7
-      )
-      .fromTo(heroBrandBlock,
-        { y: 0, scale: 1, opacity: 1 },
-        { y: -150, scale: 0.68, opacity: 0, ease: 'none' }, 0
-      )
-      .fromTo(heroTopMeta,
-        { y: 0, opacity: 1 },
-        { y: -22, opacity: 0, ease: 'none' }, 0
-      )
-      .fromTo(heroNarrBlock,
-        { y: 55, opacity: 0 },
-        { y: 0,  opacity: 1, ease: 'none' }, 0.33
-      )
-      .fromTo(heroNarrBlock,
-        { y: 0,  opacity: 1 },
-        { y: -30, opacity: 0.1, ease: 'none' }, 0.8
-      )
-      .fromTo(heroScrollCue,
-        { opacity: 1 },
-        { opacity: 0, ease: 'none' }, 0
-      );
-    }
-
-    // ── MANGA / STORY SCENE (ORIGIN → ACT I → ACT II → ACT III → ACT IV) ──────
     const mangaStage  = document.getElementById('story');
     const mangaPanels = [0,1,2,3,4].map(n => document.getElementById(`mangaPanel${n}`));
     const storyPhases = [0,1,2,3,4].map(n => document.getElementById(`storyPhase${n}`));
     const mangaCard   = document.getElementById('mangaViewportCard');
 
-    if (mangaStage) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: mangaStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-        }
-      });
-
-      // Card breathe in on entry
-      tl.fromTo(mangaCard,
-        { scale: 0.92, opacity: 0.3 },
-        { scale: 1.0,  opacity: 1,  ease: 'none', duration: 0.1 }
-      );
-
-      // 5 acts across the scroll track (ORIGIN -> ACT I -> ACT II -> ACT III -> ACT IV)
-      const totalActs = 5;
-      const actDur = 0.88 / totalActs;
-
-      mangaPanels.forEach((panel, idx) => {
-        if (!panel) return;
-        const start = 0.12 + idx * actDur;
-        const mid   = start + actDur * 0.5;
-        const img   = panel.querySelector('img');
-
-        // Panel visual in
-        if (idx === 0) {
-          gsap.set(panel, { autoAlpha: 1, y: 0, scale: 1 });
-        } else {
-          tl.fromTo(panel,
-            { autoAlpha: 0, y: 30, scale: 0.94 },
-            { autoAlpha: 1, y: 0,  scale: 1, ease: 'none', duration: actDur * 0.4 },
-            start
-          );
-        }
-
-        if (img) {
-          tl.fromTo(img, { scale: 1.0 }, { scale: 1.06, ease: 'none', duration: actDur }, start);
-        }
-
-        if (idx < totalActs - 1) {
-          tl.to(panel,
-            { autoAlpha: 0, y: -20, scale: 0.92, ease: 'none', duration: actDur * 0.35 },
-            mid
-          );
-        }
-
-        // Story phase text sync
-        const phase = storyPhases[idx];
-        if (phase) {
-          if (idx === 0) {
-            gsap.set(phase, { autoAlpha: 1, y: 0 });
-          } else {
-            tl.fromTo(phase,
-              { autoAlpha: 0, y: 25 },
-              { autoAlpha: 1, y: 0,  ease: 'none', duration: actDur * 0.4 },
-              start
-            );
-          }
-
-          if (idx < totalActs - 1) {
-            tl.to(phase,
-              { autoAlpha: 0, y: -15, ease: 'none', duration: actDur * 0.35 },
-              mid
-            );
-          }
-        }
-      });
-    }
-
-    // ── PROOF / TELEMETRY ────────────────────────────────────────────────────
     const proofStage    = document.getElementById('proof');
     const proofHeroText = document.getElementById('proofHeroText');
     const telePods      = [1,2,3].map(n => document.getElementById(`telePod${n}`));
 
-    if (proofStage) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: proofStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.1,
-          onEnter: triggerCount,
-        }
-      });
-
-      tl.fromTo(proofHeroText,
-        { y: 38, opacity: 0.25 },
-        { y: 0,  opacity: 1, ease: 'none', duration: 0.3 }
-      );
-
-      telePods.forEach((pod, idx) => {
-        if (!pod) return;
-        const start = 0.08 + idx * 0.12;
-        tl.fromTo(pod,
-          { scale: 0.88, y: 50, opacity: 0.12 },
-          { scale: 1,    y: 0,  opacity: 1,    ease: 'none', duration: 0.3 },
-          start
-        );
-      });
-    }
-
-    // ── GARMENT CINEMA ───────────────────────────────────────────────────────
     const garmentStage  = document.getElementById('garment');
     const cinemaVisual  = document.getElementById('cinemaVisualStage');
-    const cinemaFront   = document.getElementById('cinemaFrontImg');
-    const cinemaBack    = document.getElementById('cinemaBackImg');
     const callouts      = document.querySelectorAll('.anatomy-callout-item');
 
-    if (garmentStage) {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: garmentStage,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.0,
-        }
-      });
+    // Universal MatchMedia Choreography for Desktop & Mobile
+    mm.add({
+      isDesktop: "(min-width: 861px)",
+      isMobile:  "(max-width: 860px)"
+    }, (context) => {
+      const { isMobile } = context.conditions;
 
-      tl.fromTo(cinemaVisual,
-        { scale: 0.86 },
-        { scale: 1.02, ease: 'none', duration: 0.45 }
-      );
-
-      // Auto flip front → back at 48%
-      tl.add(() => setGarmentView('back'),   0.48);
-      tl.add(() => setGarmentView('front'),  0.05);
-
-      callouts.forEach((c, idx) => {
-        const st = 0.14 + idx * 0.17;
-        tl.fromTo(c,
-          { x: 38, opacity: 0.08 },
-          { x: 0,  opacity: 1, ease: 'none', duration: 0.24 },
-          st
+      // ── HERO SCENE ──────────────────────────────────────────────────────────
+      if (heroStage) {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: heroStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.2,
+          }
+        })
+        .fromTo(heroVisualLayer,
+          { clipPath: isMobile ? 'inset(8% 6% 8% 6%)' : 'inset(14% 20% 14% 20%)', opacity: 0.88 },
+          { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, ease: 'none' }, 0
+        )
+        .fromTo('.hero-visual-media',
+          { scale: 1.0, y: 0 },
+          { scale: isMobile ? 1.14 : 1.22, y: isMobile ? 35 : 70, ease: 'none' }, 0
+        )
+        .fromTo(heroVisualScrim,
+          { opacity: 0.1 },
+          { opacity: 0.9, ease: 'none' }, 0.7
+        )
+        .fromTo(heroBrandBlock,
+          { y: 0, scale: 1, opacity: 1 },
+          { y: isMobile ? -80 : -150, scale: isMobile ? 0.78 : 0.68, opacity: 0, ease: 'none' }, 0
+        )
+        .fromTo(heroTopMeta,
+          { y: 0, opacity: 1 },
+          { y: -22, opacity: 0, ease: 'none' }, 0
+        )
+        .fromTo(heroNarrBlock,
+          { y: isMobile ? 32 : 55, opacity: 0 },
+          { y: 0, opacity: 1, ease: 'none' }, 0.33
+        )
+        .fromTo(heroNarrBlock,
+          { y: 0, opacity: 1 },
+          { y: isMobile ? -18 : -30, opacity: 0.1, ease: 'none' }, 0.8
+        )
+        .fromTo(heroScrollCue,
+          { opacity: 1 },
+          { opacity: 0, ease: 'none' }, 0
         );
-      });
-    }
+      }
 
-    // ── COLLECTION SECTION ───────────────────────────────────────────────────
-    const garmentCards = document.querySelectorAll('.garment-card');
-    if (garmentCards.length) {
-      gsap.from(garmentCards, {
+      // ── MANGA / STORY SCENE (ORIGIN → ACT I → ACT II → ACT III → ACT IV) ──────
+      if (mangaStage) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: mangaStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.1,
+          }
+        });
+
+        tl.fromTo(mangaCard,
+          { scale: 0.94, opacity: 0.4 },
+          { scale: 1.0, opacity: 1, ease: 'none', duration: 0.1 }
+        );
+
+        const totalActs = 5;
+        const actDur = 0.88 / totalActs;
+
+        mangaPanels.forEach((panel, idx) => {
+          if (!panel) return;
+          const start = 0.12 + idx * actDur;
+          const mid   = start + actDur * 0.5;
+          const img   = panel.querySelector('img');
+
+          if (idx === 0) {
+            gsap.set(panel, { autoAlpha: 1, y: 0, scale: 1 });
+          } else {
+            tl.fromTo(panel,
+              { autoAlpha: 0, y: isMobile ? 18 : 30, scale: 0.95 },
+              { autoAlpha: 1, y: 0, scale: 1, ease: 'none', duration: actDur * 0.4 },
+              start
+            );
+          }
+
+          if (img) {
+            tl.fromTo(img, { scale: 1.0 }, { scale: 1.06, ease: 'none', duration: actDur }, start);
+          }
+
+          if (idx < totalActs - 1) {
+            tl.to(panel,
+              { autoAlpha: 0, y: isMobile ? -12 : -20, scale: 0.94, ease: 'none', duration: actDur * 0.35 },
+              mid
+            );
+          }
+
+          const phase = storyPhases[idx];
+          if (phase) {
+            if (idx === 0) {
+              gsap.set(phase, { autoAlpha: 1, y: 0 });
+            } else {
+              tl.fromTo(phase,
+                { autoAlpha: 0, y: isMobile ? 16 : 25 },
+                { autoAlpha: 1, y: 0, ease: 'none', duration: actDur * 0.4 },
+                start
+              );
+            }
+
+            if (idx < totalActs - 1) {
+              tl.to(phase,
+                { autoAlpha: 0, y: isMobile ? -10 : -15, ease: 'none', duration: actDur * 0.35 },
+                mid
+              );
+            }
+          }
+        });
+      }
+
+      // ── PROOF / TELEMETRY ────────────────────────────────────────────────────
+      if (proofStage) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: proofStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.1,
+            onEnter: triggerCount,
+          }
+        });
+
+        tl.fromTo(proofHeroText,
+          { y: isMobile ? 24 : 38, opacity: 0.25 },
+          { y: 0, opacity: 1, ease: 'none', duration: 0.3 }
+        );
+
+        telePods.forEach((pod, idx) => {
+          if (!pod) return;
+          const start = 0.08 + idx * 0.12;
+          tl.fromTo(pod,
+            { scale: 0.9, y: isMobile ? 30 : 50, opacity: 0.12 },
+            { scale: 1, y: 0, opacity: 1, ease: 'none', duration: 0.3 },
+            start
+          );
+        });
+      }
+
+      // ── GARMENT CINEMA ───────────────────────────────────────────────────────
+      if (garmentStage) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: garmentStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.0,
+          }
+        });
+
+        tl.fromTo(cinemaVisual,
+          { scale: 0.88 },
+          { scale: 1.02, ease: 'none', duration: 0.45 }
+        );
+
+        tl.add(() => setGarmentView('back'), 0.48);
+        tl.add(() => setGarmentView('front'), 0.05);
+
+        callouts.forEach((c, idx) => {
+          const st = 0.14 + idx * 0.17;
+          tl.fromTo(c,
+            { x: isMobile ? 18 : 38, opacity: 0.08 },
+            { x: 0, opacity: 1, ease: 'none', duration: 0.24 },
+            st
+          );
+        });
+      }
+    });
+
+    // ── GENERAL VIEWPORT STAGGER REVEALS (FOR NON-PINNED SECTIONS) ───────────
+    const revealItems = document.querySelectorAll(
+      '.garment-card, .shop-item-card, .section-label, .lookbook-header-bar'
+    );
+    revealItems.forEach(item => {
+      gsap.from(item, {
         scrollTrigger: {
-          trigger: '#collection',
-          start: 'top 80%',
+          trigger: item,
+          start: 'top 86%',
           once: true,
         },
-        y: 55, opacity: 0,
-        duration: 1.1, ease: 'expo.out', stagger: 0.14
-      });
-    }
-
-    // ── SHOP / ARCHIVE SECTION ────────────────────────────────────────────────
-    const shopCards = document.querySelectorAll('.shop-item-card');
-    if (shopCards.length) {
-      gsap.from(shopCards, {
-        scrollTrigger: {
-          trigger: '#shop',
-          start: 'top 80%',
-          once: true,
-        },
-        y: 44, opacity: 0,
-        duration: 1.0, ease: 'expo.out', stagger: 0.12
-      });
-    }
-
-    // ── PROOF HEADING REVEAL ─────────────────────────────────────────────────
-    if (proofHeroText) {
-      gsap.from(proofHeroText, {
-        scrollTrigger: {
-          trigger: '#proof',
-          start: 'top 80%',
-          once: true,
-        },
-        y: 30, opacity: 0,
-        duration: 1.2, ease: 'expo.out'
-      });
-    }
-
-    // ── SECTION LABEL STAGGER REVEALS ────────────────────────────────────────
-    document.querySelectorAll('.section-label').forEach(el => {
-      gsap.from(el, {
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-        y: 20, opacity: 0, duration: 0.8, ease: 'expo.out'
+        y: 28,
+        opacity: 0,
+        duration: 0.95,
+        ease: 'expo.out'
       });
     });
 
-    // ── LOOKBOOK HEADER ──────────────────────────────────────────────────────
-    const lookbookHeader = document.querySelector('.lookbook-header-bar');
-    if (lookbookHeader) {
-      gsap.from(lookbookHeader, {
-        scrollTrigger: { trigger: lookbookHeader, start: 'top 85%', once: true },
-        y: 28, opacity: 0, duration: 1.0, ease: 'expo.out'
-      });
-    }
-
-    // ── GRAND FINALE ─────────────────────────────────────────────────────────
-    const finaleStage  = document.getElementById('finale');
-    const finaleItems  = [
-      '#finaleLogoImg', '.finale-grand-title', '.finale-lead-text',
-      '.finale-founders-duo', '.finale-action-row'
-    ].map(s => document.querySelector(s)).filter(Boolean);
-
+    const finaleStage = document.getElementById('finale');
     if (finaleStage) {
+      const finaleItems = [
+        '#finaleLogoImg', '.finale-grand-title', '.finale-lead-text',
+        '.finale-founders-duo', '.finale-action-row'
+      ].map(s => document.querySelector(s)).filter(Boolean);
+
       gsap.from(finaleItems, {
         scrollTrigger: {
           trigger: finaleStage,
-          start: 'top 75%',
+          start: 'top 78%',
           once: true,
         },
-        y: 38, opacity: 0,
-        duration: 1.2, ease: 'expo.out', stagger: 0.12
+        y: 28,
+        opacity: 0,
+        duration: 1.0,
+        ease: 'expo.out',
+        stagger: 0.1
       });
     }
   }
