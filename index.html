@@ -11,9 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
 
-  <!-- GSAP + ScrollTrigger (CDN) -->
+  <!-- GSAP + ScrollTrigger + ScrollToPlugin (CDN) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
 
   <!-- Lenis Smooth Scroll (CDN) -->
   <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
@@ -572,109 +573,113 @@
     </section>
 
     <!-- ==========================================================================
-         SCENE 6: ASYMMETRIC EDITORIAL LOOKBOOK (Interactive Horizontal Runway)
+         SCENE 6: SHOPIFY EDITIONS-STYLE PINNED HORIZONTAL EDITORIAL LOOKBOOK
          ========================================================================== -->
-    <section class="lookbook-stage" id="lookbook" aria-label="Editorial Lookbook">
-      <div class="lookbook-container">
+    <section class="scene-stage lookbook-stage" id="lookbook" data-scene="lookbook" aria-label="Editorial Lookbook">
+      <div class="scene-pin lookbook-pin" id="lookbookPin">
         
-        <div class="lookbook-header-bar">
-          <div>
-            <span class="section-label">Visual Journal</span>
-            <h2 class="lookbook-heading">Editorial Lookbook</h2>
-          </div>
-          <div class="lookbook-controls-wrap">
-            <span class="drag-hint">Drag or Scroll Track</span>
-            <div class="track-arrow-buttons">
-              <button class="track-btn prev" id="trackPrevBtn" aria-label="Previous Slide">←</button>
-              <button class="track-btn next" id="trackNextBtn" aria-label="Next Slide">→</button>
+        <div class="lookbook-container">
+          
+          <div class="lookbook-header-bar">
+            <div>
+              <span class="section-label">Visual Journal</span>
+              <h2 class="lookbook-heading">Editorial Lookbook</h2>
+            </div>
+            <div class="lookbook-controls-wrap">
+              <span class="drag-hint">Scroll to Experience</span>
+              <div class="track-arrow-buttons">
+                <button class="track-btn prev" id="trackPrevBtn" aria-label="Previous Slide">←</button>
+                <button class="track-btn next" id="trackNextBtn" aria-label="Next Slide">→</button>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="lookbook-scroll-viewport" id="lookbookViewport">
-          <div class="lookbook-runway-track" id="lookbookRunwayTrack">
-            
-            <figure class="lookbook-slide tall-campaign-slide">
-              <div class="slide-media-box">
-                <img src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie editorial campaign in architectural concrete studio">
-              </div>
-              <figcaption>
-                <span class="slide-index">01 / 07</span>
-                <h4>Architectural Silhouette</h4>
-                <p>Minimalist drop-shoulder cut photographed in concrete studio lighting.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide">
-              <div class="slide-media-box">
-                <img src="assets/manga_ch1_dream.jpg" alt="The early notebook sketches">
-              </div>
-              <figcaption>
-                <span class="slide-index">02 / 07</span>
-                <h4>The Notebook Spark</h4>
-                <p>Davangere 2023. Where the initial silhouettes and tactile swatch tests began.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide wide-slide">
-              <div class="slide-media-box">
-                <img src="assets/hoodie-black-front-hr.jpg" alt="The Heavyweight Hoodie in studio lighting">
-              </div>
-              <figcaption>
-                <span class="slide-index">03 / 07</span>
-                <h4>The Heavyweight Silhouette</h4>
-                <p>Clean architectural drape. 450 GSM long-staple cotton-poly blend.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide macro-slide">
-              <div class="slide-media-box">
-                <img src="assets/editorial_fleece_macro.jpg" alt="Macro close-up of 450 GSM looped cotton fleece weave">
-              </div>
-              <figcaption>
-                <span class="slide-index">04 / 07</span>
-                <h4>450 GSM Tactile Weave</h4>
-                <p>Ultra-dense looped cotton fleece engineered against pilling and fraying.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide">
-              <div class="slide-media-box">
-                <img src="assets/manga_ch4_pitch.jpg" alt="Passing cut swatches hand to hand">
-              </div>
-              <figcaption>
-                <span class="slide-index">05 / 07</span>
-                <h4>Tactile Verification</h4>
-                <p>The 300-day worn prototype cut into pieces and proven in direct meetings.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide">
-              <div class="slide-media-box">
-                <img src="assets/sweatshirt-black-front-hr.jpg" alt="The Versity Sweatshirt minimal flat lay">
-              </div>
-              <figcaption>
-                <span class="slide-index">06 / 07</span>
-                <h4>The Versity Crewneck</h4>
-                <p>Ergonomic drop-shoulder cut designed for everyday campus movement.</p>
-              </figcaption>
-            </figure>
-
-            <figure class="lookbook-slide manifesto-slide">
-              <div class="manifesto-card-inner">
-                <div class="manifesto-crest">
-                  <img src="assets/xtich-logo.png" alt="XTICH" class="manifesto-logo-img">
+          <div class="lookbook-scroll-viewport" id="lookbookViewport">
+            <div class="lookbook-runway-track" id="lookbookRunwayTrack">
+              
+              <figure class="lookbook-slide tall-campaign-slide">
+                <div class="slide-media-box">
+                  <img src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie editorial campaign in architectural concrete studio">
                 </div>
-                <h3>&ldquo;Built for those who are still in the middle of building.&rdquo;</h3>
-                <p>XTICH was founded to prove that student apparel can rival international design houses in quality, fit, and durability.</p>
-                <div class="manifesto-authors">
-                  <span><a href="https://www.linkedin.com/in/rathan-p/" target="_blank" rel="noopener noreferrer" class="founder-link-inline">Rathan</a> &amp; <a href="https://www.linkedin.com/in/shreyasmh/" target="_blank" rel="noopener noreferrer" class="founder-link-inline">Shreyas</a></span>
-                  <span>Founders, XTICH</span>
-                </div>
-              </div>
-            </figure>
+                <figcaption>
+                  <span class="slide-index">01 / 07</span>
+                  <h4>Architectural Silhouette</h4>
+                  <p>Minimalist drop-shoulder cut photographed in concrete studio lighting.</p>
+                </figcaption>
+              </figure>
 
+              <figure class="lookbook-slide">
+                <div class="slide-media-box">
+                  <img src="assets/manga_ch1_dream.jpg" alt="The early notebook sketches">
+                </div>
+                <figcaption>
+                  <span class="slide-index">02 / 07</span>
+                  <h4>The Notebook Spark</h4>
+                  <p>Davangere 2023. Where the initial silhouettes and tactile swatch tests began.</p>
+                </figcaption>
+              </figure>
+
+              <figure class="lookbook-slide wide-slide">
+                <div class="slide-media-box">
+                  <img src="assets/hoodie-black-front-hr.jpg" alt="The Heavyweight Hoodie in studio lighting">
+                </div>
+                <figcaption>
+                  <span class="slide-index">03 / 07</span>
+                  <h4>The Heavyweight Silhouette</h4>
+                  <p>Clean architectural drape. 450 GSM long-staple cotton-poly blend.</p>
+                </figcaption>
+              </figure>
+
+              <figure class="lookbook-slide macro-slide">
+                <div class="slide-media-box">
+                  <img src="assets/editorial_fleece_macro.jpg" alt="Macro close-up of 450 GSM looped cotton fleece weave">
+                </div>
+                <figcaption>
+                  <span class="slide-index">04 / 07</span>
+                  <h4>450 GSM Tactile Weave</h4>
+                  <p>Ultra-dense looped cotton fleece engineered against pilling and fraying.</p>
+                </figcaption>
+              </figure>
+
+              <figure class="lookbook-slide">
+                <div class="slide-media-box">
+                  <img src="assets/manga_ch4_pitch.jpg" alt="Passing cut swatches hand to hand">
+                </div>
+                <figcaption>
+                  <span class="slide-index">05 / 07</span>
+                  <h4>Tactile Verification</h4>
+                  <p>The 300-day worn prototype cut into pieces and proven in direct meetings.</p>
+                </figcaption>
+              </figure>
+
+              <figure class="lookbook-slide">
+                <div class="slide-media-box">
+                  <img src="assets/sweatshirt-black-front-hr.jpg" alt="The Versity Sweatshirt minimal flat lay">
+                </div>
+                <figcaption>
+                  <span class="slide-index">06 / 07</span>
+                  <h4>The Versity Crewneck</h4>
+                  <p>Ergonomic drop-shoulder cut designed for everyday campus movement.</p>
+                </figcaption>
+              </figure>
+
+              <figure class="lookbook-slide manifesto-slide">
+                <div class="manifesto-card-inner">
+                  <div class="manifesto-crest">
+                    <img src="assets/xtich-logo.png" alt="XTICH" class="manifesto-logo-img">
+                  </div>
+                  <h3>&ldquo;Built for those who are still in the middle of building.&rdquo;</h3>
+                  <p>XTICH was founded to prove that student apparel can rival international design houses in quality, fit, and durability.</p>
+                  <div class="manifesto-authors">
+                    <span><a href="https://www.linkedin.com/in/rathan-p/" target="_blank" rel="noopener noreferrer" class="founder-link-inline">Rathan</a> &amp; <a href="https://www.linkedin.com/in/shreyasmh/" target="_blank" rel="noopener noreferrer" class="founder-link-inline">Shreyas</a></span>
+                    <span>Founders, XTICH</span>
+                  </div>
+                </div>
+              </figure>
+
+            </div>
           </div>
+
         </div>
 
       </div>

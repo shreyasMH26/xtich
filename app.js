@@ -572,6 +572,99 @@
           );
         });
       }
+
+      // ── SCENE 6: SHOPIFY EDITIONS-STYLE PINNED LOOKBOOK HORIZONTAL SCROLL ──────
+      const lookbookStage  = document.getElementById('lookbook');
+      const lookbookTrack  = document.getElementById('lookbookRunwayTrack');
+      const lookbookSlides = document.querySelectorAll('.lookbook-slide');
+
+      if (lookbookStage && lookbookTrack && lookbookSlides.length) {
+        const getScrollDistance = () => {
+          const trackWidth = lookbookTrack.scrollWidth;
+          const containerWidth = lookbookTrack.parentElement ? lookbookTrack.parentElement.clientWidth : window.innerWidth;
+          return -(trackWidth - containerWidth + (isMobile ? 32 : 80));
+        };
+
+        const lookbookTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: lookbookStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: isMobile ? 1.0 : 1.25,
+            invalidateOnRefresh: true,
+          }
+        });
+
+        // 1. Scrub horizontal track translation driven by vertical scroll
+        lookbookTl.to(lookbookTrack, {
+          x: getScrollDistance,
+          ease: 'none',
+          duration: 1.0,
+        });
+
+        // 2. Individual slide scale and depth choreography
+        const totalSlides = lookbookSlides.length;
+        lookbookSlides.forEach((slide, idx) => {
+          const img = slide.querySelector('.slide-media-box img');
+          const progressStep = idx / (totalSlides - 1);
+          const dur = 0.28;
+          const startAt = Math.max(0, progressStep * 0.72 - 0.04);
+
+          lookbookTl.fromTo(slide,
+            { scale: 0.93, opacity: 0.85 },
+            { scale: 1.0, opacity: 1, ease: 'sine.out', duration: dur },
+            startAt
+          );
+
+          if (img) {
+            lookbookTl.fromTo(img,
+              { scale: 1.0 },
+              { scale: 1.08, ease: 'none', duration: dur * 1.4 },
+              startAt
+            );
+          }
+        });
+
+        // 3. Arrow navigation buttons (← / →)
+        const trackPrevBtn = document.getElementById('trackPrevBtn');
+        const trackNextBtn = document.getElementById('trackNextBtn');
+
+        if (trackPrevBtn && trackNextBtn) {
+          const stepPercent = 1 / (totalSlides - 1);
+
+          trackPrevBtn.onclick = (e) => {
+            e.preventDefault();
+            const st = lookbookTl.scrollTrigger;
+            if (!st) return;
+            const targetProg = Math.max(0, st.progress - stepPercent);
+            const targetY    = st.start + targetProg * (st.end - st.start);
+
+            if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
+              gsap.to(window, { scrollTo: targetY, duration: 0.7, ease: 'power2.out' });
+            } else if (window.lenis) {
+              window.lenis.scrollTo(targetY, { duration: 0.7 });
+            } else {
+              window.scrollTo({ top: targetY, behavior: 'smooth' });
+            }
+          };
+
+          trackNextBtn.onclick = (e) => {
+            e.preventDefault();
+            const st = lookbookTl.scrollTrigger;
+            if (!st) return;
+            const targetProg = Math.min(1, st.progress + stepPercent);
+            const targetY    = st.start + targetProg * (st.end - st.start);
+
+            if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
+              gsap.to(window, { scrollTo: targetY, duration: 0.7, ease: 'power2.out' });
+            } else if (window.lenis) {
+              window.lenis.scrollTo(targetY, { duration: 0.7 });
+            } else {
+              window.scrollTo({ top: targetY, behavior: 'smooth' });
+            }
+          };
+        }
+      }
     });
 
     // ── GENERAL VIEWPORT STAGGER REVEALS (FOR NON-PINNED SECTIONS) ───────────
@@ -940,39 +1033,7 @@
   btnCinemaFront?.addEventListener('click', () => setGarmentView('front'));
   btnCinemaBack?.addEventListener('click',  () => setGarmentView('back'));
 
-  /* =========================================================================
-     14. LOOKBOOK RUNWAY
-     ========================================================================= */
-  const lookbookViewport = document.getElementById('lookbookViewport');
-  const trackPrevBtn     = document.getElementById('trackPrevBtn');
-  const trackNextBtn     = document.getElementById('trackNextBtn');
 
-  if (lookbookViewport) {
-    const delta = 440;
-    trackPrevBtn?.addEventListener('click', () => lookbookViewport.scrollBy({ left: -delta, behavior: 'smooth' }));
-    trackNextBtn?.addEventListener('click', () => lookbookViewport.scrollBy({ left:  delta, behavior: 'smooth' }));
-
-    let isDragging = false, startX = 0, startSL = 0;
-    lookbookViewport.addEventListener('mousedown',  e => { isDragging = true;  startX = e.pageX - lookbookViewport.offsetLeft; startSL = lookbookViewport.scrollLeft; lookbookViewport.style.cursor = 'grabbing'; });
-    lookbookViewport.addEventListener('mouseleave', () => { isDragging = false; lookbookViewport.style.cursor = 'grab'; });
-    lookbookViewport.addEventListener('mouseup',    () => { isDragging = false; lookbookViewport.style.cursor = 'grab'; });
-    lookbookViewport.addEventListener('mousemove',  e => {
-      if (!isDragging) return; e.preventDefault();
-      lookbookViewport.scrollLeft = startSL - (e.pageX - lookbookViewport.offsetLeft - startX) * 1.6;
-    });
-
-    // Slide parallax
-    const slides = lookbookViewport.querySelectorAll('.lookbook-slide img');
-    lookbookViewport.addEventListener('scroll', () => {
-      const vpW  = lookbookViewport.offsetWidth;
-      const vpSL = lookbookViewport.scrollLeft;
-      slides.forEach(img => {
-        const slideLeft = img.closest('.lookbook-slide').offsetLeft - vpSL;
-        const frac = (slideLeft + img.closest('.lookbook-slide').offsetWidth / 2) / vpW - 0.5;
-        img.style.transform = `translateX(${frac * -18}px) scale(1.04)`;
-      });
-    }, { passive: true });
-  }
 
   /* =========================================================================
      15. MANGA LIGHTBOX

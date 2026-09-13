@@ -1561,32 +1561,53 @@ button {
 }
 
 /* ==========================================================================
-   SCENE 6: ASYMMETRIC EDITORIAL LOOKBOOK (WITH EDITORIAL CAMPAIGN IMAGES)
+   SCENE 6: SHOPIFY EDITIONS-STYLE PINNED HORIZONTAL EDITORIAL LOOKBOOK
    ========================================================================== */
 .lookbook-stage {
-  padding: clamp(6rem, 10vw, 8rem) 0;
+  height: 350vh; /* Scroll distance runway */
   background-color: var(--ink-800);
   border-top: 1px solid var(--rule-dark);
+  position: relative;
+}
+
+.lookbook-pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
   overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.5rem 0 2rem;
 }
 
 .lookbook-container {
-  max-width: var(--content-max-width);
-  margin: 0 auto;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
   padding: 0 clamp(1.25rem, 4vw, 3.5rem);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
 .lookbook-header-bar {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  margin-bottom: 2.5rem;
+  flex-shrink: 0;
 }
 
 .lookbook-heading {
   font-family: var(--font-serif);
-  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+  font-size: clamp(2.2rem, 4.2vw, 3.4rem);
   color: var(--paper-100);
+  margin: 0;
 }
 
 .lookbook-controls-wrap {
@@ -1609,68 +1630,131 @@ button {
 }
 
 .track-btn {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid var(--rule-dark);
+  background: rgba(251, 250, 246, 0.04);
   color: var(--paper-100);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  transition: all 0.25s ease;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-editorial);
 }
 
 .track-btn:hover {
   background: var(--paper-100);
   color: var(--ink-900);
+  border-color: var(--paper-100);
+  transform: scale(1.05);
 }
 
 .lookbook-scroll-viewport {
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  padding: 1rem 0;
-  cursor: grab;
-}
-
-.lookbook-scroll-viewport::-webkit-scrollbar {
-  display: none;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .lookbook-runway-track {
   display: flex;
-  gap: 2rem;
+  gap: 2.25rem;
   width: max-content;
+  will-change: transform;
+  align-items: center;
+  padding-right: 8vw;
 }
 
 .lookbook-slide {
-  flex: 0 0 340px;
+  flex: 0 0 380px;
   background: var(--ink-900);
   border: 1px solid var(--rule-dark);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  will-change: transform, opacity;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease;
+}
+
+.lookbook-slide:hover {
+  border-color: var(--rule-dark-high);
 }
 
 .lookbook-slide.wide-slide {
-  flex: 0 0 440px;
+  flex: 0 0 460px;
 }
 
 .lookbook-slide.tall-campaign-slide {
-  flex: 0 0 380px;
+  flex: 0 0 400px;
 }
 
 .lookbook-slide.macro-slide {
-  flex: 0 0 400px;
+  flex: 0 0 420px;
+}
+
+.lookbook-slide.manifesto-slide {
+  flex: 0 0 420px;
+  background: linear-gradient(145deg, var(--ink-900) 0%, #151518 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 2rem;
+  box-sizing: border-box;
+}
+
+.manifesto-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: center;
+  align-items: center;
+}
+
+.manifesto-logo-img {
+  height: 24px;
+  width: auto;
+  opacity: 0.9;
+}
+
+.manifesto-card-inner h3 {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  line-height: 1.35;
+  color: var(--paper-100);
+  font-style: italic;
+  margin: 0;
+}
+
+.manifesto-card-inner p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--graphite-400);
+  margin: 0;
+}
+
+.manifesto-authors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: var(--paper-200);
+  border-top: 1px solid var(--rule-dark);
+  padding-top: 1rem;
+  width: 100%;
 }
 
 .slide-media-box {
   aspect-ratio: 4/5;
   background: var(--ink-700);
   overflow: hidden;
+  position: relative;
 }
 
 .tall-campaign-slide .slide-media-box {
@@ -1685,18 +1769,20 @@ button {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  will-change: transform;
   transition: transform 0.6s var(--ease-editorial);
 }
 
 .lookbook-slide:hover .slide-media-box img {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .lookbook-slide figcaption {
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  background: var(--ink-900);
 }
 
 .slide-index {
@@ -1708,49 +1794,16 @@ button {
 
 .lookbook-slide figcaption h4 {
   font-family: var(--font-serif);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   color: var(--paper-100);
+  margin: 0;
 }
 
 .lookbook-slide figcaption p {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--graphite-400);
-  line-height: 1.55;
-}
-
-.manifesto-slide {
-  flex: 0 0 380px;
-  background: var(--ink-700);
-  border: 1px solid var(--rule-dark-high);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2.5rem;
-}
-
-.manifesto-card-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  text-align: center;
-}
-
-.manifesto-crest {
-  display: flex;
-  justify-content: center;
-}
-
-.manifesto-card-inner h3 {
-  font-family: var(--font-serif);
-  font-size: 1.4rem;
-  line-height: 1.35;
-  color: var(--paper-100);
-}
-
-.manifesto-card-inner p {
-  font-size: 0.88rem;
-  color: var(--graphite-300);
-  line-height: 1.6;
+  line-height: 1.5;
+  margin: 0;
 }
 
 .manifesto-authors {
@@ -3407,6 +3460,83 @@ button {
   .editorial-primary-btn {
     padding: 0.75rem 1.25rem;
     font-size: 0.8rem;
+  }
+
+  /* Lookbook Pinned Scene Mobile Layout */
+  .lookbook-stage {
+    height: 300vh;
+  }
+
+  .lookbook-pin {
+    padding: 4.2rem 0 1.25rem;
+  }
+
+  .lookbook-container {
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .lookbook-heading {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+  }
+
+  .drag-hint {
+    display: none;
+  }
+
+  .track-arrow-buttons {
+    gap: 0.35rem;
+  }
+
+  .track-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+
+  .lookbook-runway-track {
+    gap: 1.25rem;
+    padding-right: 12vw;
+  }
+
+  .lookbook-slide {
+    flex: 0 0 270px;
+    border-radius: 6px;
+  }
+
+  .lookbook-slide.wide-slide {
+    flex: 0 0 310px;
+  }
+
+  .lookbook-slide.tall-campaign-slide {
+    flex: 0 0 280px;
+  }
+
+  .lookbook-slide.macro-slide {
+    flex: 0 0 290px;
+  }
+
+  .lookbook-slide.manifesto-slide {
+    flex: 0 0 290px;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .slide-media-box {
+    aspect-ratio: 4/5;
+  }
+
+  .lookbook-slide figcaption {
+    padding: 0.85rem 1rem;
+    gap: 0.25rem;
+  }
+
+  .lookbook-slide figcaption h4 {
+    font-size: 0.98rem;
+  }
+
+  .lookbook-slide figcaption p {
+    font-size: 0.76rem;
+    line-height: 1.35;
   }
 
   /* Grid Layouts for Unpinned Sections */
