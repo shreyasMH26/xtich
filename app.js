@@ -566,7 +566,7 @@
         callouts.forEach((c, idx) => {
           const st = 0.14 + idx * 0.17;
           tl.fromTo(c,
-            { x: isMobile ? 18 : 38, opacity: 0.08 },
+            { x: isMobile ? 12 : 38, opacity: isMobile ? 0.75 : 0.08 },
             { x: 0, opacity: 1, ease: 'none', duration: 0.24 },
             st
           );
