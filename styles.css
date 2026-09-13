@@ -728,12 +728,22 @@ button {
 }
 
 .hero-visual-media {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 25%;
   filter: contrast(1.08) brightness(0.92);
   will-change: transform;
+}
+
+.hero-video-media {
+  z-index: 2;
+}
+
+.hero-fallback-media {
+  z-index: 1;
 }
 
 .hero-visual-scrim {

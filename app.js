@@ -397,7 +397,7 @@
         { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
         { clipPath: 'inset(0% 0% 0% 0%)',     opacity: 1,   ease: 'none' }, 0
       )
-      .fromTo(heroHoodieImg,
+      .fromTo('.hero-visual-media',
         { scale: 1.0, y: 0 },
         { scale: 1.22, y: 70, ease: 'none' }, 0
       )

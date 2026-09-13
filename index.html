@@ -159,7 +159,10 @@
 
         <!-- Layer 1: Full-Viewport Editorial Visual Canvas -->
         <div class="hero-visual-layer" id="heroVisualLayer">
-          <img class="hero-visual-media" id="heroHoodieImg" src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie Campaign">
+          <video class="hero-visual-media hero-video-media" id="heroVideoMedia" autoplay loop muted playsinline poster="assets/editorial_hoodie_campaign.jpg">
+            <source src="assets/hero-ambient.mp4" type="video/mp4">
+          </video>
+          <img class="hero-visual-media hero-fallback-media" id="heroHoodieImg" src="assets/editorial_hoodie_campaign.jpg" alt="XTICH Heavyweight Hoodie Campaign">
           <div class="hero-visual-scrim" id="heroVisualScrim"></div>
         </div>
 
