@@ -2976,38 +2976,31 @@ button {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN SYSTEM
+   RESPONSIVE DESIGN SYSTEM (DESKTOP EXPERIENCE ≈ MOBILE EXPERIENCE)
    ========================================================================== */
 @media (max-width: 1024px) {
-  .manga-stage-grid {
-    grid-template-columns: 1fr;
-    gap: 3.5rem;
-  }
-
-  .cinema-stage-canvas {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
   .footer-grid {
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 }
 
 @media (max-width: 860px) {
-  /* Hide custom cursor on touch */
-  #xtich-cursor { display: none; }
+  /* Hide desktop custom cursor on touch */
+  #xtich-cursor { display: none !important; }
 
+  /* Mobile Navigation Drawer */
   .nav-menu {
     position: fixed;
     top: 0;
     right: 0;
     bottom: 0;
-    width: min(80vw, 320px);
-    background: var(--ink-900);
+    width: min(85vw, 340px);
+    background: rgba(10, 10, 12, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border-left: 1px solid var(--rule-dark);
-    padding: 6rem 2rem 2rem;
+    padding: 5.5rem 1.75rem 2rem;
     transform: translateX(100%);
     transition: transform 0.4s var(--ease-editorial);
     z-index: 490;
@@ -3017,82 +3010,191 @@ button {
 
   .nav-list {
     flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .nav-item { font-size: 0.95rem; }
+  .menu-toggle { display: flex; }
+
+  /* Ensure pinned stages stay sticky & 100vh on mobile */
+  .scene-stage {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .scene-pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Hero Stage Mobile Tuning */
+  .hero-brand-block {
+    max-width: 82vw;
+  }
+
+  .hero-narrative-block {
+    max-width: 88vw;
+    bottom: 3.5rem;
+  }
+
+  .hero-statement-title {
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem);
+  }
+
+  /* Manga / Story Pinned Scene Mobile Layout */
+  .manga-pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4.5rem 1.25rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .manga-stage-grid {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-height: 82vh;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .manga-visual-col {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    height: 38vh;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .manga-viewport-card {
+    height: 100%;
+    width: 100%;
+    max-width: 340px;
+    aspect-ratio: 4/3;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .manga-story-col {
+    position: relative;
+    height: 38vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .story-phase {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    gap: 0.75rem;
+    pointer-events: auto;
+  }
+
+  .story-phase-title {
+    font-size: clamp(1.1rem, 5vw, 1.5rem);
+  }
+
+  .story-phase-desc {
+    font-size: clamp(0.8rem, 3.5vw, 0.95rem);
+    line-height: 1.55;
+  }
+
+  /* Proof / Telemetry Pinned Scene Mobile Layout */
+  .proof-pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4.5rem 1.25rem 2rem;
+    box-sizing: border-box;
+    gap: 1.5rem;
+  }
+
+  .proof-header-block {
+    margin-bottom: 0;
+  }
+
+  .telemetry-deck {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .telemetry-pod {
+    padding: 0.85rem 1.1rem;
+  }
+
+  .pod-stat-value {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+
+  /* Garment Cinema Pinned Scene Mobile Layout */
+  .garment-cinema-pin {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4.5rem 1.25rem 2rem;
+    box-sizing: border-box;
+    gap: 1rem;
+  }
+
+  .cinema-stage-canvas {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .cinema-visual-stage {
+    max-height: 38vh;
+    aspect-ratio: 1/1;
+    margin: 0 auto;
+  }
+
+  .anatomy-callouts-list {
+    gap: 0.65rem;
+  }
+
+  .callout-title {
+    font-size: 0.85rem;
+  }
+
+  /* Grid Layouts for Unpinned Sections */
+  .collection-duo-grid, .shop-cards-grid {
+    grid-template-columns: 1fr;
     gap: 2rem;
   }
 
-  .nav-item { font-size: 1rem; }
-
-  .menu-toggle { display: flex; }
-
-  /* Hero: disable sticky on mobile */
-  .hero-stage { height: auto; min-height: 100svh; }
-  .hero-pin {
-    position: relative;
-    height: auto;
-    min-height: 100svh;
-    padding-bottom: 3rem;
+  .modal-layout-grid {
+    grid-template-columns: 1fr;
   }
 
-  .hero-visual-layer { clip-path: inset(0) !important; opacity: 0.52 !important; }
-  .hero-center-brand, .hero-top-meta, .hero-narrative-block { transform: none !important; opacity: 1 !important; }
-  .hero-bottom-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .hero-scroll-cue { display: none; }
-  .hero-stage::after { display: none; }
-
-  /* Manga: responsive layout */
-  .manga-stage { height: auto !important; padding: 4rem 0 !important; }
-  .manga-pin { position: relative !important; height: auto !important; padding: 0 1.25rem !important; }
-  .manga-stage-grid { grid-template-columns: 1fr !important; gap: 3rem !important; }
-  .manga-visual-col { display: none !important; }
-  .phase-manga-card { display: block !important; }
-  .manga-viewport-card { transform: none !important; opacity: 1 !important; }
-  .manga-panel { position: relative !important; inset: auto !important; transform: none !important; opacity: 1 !important; visibility: visible !important; display: block !important; }
-  .manga-story-col { display: flex !important; flex-direction: column !important; gap: 3.5rem !important; min-height: auto !important; height: auto !important; }
-  .story-phase {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1.25rem !important;
-    padding-bottom: 2.5rem !important;
-    border-bottom: 1px solid rgba(251, 250, 246, 0.1) !important;
+  .modal-media-pane {
+    padding: 1.5rem;
+    aspect-ratio: 1/1;
   }
-  .story-phase:last-child { border-bottom: none !important; padding-bottom: 0 !important; }
 
-  /* Proof: disable pinning */
-  .proof-stage { height: auto; padding: 5rem 0; }
-  .proof-pin { position: relative; height: auto; padding: 0 1.25rem; gap: 3rem; }
-  .telemetry-deck { grid-template-columns: 1fr; gap: 1.5rem; }
-  .telemetry-pod { transform: none !important; opacity: 1 !important; }
-  .proof-stage::after { display: none; }
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
 
-  /* Garment cinema: disable pinning */
-  .garment-cinema-stage { height: auto; padding: 5rem 0; }
-  .garment-cinema-pin { position: relative; height: auto; padding: 0 1.25rem; }
-  .cinema-header-row { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-  .cinema-visual-stage { transform: none !important; }
-  .anatomy-callout-item { transform: none !important; opacity: 1 !important; }
-  .garment-cinema-stage::after { display: none; }
-
-  .collection-duo-grid, .shop-cards-grid { grid-template-columns: 1fr; }
-  .garment-card { transform: none !important; opacity: 1 !important; }
-  .shop-item-card { transform: none !important; opacity: 1 !important; }
-
-  .modal-layout-grid { grid-template-columns: 1fr; }
-  .modal-media-pane { padding: 1.5rem; aspect-ratio: 1/1; }
-
-  .footer-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-
-  .finale-logo-wrap, .finale-grand-title, .finale-lead-text,
-  .finale-founders-duo, .finale-action-row { transform: none !important; opacity: 1 !important; }
-
-  .finale-founders-duo { flex-direction: column; gap: 1rem; }
+  .finale-founders-duo {
+    flex-direction: column;
+    gap: 1rem;
+  }
 }
 
 /* Prefers reduced motion */
@@ -3104,7 +3206,7 @@ button {
     scroll-behavior: auto !important;
   }
 
-  #xtich-cursor { display: none; }
+  #xtich-cursor { display: none !important; }
 
   .hero-visual-layer { clip-path: inset(0) !important; opacity: 1 !important; }
   .hero-center-brand, .hero-top-meta, .hero-narrative-block { transform: none !important; opacity: 1 !important; }
@@ -3137,148 +3239,4 @@ button {
 .toast-notification.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
-}
-
-/* ==========================================================================
-   RESPONSIVE DESIGN SYSTEM
-   ========================================================================== */
-@media (max-width: 1024px) {
-  .hero-layer-bg {
-    width: 75vw;
-    right: -10vw;
-  }
-
-  .manga-stage-grid {
-    grid-template-columns: 1fr;
-    gap: 3.5rem;
-  }
-
-  .cinema-stage-canvas {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-  }
-}
-
-@media (max-width: 860px) {
-  .nav-menu {
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: min(80vw, 320px);
-    background: var(--ink-900);
-    border-left: 1px solid var(--rule-dark);
-    padding: 6rem 2rem 2rem;
-    transform: translateX(100%);
-    transition: transform 0.4s var(--ease-editorial);
-  }
-
-  .nav-menu.open {
-    transform: translateX(0);
-  }
-
-  .nav-list {
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .nav-item {
-    font-size: 1rem;
-  }
-
-  .menu-toggle {
-    display: flex;
-  }
-
-  .hero-stage {
-    height: auto;
-    min-height: 100vh;
-  }
-
-  .hero-pin {
-    position: relative;
-    height: auto;
-    min-height: 100vh;
-    padding-bottom: 3rem;
-  }
-
-  .hero-layer-bg {
-    width: 100vw;
-    right: 0;
-    opacity: 0.4;
-  }
-
-  .hero-bottom-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .manga-stage {
-    height: auto;
-    padding: 4rem 0;
-  }
-
-  .manga-pin {
-    position: relative;
-    height: auto;
-    padding: 0 1.25rem;
-  }
-
-  .proof-stage {
-    height: auto;
-    padding: 5rem 0;
-  }
-
-  .proof-pin {
-    position: relative;
-    height: auto;
-    padding: 0 1.25rem;
-    gap: 3rem;
-  }
-
-  .telemetry-deck {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .garment-cinema-stage {
-    height: auto;
-    padding: 5rem 0;
-  }
-
-  .garment-cinema-pin {
-    position: relative;
-    height: auto;
-    padding: 0 1.25rem;
-  }
-
-  .cinema-header-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .collection-duo-grid,
-  .shop-cards-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-layout-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .modal-media-pane {
-    padding: 1.5rem;
-    aspect-ratio: 1/1;
-  }
-
-  .footer-grid {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
 }
