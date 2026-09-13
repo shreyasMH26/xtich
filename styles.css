@@ -2059,12 +2059,6 @@ button {
 .footer-social-link:hover svg {
   color: var(--paper-100);
 }
-  transition: color 0.2s ease;
-}
-
-.col-links a:hover {
-  color: var(--paper-100);
-}
 
 .footer-bottom-strip {
   display: flex;
