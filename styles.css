@@ -2626,6 +2626,25 @@ button {
   font-size: clamp(1.2rem, 1.8vw, 1.5rem);
   color: var(--paper-100);
   letter-spacing: -0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.duo-name:hover {
+  color: var(--paper-100);
+  opacity: 0.85;
+}
+
+.founder-link-inline {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.founder-link-inline:hover {
+  opacity: 0.85;
 }
 
 .duo-role {
