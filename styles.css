@@ -279,7 +279,7 @@ button {
 .hero-logo-img {
   max-width: clamp(260px, 42vw, 580px);
   height: auto;
-  filter: invert(1) brightness(1.1);
+  filter: none;
   display: block;
   margin: 0 auto;
 }
@@ -580,7 +580,7 @@ button {
 .hero-logo-img {
   max-width: clamp(300px, 48vw, 680px);
   height: auto;
-  filter: invert(1) brightness(1.1);
+  filter: none;
   margin: 0 auto;
   display: block;
 }
