@@ -1386,8 +1386,8 @@
         hex: '#0A0A0A',
         desc: 'Deep black',
         specLabel: '450 GSM Cotton-Poly Fleece · Obsidian',
-        frontImg: 'assets/hoodie-obsidian-front.jpg',
-        backImg: 'assets/hoodie-obsidian-back.jpg'
+        frontImg: 'assets/hoodie-obsidian-front.png',
+        backImg: 'assets/hoodie-obsidian-back.png'
       },
       'bone': {
         code: '02 / BONE',
@@ -1396,8 +1396,8 @@
         hex: '#E8E4DC',
         desc: 'Warm off-white',
         specLabel: '450 GSM Cotton-Poly Fleece · Bone',
-        frontImg: 'assets/hoodie-bone-front.jpg',
-        backImg: 'assets/hoodie-bone-back.jpg'
+        frontImg: 'assets/hoodie-bone-front.png',
+        backImg: 'assets/hoodie-bone-back.png'
       },
       'stone': {
         code: '03 / STONE',
@@ -1406,8 +1406,8 @@
         hex: '#A7A39B',
         desc: 'Soft neutral grey',
         specLabel: '450 GSM Cotton-Poly Fleece · Stone',
-        frontImg: 'assets/hoodie-stone-front.jpg',
-        backImg: 'assets/hoodie-stone-back.jpg'
+        frontImg: 'assets/hoodie-stone-front.png',
+        backImg: 'assets/hoodie-stone-back.png'
       },
       'graphite': {
         code: '04 / GRAPHITE',
@@ -1416,8 +1416,8 @@
         hex: '#343434',
         desc: 'Dark charcoal',
         specLabel: '450 GSM Cotton-Poly Fleece · Graphite',
-        frontImg: 'assets/hoodie-graphite-front.jpg',
-        backImg: 'assets/hoodie-graphite-back.jpg'
+        frontImg: 'assets/hoodie-graphite-front.png',
+        backImg: 'assets/hoodie-graphite-back.png'
       },
       'deep-navy': {
         code: '05 / DEEP NAVY',
@@ -1426,8 +1426,8 @@
         hex: '#111923',
         desc: 'Very dark muted navy',
         specLabel: '450 GSM Cotton-Poly Fleece · Deep Navy',
-        frontImg: 'assets/hoodie-deep-navy-front.jpg',
-        backImg: 'assets/hoodie-deep-navy-back.jpg'
+        frontImg: 'assets/hoodie-deep-navy-front.png',
+        backImg: 'assets/hoodie-deep-navy-back.png'
       }
     };
 
