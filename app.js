@@ -1369,7 +1369,7 @@
 
     if (!hoodieStage) return;
 
-    // 0. Hoodie Color Selector (5 Colors: Obsidian, Bone, Stone, Graphite, Deep Navy)
+    // 0. Hoodie Color Selector (5 Authentic Product Assets: Obsidian, Bone, Stone, Graphite, Deep Navy)
     const colorButtons     = document.querySelectorAll('#bespokeColorSwatches .color-swatch-btn');
     const colorCurrentVal  = document.getElementById('bespokeColorCurrentVal');
     const colorCaptionCode = document.querySelector('#bespokeColorMetaCaption .caption-code');
@@ -1378,14 +1378,16 @@
     const specDetail       = document.getElementById('bespokeSpecDetail');
     const calloutTitle     = document.getElementById('bespokeCalloutTitle');
 
-    const colorSpecs = {
+    const bespokeColorVariants = {
       'obsidian': {
         code: '01 / OBSIDIAN',
         name: 'Obsidian Black',
         shortName: 'Obsidian',
         hex: '#0A0A0A',
         desc: 'Deep black',
-        specLabel: '450 GSM Cotton-Poly Fleece · Obsidian Black'
+        specLabel: '450 GSM Cotton-Poly Fleece · Obsidian',
+        frontImg: 'assets/hoodie-obsidian-front.jpg',
+        backImg: 'assets/hoodie-obsidian-back.jpg'
       },
       'bone': {
         code: '02 / BONE',
@@ -1393,7 +1395,9 @@
         shortName: 'Bone',
         hex: '#E8E4DC',
         desc: 'Warm off-white',
-        specLabel: '450 GSM Cotton-Poly Fleece · Bone'
+        specLabel: '450 GSM Cotton-Poly Fleece · Bone',
+        frontImg: 'assets/hoodie-bone-front.jpg',
+        backImg: 'assets/hoodie-bone-back.jpg'
       },
       'stone': {
         code: '03 / STONE',
@@ -1401,7 +1405,9 @@
         shortName: 'Stone',
         hex: '#A7A39B',
         desc: 'Soft neutral grey',
-        specLabel: '450 GSM Cotton-Poly Fleece · Stone'
+        specLabel: '450 GSM Cotton-Poly Fleece · Stone',
+        frontImg: 'assets/hoodie-stone-front.jpg',
+        backImg: 'assets/hoodie-stone-back.jpg'
       },
       'graphite': {
         code: '04 / GRAPHITE',
@@ -1409,7 +1415,9 @@
         shortName: 'Graphite',
         hex: '#343434',
         desc: 'Dark charcoal',
-        specLabel: '450 GSM Cotton-Poly Fleece · Graphite'
+        specLabel: '450 GSM Cotton-Poly Fleece · Graphite',
+        frontImg: 'assets/hoodie-graphite-front.jpg',
+        backImg: 'assets/hoodie-graphite-back.jpg'
       },
       'deep-navy': {
         code: '05 / DEEP NAVY',
@@ -1417,14 +1425,18 @@
         shortName: 'Deep Navy',
         hex: '#111923',
         desc: 'Very dark muted navy',
-        specLabel: '450 GSM Cotton-Poly Fleece · Deep Navy'
+        specLabel: '450 GSM Cotton-Poly Fleece · Deep Navy',
+        frontImg: 'assets/hoodie-deep-navy-front.jpg',
+        backImg: 'assets/hoodie-deep-navy-back.jpg'
       }
     };
 
     let selectedHoodieColor = 'obsidian';
+    let currentPlacement = 'chest';
 
     const setHoodieColor = (colorKey) => {
-      const spec = colorSpecs[colorKey] || colorSpecs['obsidian'];
+      if (!bespokeColorVariants[colorKey]) colorKey = 'obsidian';
+      const spec = bespokeColorVariants[colorKey];
       selectedHoodieColor = colorKey;
 
       colorButtons.forEach(btn => {
@@ -1432,15 +1444,6 @@
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
       });
-
-      hoodieStage.classList.remove(
-        'color-obsidian',
-        'color-bone',
-        'color-stone',
-        'color-graphite',
-        'color-deep-navy'
-      );
-      hoodieStage.classList.add(`color-${colorKey}`);
 
       if (colorCurrentVal) colorCurrentVal.textContent = spec.code;
       if (colorCaptionCode) colorCaptionCode.textContent = spec.code;
@@ -1454,6 +1457,20 @@
       if (calloutTitle) {
         calloutTitle.textContent = `HEAVYWEIGHT HOODIE · 450 GSM · ${spec.shortName.toUpperCase()}`;
       }
+
+      // Subtle premium crossfade (300-400ms) without flashes
+      const visibleImg = currentPlacement === 'back' ? hoodieBack : hoodieFront;
+      if (visibleImg) {
+        visibleImg.classList.add('color-switching');
+      }
+
+      setTimeout(() => {
+        if (hoodieFront) hoodieFront.src = spec.frontImg;
+        if (hoodieBack) hoodieBack.src = spec.backImg;
+        if (visibleImg) {
+          visibleImg.classList.remove('color-switching');
+        }
+      }, 150);
     };
 
     colorButtons.forEach(btn => {
@@ -1462,6 +1479,26 @@
         if (color) setHoodieColor(color);
       });
     });
+
+    // Preload remaining color variants in background for instantaneous swaps
+    if (typeof window !== 'undefined') {
+      const preloadVariants = () => {
+        ['bone', 'stone', 'graphite', 'deep-navy'].forEach(key => {
+          const v = bespokeColorVariants[key];
+          if (v) {
+            const imgF = new Image();
+            imgF.src = v.frontImg;
+            const imgB = new Image();
+            imgB.src = v.backImg;
+          }
+        });
+      };
+      if (document.readyState === 'complete') {
+        setTimeout(preloadVariants, 1000);
+      } else {
+        window.addEventListener('load', () => setTimeout(preloadVariants, 1000));
+      }
+    }
 
     // 1. Text & Initial Input Realtime Reflection
     const syncEmbroideryText = () => {
@@ -1516,6 +1553,7 @@
         placementPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         const placement = pill.dataset.placement || 'chest';
+        currentPlacement = placement;
 
         hoodieStage.classList.remove('placement-chest', 'placement-sleeve', 'placement-back', 'placement-hood');
         hoodieStage.classList.add(`placement-${placement}`);
@@ -1754,7 +1792,7 @@
         submitBtn.textContent = 'COMMISSIONING...';
         if (globalStatusEl) globalStatusEl.textContent = 'Transmitting commission to XTICH atelier...';
 
-        const activeColorSpec = colorSpecs[selectedHoodieColor] || colorSpecs['obsidian'];
+        const activeColorSpec = bespokeColorVariants[selectedHoodieColor] || bespokeColorVariants['obsidian'];
 
         // Build FormData payload
         const formData = new FormData();
