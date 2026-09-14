@@ -574,15 +574,33 @@
       }
 
       // ── SCENE 6: SHOPIFY EDITIONS-STYLE PINNED LOOKBOOK HORIZONTAL SCROLL ──────
-      const lookbookStage  = document.getElementById('lookbook');
-      const lookbookTrack  = document.getElementById('lookbookRunwayTrack');
-      const lookbookSlides = document.querySelectorAll('.lookbook-slide');
+      const lookbookStage     = document.getElementById('lookbook');
+      const lookbookTrack     = document.getElementById('lookbookRunwayTrack');
+      const lookbookSlides    = document.querySelectorAll('.lookbook-slide');
+      const lookbookActiveNum = document.getElementById('lookbookActiveNum');
 
       if (lookbookStage && lookbookTrack && lookbookSlides.length) {
+        const totalSlides = lookbookSlides.length;
+
         const getScrollDistance = () => {
           const trackWidth = lookbookTrack.scrollWidth;
           const containerWidth = lookbookTrack.parentElement ? lookbookTrack.parentElement.clientWidth : window.innerWidth;
-          return -(trackWidth - containerWidth + (isMobile ? 32 : 80));
+          return -(trackWidth - containerWidth + (isMobile ? 24 : 80));
+        };
+
+        const updateActiveSlideState = (prog) => {
+          const activeIndex = Math.min(
+            totalSlides - 1,
+            Math.max(0, Math.floor(prog * totalSlides + 0.05))
+          );
+
+          if (lookbookActiveNum) {
+            lookbookActiveNum.textContent = `0${activeIndex + 1}`;
+          }
+
+          lookbookSlides.forEach((slide, idx) => {
+            slide.classList.toggle('is-active', idx === activeIndex);
+          });
         };
 
         const lookbookTl = gsap.timeline({
@@ -590,8 +608,9 @@
             trigger: lookbookStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: isMobile ? 1.0 : 1.25,
+            scrub: isMobile ? 1.0 : 1.2,
             invalidateOnRefresh: true,
+            onUpdate: (self) => updateActiveSlideState(self.progress),
           }
         });
 
@@ -603,7 +622,6 @@
         });
 
         // 2. Individual slide scale and depth choreography
-        const totalSlides = lookbookSlides.length;
         lookbookSlides.forEach((slide, idx) => {
           const img = slide.querySelector('.slide-media-box img');
           const progressStep = idx / (totalSlides - 1);
@@ -611,7 +629,7 @@
           const startAt = Math.max(0, progressStep * 0.72 - 0.04);
 
           lookbookTl.fromTo(slide,
-            { scale: 0.93, opacity: 0.85 },
+            { scale: 0.88, opacity: 0.38 },
             { scale: 1.0, opacity: 1, ease: 'sine.out', duration: dur },
             startAt
           );
@@ -624,6 +642,9 @@
             );
           }
         });
+
+        // Initialize first slide state
+        updateActiveSlideState(0);
 
         // 3. Arrow navigation buttons (← / →)
         const trackPrevBtn = document.getElementById('trackPrevBtn');
