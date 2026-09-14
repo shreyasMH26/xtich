@@ -612,7 +612,18 @@
 
         const setBespokeStep = (stepIdx) => {
           bespokeStepCards.forEach((card, idx) => {
-            if (card) card.classList.toggle('active', idx === stepIdx);
+            if (card) {
+              if (idx === 4) {
+                // Confirmation step
+                card.classList.toggle('active', idx === stepIdx);
+              } else if (!isMobile) {
+                // On desktop, toggle active step card
+                card.classList.toggle('active', idx === stepIdx);
+              } else {
+                // On mobile, steps 0-3 remain in normal document flow
+                card.classList.add('active');
+              }
+            }
           });
           if (bespokeStepCounter) {
             bespokeStepCounter.textContent = stepLabels[stepIdx] || `PHASE 0${stepIdx + 1} / 05`;
@@ -622,33 +633,60 @@
         // Expose helper globally for direct interactive button clicks
         window.__setBespokeStep = setBespokeStep;
 
-        const bespokeTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: bespokeStage,
-            start: 'top top',
-            end: 'bottom bottom',
-            scrub: isMobile ? 0.2 : 1.2,
-            onUpdate: (self) => {
-              if (window.__bespokeSubmitted) return;
-              const p = self.progress;
-              let activeStep = 0;
-              if (p < 0.22) activeStep = 0;
-              else if (p < 0.46) activeStep = 1;
-              else if (p < 0.72) activeStep = 2;
-              else if (p < 0.92) activeStep = 3;
-              else activeStep = 4;
+        if (!isMobile) {
+          // DESKTOP: Pinned two-column atelier with scrubbed timeline
+          const bespokeTl = gsap.timeline({
+            scrollTrigger: {
+              trigger: bespokeStage,
+              start: 'top top',
+              end: 'bottom bottom',
+              scrub: 1.2,
+              onUpdate: (self) => {
+                if (window.__bespokeSubmitted) return;
+                const p = self.progress;
+                let activeStep = 0;
+                if (p < 0.22) activeStep = 0;
+                else if (p < 0.46) activeStep = 1;
+                else if (p < 0.72) activeStep = 2;
+                else if (p < 0.92) activeStep = 3;
+                else activeStep = 4;
 
-              setBespokeStep(activeStep);
+                setBespokeStep(activeStep);
+              }
             }
-          }
-        });
+          });
 
-        const canvasCard = document.getElementById('bespokeCanvasCard');
-        if (canvasCard) {
-          bespokeTl.fromTo(canvasCard,
-            { y: isMobile ? 8 : 22, scale: 0.98 },
-            { y: 0, scale: 1.0, ease: 'none', duration: 0.5 }
-          );
+          const canvasCard = document.getElementById('bespokeCanvasCard');
+          if (canvasCard) {
+            bespokeTl.fromTo(canvasCard,
+              { y: 22, scale: 0.98 },
+              { y: 0, scale: 1.0, ease: 'none', duration: 0.5 }
+            );
+          }
+        } else {
+          // MOBILE: Single-column continuous document flow
+          // Steps 0-3 are all visible in normal flow
+          bespokeStepCards.slice(0, 4).forEach((card, idx) => {
+            if (!card) return;
+            card.classList.add('active');
+
+            // Dynamic phase counter update as user scrolls past each phase
+            ScrollTrigger.create({
+              trigger: card,
+              start: 'top 60%',
+              end: 'bottom 40%',
+              onEnter: () => {
+                if (!window.__bespokeSubmitted && bespokeStepCounter) {
+                  bespokeStepCounter.textContent = stepLabels[idx];
+                }
+              },
+              onEnterBack: () => {
+                if (!window.__bespokeSubmitted && bespokeStepCounter) {
+                  bespokeStepCounter.textContent = stepLabels[idx];
+                }
+              }
+            });
+          });
         }
       }
 
