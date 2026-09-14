@@ -144,6 +144,9 @@
         state.loaderDone = true;
         document.body.classList.add('loader-complete');
         initHeroReveal();
+        if (typeof ScrollTrigger !== 'undefined') {
+          setTimeout(() => ScrollTrigger.refresh(), 100);
+        }
       }, 900);
     }, 400);
   }
@@ -181,25 +184,35 @@
   function initLenis() {
     if (prefersReduced || typeof Lenis === 'undefined') return;
 
-    const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0);
+    const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || !isDesktop();
+
+    // On mobile touch devices, use native 120Hz hardware momentum scrolling for maximum responsiveness and zero input lag.
+    if (isTouch) {
+      window.addEventListener('scroll', () => {
+        state.lenisScrollY = window.pageYOffset || document.documentElement.scrollTop;
+        if (typeof ScrollTrigger !== 'undefined') {
+          ScrollTrigger.update();
+        }
+      }, { passive: true });
+      return;
+    }
 
     lenis = new Lenis({
-      duration: isTouch ? 0.85 : 1.25,
+      duration: 1.15,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // expo easing
       smoothWheel: true,
       wheelMultiplier: 0.95,
-      touchMultiplier: isTouch ? 1.05 : 1.8,
       infinite: false,
       autoResize: true,
     });
 
-    // Feed Lenis into GSAP ticker for perfect sync
+    // Feed Lenis into GSAP ticker for perfect sync on desktop
     if (typeof gsap !== 'undefined') {
       gsap.ticker.add(time => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
+      gsap.ticker.lagSmoothing(500, 33);
     }
 
-    // Track velocity for WebGL effect
+    // Track velocity for desktop effects
     lenis.on('scroll', ({ scroll, velocity }) => {
       state.lenisScrollY   = scroll;
       state.scrollVelocity = velocity;
@@ -406,21 +419,31 @@
 
       // ── HERO SCENE ──────────────────────────────────────────────────────────
       if (heroStage) {
-        gsap.timeline({
+        const heroTl = gsap.timeline({
           scrollTrigger: {
             trigger: heroStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 1.2,
+            scrub: isMobile ? 0.2 : 1.2,
           }
-        })
-        .fromTo(heroVisualLayer,
-          { clipPath: isMobile ? 'inset(8% 6% 8% 6%)' : 'inset(14% 20% 14% 20%)', opacity: 0.88 },
-          { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, ease: 'none' }, 0
-        )
+        });
+
+        if (isMobile) {
+          heroTl.fromTo(heroVisualLayer,
+            { scale: 0.95, opacity: 0.88 },
+            { scale: 1.0, opacity: 1, ease: 'none' }, 0
+          );
+        } else {
+          heroTl.fromTo(heroVisualLayer,
+            { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
+            { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, ease: 'none' }, 0
+          );
+        }
+
+        heroTl
         .fromTo('.hero-visual-media',
           { scale: 1.0, y: 0 },
-          { scale: isMobile ? 1.14 : 1.22, y: isMobile ? 35 : 70, ease: 'none' }, 0
+          { scale: isMobile ? 1.10 : 1.22, y: isMobile ? 25 : 70, ease: 'none' }, 0
         )
         .fromTo(heroVisualScrim,
           { opacity: 0.1 },
@@ -428,19 +451,19 @@
         )
         .fromTo(heroBrandBlock,
           { y: 0, scale: 1, opacity: 1 },
-          { y: isMobile ? -80 : -150, scale: isMobile ? 0.78 : 0.68, opacity: 0, ease: 'none' }, 0
+          { y: isMobile ? -60 : -150, scale: isMobile ? 0.82 : 0.68, opacity: 0, ease: 'none' }, 0
         )
         .fromTo(heroTopMeta,
           { y: 0, opacity: 1 },
           { y: -22, opacity: 0, ease: 'none' }, 0
         )
         .fromTo(heroNarrBlock,
-          { y: isMobile ? 32 : 55, opacity: 0 },
+          { y: isMobile ? 25 : 55, opacity: 0 },
           { y: 0, opacity: 1, ease: 'none' }, 0.33
         )
         .fromTo(heroNarrBlock,
           { y: 0, opacity: 1 },
-          { y: isMobile ? -18 : -30, opacity: 0.1, ease: 'none' }, 0.8
+          { y: isMobile ? -14 : -30, opacity: 0.1, ease: 'none' }, 0.8
         )
         .fromTo(heroScrollCue,
           { opacity: 1 },
@@ -455,7 +478,7 @@
             trigger: mangaStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 1.1,
+            scrub: isMobile ? 0.2 : 1.1,
           }
         });
 
@@ -523,7 +546,7 @@
             trigger: proofStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 1.1,
+            scrub: isMobile ? 0.2 : 1.1,
             onEnter: triggerCount,
           }
         });
@@ -551,7 +574,7 @@
             trigger: garmentStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 1.0,
+            scrub: isMobile ? 0.2 : 1.0,
           }
         });
 
@@ -604,7 +627,7 @@
             trigger: bespokeStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: isMobile ? 1.0 : 1.2,
+            scrub: isMobile ? 0.2 : 1.2,
             onUpdate: (self) => {
               if (window.__bespokeSubmitted) return;
               const p = self.progress;
@@ -664,7 +687,7 @@
             trigger: lookbookStage,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: isMobile ? 1.0 : 1.2,
+            scrub: isMobile ? 0.25 : 1.2,
             invalidateOnRefresh: true,
             onUpdate: (self) => updateActiveSlideState(self.progress),
           }
@@ -789,7 +812,10 @@
      ========================================================================= */
   function initWebGLCanvas() {
     const canvas = document.getElementById('hero-webgl-canvas');
-    if (!canvas || prefersReduced) return;
+    if (!canvas || prefersReduced || !isDesktop()) {
+      if (canvas) canvas.style.display = 'none';
+      return;
+    }
 
     const gl = canvas.getContext('webgl', { alpha: true, antialias: false, depth: false });
     if (!gl) return;
@@ -901,7 +927,7 @@
      7. SCROLL-VELOCITY PARALLAX (elements accelerate with scroll speed)
      ========================================================================= */
   function initVelocityParallax() {
-    if (prefersReduced) return;
+    if (prefersReduced || !isDesktop()) return;
 
     const targets = document.querySelectorAll(
       '.manga-viewport-card, .telemetry-pod, .cinema-visual-stage'

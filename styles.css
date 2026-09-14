@@ -203,8 +203,8 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  overflow-x: hidden;
+html, body {
+  overflow-x: clip;
   position: relative;
   background-color: var(--ink-900);
   color: var(--paper-100);
@@ -4527,7 +4527,7 @@ button {
   .nav-item { font-size: 0.95rem; }
   .menu-toggle { display: flex; }
 
-  /* Ensure pinned stages stay sticky & 100vh on mobile */
+  /* Ensure pinned stages stay sticky & 100vh on mobile with optimized runway heights */
   .scene-stage {
     width: 100%;
     overflow: visible;
@@ -4540,6 +4540,29 @@ button {
     height: 100svh;
     width: 100%;
     overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  /* Optimized Mobile Runway Distances (Crisp, effortless chapter progression) */
+  #hero {
+    height: 180vh;
+  }
+
+  .hero-visual-layer {
+    clip-path: none !important;
+  }
+
+  #story {
+    height: 250vh;
+  }
+
+  #proof {
+    height: 160vh;
+  }
+
+  #garment {
+    height: 180vh;
   }
 
   /* Hero Stage Mobile Tuning */
@@ -4848,7 +4871,7 @@ button {
 
   /* Bespoke Digital Atelier Mobile Layout */
   .bespoke-stage {
-    height: 320vh;
+    height: 260vh;
   }
 
   .bespoke-pin {
@@ -5021,7 +5044,7 @@ button {
 
   /* Lookbook Pinned Scene Mobile Layout */
   .lookbook-stage {
-    height: 300vh;
+    height: 260vh;
   }
 
   .lookbook-pin {
