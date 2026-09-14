@@ -2909,6 +2909,11 @@ button {
   margin: 0;
 }
 
+/* Floating mobile quick-preview button (desktop hidden) */
+.bespoke-floating-preview-pill {
+  display: none;
+}
+
 /* ==========================================================================
    SCENE 6: SHOPIFY EDITIONS-STYLE PINNED HORIZONTAL EDITORIAL LOOKBOOK
    ========================================================================== */
@@ -4451,10 +4456,19 @@ button {
   }
 }
 
-@media (max-width: 860px) {
-  /* Hide desktop custom cursor on touch */
-  #xtich-cursor { display: none !important; }
+@media (max-width: 860px), (hover: none), (pointer: coarse) {
+  /* Hide desktop custom cursor on all touch & mobile devices */
+  #xtich-cursor,
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+}
 
+@media (max-width: 860px) {
   /* Mobile Header Navigation & Modern Rectangular Contact Us Button */
   .editorial-nav {
     padding: 0;
@@ -4976,9 +4990,9 @@ button {
     width: 100% !important;
     height: auto !important;
     aspect-ratio: 1 / 1 !important;
-    min-height: 240px !important;
-    max-height: 340px !important;
-    margin: 0.4rem 0 0.6rem !important;
+    min-height: 200px !important;
+    max-height: 260px !important;
+    margin: 0.25rem 0 0.5rem !important;
   }
 
   .canvas-spec-bar {
@@ -5081,7 +5095,7 @@ button {
     margin-bottom: 1.25rem !important;
   }
 
-  /* HOODIE COLOR SELECTOR - Horizontally scrollable row on mobile without page wobble */
+  /* HOODIE COLOR SELECTOR - All 5 colors visible at a glance without cut-off horizontal scrolling */
   .bespoke-color-block {
     margin: 1rem 0 1.25rem !important;
     padding: 0.85rem 0.95rem !important;
@@ -5093,13 +5107,10 @@ button {
 
   .bespoke-color-swatches {
     display: flex !important;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap !important;
     gap: 0.45rem !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    padding-bottom: 0.35rem !important;
-    -webkit-overflow-scrolling: touch !important;
-    scrollbar-width: none !important;
+    overflow: visible !important;
+    padding-bottom: 0 !important;
     width: 100% !important;
   }
 
@@ -5108,10 +5119,12 @@ button {
   }
 
   .color-swatch-btn {
-    flex: 0 0 auto !important;
-    min-height: 36px !important;
-    padding: 0.38rem 0.65rem !important;
-    gap: 0.4rem !important;
+    flex: 1 1 calc(33.333% - 0.45rem) !important;
+    min-width: 96px !important;
+    min-height: 38px !important;
+    padding: 0.42rem 0.55rem !important;
+    gap: 0.45rem !important;
+    justify-content: center !important;
   }
 
   .swatch-indicator {
@@ -5174,9 +5187,53 @@ button {
     padding: 0.4rem 0.75rem !important;
   }
 
-  .bespoke-text-input {
-    font-size: 0.85rem !important;
-    padding: 0.65rem 0.75rem !important;
+  .bespoke-text-input,
+  .bespoke-text-input:focus,
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    font-size: 16px !important; /* Prevents iOS Safari from forcibly zooming viewport on tap */
+    padding: 0.72rem 0.85rem !important;
+  }
+
+  /* Floating Mobile Quick-Preview Anchor */
+  .bespoke-floating-preview-pill {
+    position: fixed !important;
+    bottom: 1.25rem !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(80px) !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    background: rgba(14, 14, 16, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: var(--paper-100) !important;
+    padding: 0.52rem 1.1rem !important;
+    border-radius: 999px !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.68rem !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase !important;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65) !important;
+    z-index: 850 !important;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.45rem !important;
+    white-space: nowrap !important;
+  }
+
+  .bespoke-floating-preview-pill.visible {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: translateX(-50%) translateY(0) !important;
+  }
+
+  .bespoke-floating-preview-pill:active {
+    transform: translateX(-50%) scale(0.96) !important;
   }
 
   .bespoke-option-duo {

@@ -1064,15 +1064,29 @@
      9. CUSTOM CURSOR
      ========================================================================= */
   function initCursor() {
-    if (prefersReduced || !isDesktop()) return;
+    const isTouch = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || !isDesktop();
+    if (prefersReduced || isTouch) return;
 
     const cur = document.createElement('div');
     cur.id = 'xtich-cursor';
     cur.innerHTML = '<div class="cursor-dot"></div><div class="cursor-ring"></div>';
+    cur.style.opacity = '0'; // Hidden until first genuine mousemove
+    cur.style.transition = 'opacity 0.25s ease';
     document.body.appendChild(cur);
 
-    let mx = 0, my = 0, cx = 0, cy = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    let mx = -100, my = -100, cx = -100, cy = -100;
+    let hasMoved = false;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!hasMoved) {
+        cx = mx;
+        cy = my;
+        hasMoved = true;
+        cur.style.opacity = '1';
+      }
+    });
 
     document.querySelectorAll('button, a, [data-open-product], .size-chip, .garment-card-media, .slide-media-box, .panel-img-box').forEach(el => {
       el.addEventListener('mouseenter', () => cur.classList.add('cursor--hover'));
@@ -1080,11 +1094,19 @@
     });
 
     function tickCursor() {
-      cx = lerp(cx, mx, 0.12); cy = lerp(cy, my, 0.12);
-      cur.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+      if (hasMoved) {
+        cx = lerp(cx, mx, 0.12);
+        cy = lerp(cy, my, 0.12);
+        cur.style.transform = `translate3d(${cx}px,${cy}px,0)`;
+      }
       requestAnimationFrame(tickCursor);
     }
     requestAnimationFrame(tickCursor);
+
+    window.addEventListener('resize', () => {
+      const touchNow = 'ontouchstart' in window || (navigator.maxTouchPoints && navigator.maxTouchPoints > 0) || !isDesktop();
+      cur.style.display = touchNow ? 'none' : 'block';
+    }, { passive: true });
   }
 
   /* =========================================================================
@@ -1987,6 +2009,40 @@
           });
         }
       });
+    }
+
+    // 14. Mobile Quick-Preview Floating Pill
+    const floatingPreviewBtn = document.getElementById('bespokeFloatingPreviewBtn');
+    const canvasCard = document.getElementById('bespokeCanvasCard');
+    const bespokeStage = document.getElementById('bespoke');
+
+    if (floatingPreviewBtn && canvasCard && bespokeStage) {
+      floatingPreviewBtn.addEventListener('click', () => {
+        const topY = canvasCard.getBoundingClientRect().top + window.pageYOffset - 68;
+        window.scrollTo({ top: topY, behavior: 'smooth' });
+      });
+
+      const updateFloatingPreviewVisibility = () => {
+        if (isDesktop()) {
+          floatingPreviewBtn.classList.remove('visible');
+          return;
+        }
+        const stageRect = bespokeStage.getBoundingClientRect();
+        const cardRect = canvasCard.getBoundingClientRect();
+
+        // Visible when user is scrolled past the preview card inside the bespoke section
+        const isPastCard = cardRect.bottom < 110;
+        const isStillInBespoke = stageRect.bottom > 220;
+
+        if (isPastCard && isStillInBespoke) {
+          floatingPreviewBtn.classList.add('visible');
+        } else {
+          floatingPreviewBtn.classList.remove('visible');
+        }
+      };
+
+      window.addEventListener('scroll', updateFloatingPreviewVisibility, { passive: true });
+      window.addEventListener('resize', updateFloatingPreviewVisibility, { passive: true });
     }
   }
 
