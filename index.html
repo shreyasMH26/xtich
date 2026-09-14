@@ -63,8 +63,9 @@
           <li><a href="#proof" class="nav-item"><span>02</span> Proof</a></li>
           <li><a href="#garment" class="nav-item"><span>03</span> The Hoodie</a></li>
           <li><a href="#collection" class="nav-item"><span>04</span> Versity Series</a></li>
-          <li><a href="#lookbook" class="nav-item"><span>05</span> Lookbook</a></li>
-          <li><a href="#shop" class="nav-item"><span>06</span> Archive</a></li>
+          <li><a href="#bespoke" class="nav-item"><span>05</span> Bespoke</a></li>
+          <li><a href="#lookbook" class="nav-item"><span>06</span> Lookbook</a></li>
+          <li><a href="#shop" class="nav-item"><span>07</span> Archive</a></li>
           <li class="mobile-contact-section">
             <div class="mobile-contact-title">Direct Line</div>
             <a href="tel:+919535344175" class="mobile-phone-btn">
@@ -573,6 +574,274 @@
     </section>
 
     <!-- ==========================================================================
+         SCENE 5.5: XTICH / BESPOKE ATELIER (Scroll-Driven Custom Hoodie Experience)
+         ========================================================================== -->
+    <section class="scene-stage bespoke-stage" id="bespoke" data-scene="bespoke" aria-label="XTICH Bespoke Custom Hoodie Atelier">
+      <div class="scene-pin bespoke-pin" id="bespokePin">
+        
+        <div class="bespoke-container">
+          
+          <!-- Top Atelier Header Bar -->
+          <div class="bespoke-header-bar">
+            <div class="bespoke-header-meta">
+              <span class="section-label">XTICH / BESPOKE</span>
+              <span class="bespoke-step-counter" id="bespokeStepCounter">PHASE 01 / 05</span>
+            </div>
+            <div class="bespoke-edition-tag">Atelier Commission · Single Unit Custom Craft</div>
+          </div>
+
+          <!-- Master Atelier Split Grid -->
+          <div class="bespoke-grid">
+            
+            <!-- Left Column: Interactive Live Hoodie Atelier Canvas (Stays Visible & Dynamic) -->
+            <div class="bespoke-canvas-col">
+              <div class="bespoke-canvas-card" id="bespokeCanvasCard">
+                
+                <div class="canvas-top-bar">
+                  <span class="canvas-plate-tag">PIECE NO. 01 / 01</span>
+                  <div class="canvas-view-indicator" id="bespokeViewIndicator">FRONT VIEW</div>
+                </div>
+
+                <!-- Live Hoodie Visual Stage with Dynamic Embroidery Overlay -->
+                <div class="bespoke-hoodie-stage placement-chest thread-white size-small" id="bespokeHoodieStage">
+                  
+                  <div class="hoodie-layer-wrap">
+                    <img src="assets/hoodie-black-front-hr.jpg" id="bespokeHoodieFront" class="bespoke-hoodie-img active" alt="XTICH Bespoke Hoodie Front View">
+                    <img src="assets/hoodie-black-back.jpg" id="bespokeHoodieBack" class="bespoke-hoodie-img" alt="XTICH Bespoke Hoodie Back View">
+                  </div>
+
+                  <!-- Live Embroidery Mark Overlay (Moves dynamically based on placement) -->
+                  <div class="bespoke-embroidery-mark" id="bespokeEmbroideryMark">
+                    <span class="embroidery-text" id="bespokeEmbroideryText">XTICH</span>
+                    <div class="embroidery-reference-badge" id="bespokeReferenceBadge" style="display:none;">
+                      <span class="badge-dot"></span>
+                      <span class="badge-text" id="bespokeBadgeText">REFERENCE LOADED</span>
+                    </div>
+                  </div>
+
+                  <!-- Subtle Reticle Guide Ring -->
+                  <div class="placement-guide-reticle" id="placementGuideReticle" aria-hidden="true"></div>
+
+                </div>
+
+                <!-- Base Garment Spec Footer Bar -->
+                <div class="canvas-spec-bar">
+                  <div class="spec-left">
+                    <span class="spec-name">HEAVYWEIGHT HOODIE</span>
+                    <span class="spec-detail">450 GSM Cotton-Poly Fleece · Obsidian Black</span>
+                  </div>
+                  <div class="spec-right">
+                    <span class="spec-badge">BASE ARCHITECTURE</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right Column: Scroll-Driven Progressive Editorial Steps -->
+            <div class="bespoke-steps-col" id="bespokeStepsCol">
+              
+              <!-- STEP 01: INTRO & CHOOSE -->
+              <div class="bespoke-step-card active" data-step="0" id="bespokeStep0">
+                <span class="step-num-eyebrow">01 / CHOOSE YOUR HOODIE</span>
+                <h2 class="bespoke-headline">A PIECE THAT<br>EXISTS ONCE.</h2>
+                <p class="bespoke-lead">Your idea. Our craft.<br>Made specifically for you.</p>
+                <p class="bespoke-desc">Every bespoke XTICH piece begins with an idea. Share your concept, choose your placement and details, and our team develops it into an embroidery concept made specifically for you.</p>
+                
+                <div class="bespoke-base-callout">
+                  <div class="callout-header">
+                    <span class="callout-label">THE FOUNDATION STANDARD</span>
+                    <span class="callout-status">VERIFIED 300 DAYS</span>
+                  </div>
+                  <h4>HEAVYWEIGHT HOODIE · 450 GSM · OBSIDIAN BLACK</h4>
+                  <p>Engineered with our signature double-layer hood, reinforced drop-shoulder pattern, and 180+ wash-tested fleece. This is the architectural canvas. Now make it yours.</p>
+                </div>
+                
+                <div class="scroll-advance-hint">
+                  <span>Scroll to define your mark</span>
+                  <div class="advance-arrow">↓</div>
+                </div>
+              </div>
+
+              <!-- STEP 02: YOUR MARK & UPLOAD -->
+              <div class="bespoke-step-card" data-step="1" id="bespokeStep1">
+                <span class="step-num-eyebrow">02 / YOUR MARK</span>
+                <h3 class="step-title">Express Your Concept.</h3>
+                <p class="step-desc">Select your embroidery style and provide your text or reference material.</p>
+
+                <div class="bespoke-option-group">
+                  <span class="option-group-label">EMBROIDERY TYPE</span>
+                  <div class="option-pill-row" id="bespokeTypePills">
+                    <button type="button" class="option-pill active" data-type="TEXT">TEXT</button>
+                    <button type="button" class="option-pill" data-type="INITIALS">INITIALS</button>
+                    <button type="button" class="option-pill" data-type="SYMBOL">SYMBOL</button>
+                    <button type="button" class="option-pill" data-type="SKETCH">SKETCH</button>
+                    <button type="button" class="option-pill" data-type="CUSTOM">CUSTOM</button>
+                  </div>
+                </div>
+
+                <div class="bespoke-input-wrap">
+                  <label for="bespokeTextInput" class="bespoke-field-label">NAME / INITIALS / SHORT TEXT</label>
+                  <input type="text" id="bespokeTextInput" class="bespoke-text-input" placeholder="e.g. XTICH or 1998 or YOUR INITIALS" maxlength="30" value="XTICH">
+                </div>
+
+                <div class="bespoke-upload-section">
+                  <label class="bespoke-upload-dropzone" id="bespokeDropzone" for="bespokeFileInput">
+                    <input type="file" id="bespokeFileInput" class="bespoke-file-input" accept="image/*,.pdf">
+                    <div class="upload-icon-wrap">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <span class="upload-main-text">UPLOAD YOUR IDEA</span>
+                    <span class="upload-sub-text">Sketch, handwriting, symbol, photo, or embroidery inspiration</span>
+                    <span class="upload-active-filename" id="bespokeFilename"></span>
+                  </label>
+                  <p class="upload-disclaimer">XTICH will review and interpret your uploaded idea into an architectural embroidery blueprint.</p>
+                </div>
+              </div>
+
+              <!-- STEP 03: PLACEMENT & EMBROIDERY DETAILS -->
+              <div class="bespoke-step-card" data-step="2" id="bespokeStep2">
+                <span class="step-num-eyebrow">03 / PLACEMENT &amp; DETAILS</span>
+                <h3 class="step-title">Placement &amp; Fiber Standard.</h3>
+                <p class="step-desc">Choose placement position, scale, and high-tensile thread tone.</p>
+
+                <div class="bespoke-option-group">
+                  <span class="option-group-label">EMBROIDERY PLACEMENT</span>
+                  <div class="option-pill-row" id="bespokePlacementPills">
+                    <button type="button" class="option-pill active" data-placement="chest">CHEST</button>
+                    <button type="button" class="option-pill" data-placement="sleeve">SLEEVE</button>
+                    <button type="button" class="option-pill" data-placement="back">BACK</button>
+                    <button type="button" class="option-pill" data-placement="hood">HOOD</button>
+                  </div>
+                </div>
+
+                <div class="bespoke-option-duo">
+                  <div class="bespoke-option-group">
+                    <span class="option-group-label">SCALE</span>
+                    <div class="option-pill-row" id="bespokeSizePills">
+                      <button type="button" class="option-pill active" data-scale="small">SMALL</button>
+                      <button type="button" class="option-pill" data-scale="medium">MEDIUM</button>
+                      <button type="button" class="option-pill" data-scale="statement">STATEMENT</button>
+                    </div>
+                  </div>
+
+                  <div class="bespoke-option-group">
+                    <span class="option-group-label">THREAD</span>
+                    <div class="option-pill-row" id="bespokeThreadPills">
+                      <button type="button" class="option-pill active" data-thread="white">WHITE</button>
+                      <button type="button" class="option-pill" data-thread="obsidian">OBSIDIAN</button>
+                      <button type="button" class="option-pill" data-thread="custom">CUSTOM</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="placement-detail-note" id="placementDetailNote">
+                  <strong>CHEST PLACEMENT</strong> — Minimalist left-breast positioning aligned to drop-shoulder axis.
+                </div>
+              </div>
+
+              <!-- STEP 04: COMMISSION SPEC & INTERPRETATION -->
+              <div class="bespoke-step-card" data-step="3" id="bespokeStep3">
+                <span class="step-num-eyebrow">04 / COMMISSION SPEC</span>
+                <h3 class="step-title">Finalize Your Commission.</h3>
+
+                <div class="bespoke-option-group">
+                  <span class="option-group-label">HOODIE SIZE</span>
+                  <div class="option-pill-row size-pills-row" id="bespokeSizeChips">
+                    <button type="button" class="option-pill" data-size="XS">XS</button>
+                    <button type="button" class="option-pill active" data-size="S">S</button>
+                    <button type="button" class="option-pill" data-size="M">M</button>
+                    <button type="button" class="option-pill" data-size="L">L</button>
+                    <button type="button" class="option-pill" data-size="XL">XL</button>
+                    <button type="button" class="option-pill" data-size="XXL">XXL</button>
+                  </div>
+                </div>
+
+                <div class="bespoke-qty-row">
+                  <span class="option-group-label">QUANTITY</span>
+                  <div class="qty-stepper">
+                    <button type="button" class="qty-btn" id="bespokeQtyMinus" aria-label="Decrease quantity">−</button>
+                    <span class="qty-val" id="bespokeQtyVal">1</span>
+                    <button type="button" class="qty-btn" id="bespokeQtyPlus" aria-label="Increase quantity">+</button>
+                  </div>
+                </div>
+
+                <!-- THE IMPORTANT DIFFERENTIATOR -->
+                <div class="bespoke-interpretation-block">
+                  <div class="interp-badge">XTICH INTERPRETATION</div>
+                  <h4>Not sure exactly what you want?</h4>
+                  <p>Send us the idea. Our team reviews your reference and develops an embroidery concept around it. This is a creative collaboration, not generic printing.</p>
+                </div>
+
+                <!-- PROCESS FLOW VISUALIZATION -->
+                <div class="bespoke-process-tracker">
+                  <div class="proc-step"><span>01</span> YOUR IDEA</div>
+                  <div class="proc-arrow">→</div>
+                  <div class="proc-step"><span>02</span> XTICH INTERPRETATION</div>
+                  <div class="proc-arrow">→</div>
+                  <div class="proc-step"><span>03</span> EMBROIDERY PROOF</div>
+                  <div class="proc-arrow">→</div>
+                  <div class="proc-step"><span>04</span> YOUR APPROVAL</div>
+                  <div class="proc-arrow">→</div>
+                  <div class="proc-step"><span>05</span> MADE FOR YOU</div>
+                </div>
+
+                <div class="bespoke-action-box">
+                  <button type="button" class="bespoke-primary-cta" id="bespokeSubmitBtn">BEGIN YOUR PIECE →</button>
+                  <span class="cta-micro-copy">REQUEST YOUR CUSTOM HOODIE · REVIEWED PERSONALLY BY XTICH</span>
+                </div>
+              </div>
+
+              <!-- STEP 05: CONFIRMATION & BESPOKE ARCHIVE -->
+              <div class="bespoke-step-card" data-step="4" id="bespokeStep4">
+                
+                <!-- Dynamic Confirmation Panel -->
+                <div class="bespoke-confirmation-card" id="bespokeConfirmationCard">
+                  <div class="conf-badge-pill">COMMISSION INITIATED</div>
+                  <h2 class="conf-headline">YOUR PIECE<br>HAS BEGUN.</h2>
+                  <span class="conf-subline">XTICH / BESPOKE</span>
+                  
+                  <div class="conf-reference-strip">
+                    <span class="ref-label">COMMISSION REFERENCE</span>
+                    <span class="ref-code" id="bespokeRefCode">REQUEST / 00127</span>
+                  </div>
+
+                  <p class="conf-message">Your idea has been received. XTICH will review the details and develop the next step with you.</p>
+
+                  <div class="conf-summary-box" id="bespokeSummaryBox">
+                    <!-- Populated dynamically via app.js -->
+                  </div>
+
+                  <div class="conf-cta-row">
+                    <a href="https://wa.me/919535344175" id="bespokeDirectWhatsappBtn" target="_blank" rel="noopener noreferrer" class="conf-whatsapp-btn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      <span>Confirm Directly with Founders</span>
+                    </a>
+                    <button type="button" class="conf-reset-btn" id="bespokeResetBtn">Edit Commission Details</button>
+                  </div>
+                </div>
+
+                <!-- Bespoke Archive Teaser -->
+                <div class="bespoke-archive-teaser">
+                  <div class="archive-header-line">
+                    <span class="archive-title">THE BESPOKE ARCHIVE</span>
+                    <span class="archive-status-tag">THE ARCHIVE · COMING SOON</span>
+                  </div>
+                  <p class="archive-subtext">Pieces made from individual ideas. Each commission will be archived here upon release.</p>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
          SCENE 6: SHOPIFY EDITIONS-STYLE PINNED HORIZONTAL EDITORIAL LOOKBOOK
          ========================================================================== -->
     <section class="scene-stage lookbook-stage" id="lookbook" data-scene="lookbook" aria-label="Editorial Lookbook">
@@ -844,6 +1113,7 @@
             <li><a href="#proof">The 300-Day Proof</a></li>
             <li><a href="#garment">The Hoodie</a></li>
             <li><a href="#collection">Versity Series</a></li>
+            <li><a href="#bespoke">Bespoke Atelier</a></li>
             <li><a href="#lookbook">Lookbook</a></li>
             <li><a href="#shop">Reserve Archive</a></li>
           </ul>

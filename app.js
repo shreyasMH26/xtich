@@ -573,6 +573,62 @@
         });
       }
 
+      // ── SCENE 5.5: XTICH BESPOKE DIGITAL ATELIER ─────────────────────────────
+      const bespokeStage = document.getElementById('bespoke');
+      const bespokeStepCards = [0, 1, 2, 3, 4].map(n => document.getElementById(`bespokeStep${n}`));
+      const bespokeStepCounter = document.getElementById('bespokeStepCounter');
+
+      if (bespokeStage && bespokeStepCards[0]) {
+        const stepLabels = [
+          'PHASE 01 / 05 · CHOOSE',
+          'PHASE 02 / 05 · YOUR MARK',
+          'PHASE 03 / 05 · PLACEMENT',
+          'PHASE 04 / 05 · COMMISSION',
+          'PHASE 05 / 05 · CONFIRMATION'
+        ];
+
+        const setBespokeStep = (stepIdx) => {
+          bespokeStepCards.forEach((card, idx) => {
+            if (card) card.classList.toggle('active', idx === stepIdx);
+          });
+          if (bespokeStepCounter) {
+            bespokeStepCounter.textContent = stepLabels[stepIdx] || `PHASE 0${stepIdx + 1} / 05`;
+          }
+        };
+
+        // Expose helper globally for direct interactive button clicks
+        window.__setBespokeStep = setBespokeStep;
+
+        const bespokeTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: bespokeStage,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: isMobile ? 1.0 : 1.2,
+            onUpdate: (self) => {
+              if (window.__bespokeSubmitted) return;
+              const p = self.progress;
+              let activeStep = 0;
+              if (p < 0.22) activeStep = 0;
+              else if (p < 0.46) activeStep = 1;
+              else if (p < 0.72) activeStep = 2;
+              else if (p < 0.92) activeStep = 3;
+              else activeStep = 4;
+
+              setBespokeStep(activeStep);
+            }
+          }
+        });
+
+        const canvasCard = document.getElementById('bespokeCanvasCard');
+        if (canvasCard) {
+          bespokeTl.fromTo(canvasCard,
+            { y: isMobile ? 8 : 22, scale: 0.98 },
+            { y: 0, scale: 1.0, ease: 'none', duration: 0.5 }
+          );
+        }
+      }
+
       // ── SCENE 6: SHOPIFY EDITIONS-STYLE PINNED LOOKBOOK HORIZONTAL SCROLL ──────
       const lookbookStage     = document.getElementById('lookbook');
       const lookbookTrack     = document.getElementById('lookbookRunwayTrack');
@@ -1272,12 +1328,267 @@
   });
 
   /* =========================================================================
+     21. XTICH / BESPOKE DIGITAL ATELIER INTERACTIVE LOGIC
+     ========================================================================= */
+  function initBespokeAtelier() {
+    const hoodieStage    = document.getElementById('bespokeHoodieStage');
+    const hoodieFront    = document.getElementById('bespokeHoodieFront');
+    const hoodieBack     = document.getElementById('bespokeHoodieBack');
+    const viewIndicator  = document.getElementById('bespokeViewIndicator');
+    const embroideryText = document.getElementById('bespokeEmbroideryText');
+    const refBadge       = document.getElementById('bespokeReferenceBadge');
+    const badgeText      = document.getElementById('bespokeBadgeText');
+    const textInput      = document.getElementById('bespokeTextInput');
+    const fileInput      = document.getElementById('bespokeFileInput');
+    const dropzone       = document.getElementById('bespokeDropzone');
+    const filenameDisplay= document.getElementById('bespokeFilename');
+    const placementNote  = document.getElementById('placementDetailNote');
+    const qtyVal         = document.getElementById('bespokeQtyVal');
+    const qtyMinus       = document.getElementById('bespokeQtyMinus');
+    const qtyPlus        = document.getElementById('bespokeQtyPlus');
+    const submitBtn      = document.getElementById('bespokeSubmitBtn');
+    const resetBtn       = document.getElementById('bespokeResetBtn');
+    const refCodeEl      = document.getElementById('bespokeRefCode');
+    const summaryBox     = document.getElementById('bespokeSummaryBox');
+    const whatsappBtn    = document.getElementById('bespokeDirectWhatsappBtn');
+
+    if (!hoodieStage) return;
+
+    // 1. Text & Initial Input Realtime Reflection
+    if (textInput && embroideryText) {
+      textInput.addEventListener('input', () => {
+        const val = textInput.value.trim();
+        embroideryText.textContent = val || 'XTICH';
+      });
+    }
+
+    // 2. Embroidery Type Selector
+    const typePills = document.querySelectorAll('#bespokeTypePills .option-pill');
+    typePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        typePills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const type = pill.dataset.type;
+        if (!textInput) return;
+        if (type === 'INITIALS') {
+          textInput.placeholder = 'e.g. SHM';
+          textInput.maxLength = 4;
+          if (textInput.value.length > 4) textInput.value = textInput.value.substring(0, 4);
+        } else if (type === 'TEXT') {
+          textInput.placeholder = 'e.g. XTICH or 1998';
+          textInput.maxLength = 30;
+        } else if (type === 'SYMBOL') {
+          textInput.placeholder = 'e.g. CREST / ICON / GEOMETRIC';
+          textInput.maxLength = 30;
+        } else {
+          textInput.placeholder = 'e.g. YOUR CONCEPT OR TITLE';
+          textInput.maxLength = 30;
+        }
+        if (embroideryText) embroideryText.textContent = textInput.value.trim() || 'XTICH';
+      });
+    });
+
+    // 3. Embroidery Placement Switcher (Front/Back Crossfade)
+    const placementPills = document.querySelectorAll('#bespokePlacementPills .option-pill');
+    const placementNotes = {
+      chest: '<strong>CHEST PLACEMENT</strong> — Minimalist left-breast positioning aligned to drop-shoulder axis.',
+      sleeve: '<strong>SLEEVE PLACEMENT</strong> — Precision alignment along the left forearm seam.',
+      back: '<strong>BACK PLACEMENT</strong> — Bold horizontal statement centered across upper shoulder blades.',
+      hood: '<strong>HOOD PLACEMENT</strong> — Subtle tone-on-tone embroidery across the outer hood crown.'
+    };
+
+    placementPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        placementPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const placement = pill.dataset.placement || 'chest';
+
+        hoodieStage.classList.remove('placement-chest', 'placement-sleeve', 'placement-back', 'placement-hood');
+        hoodieStage.classList.add(`placement-${placement}`);
+
+        if (placement === 'back') {
+          if (hoodieFront) hoodieFront.classList.remove('active');
+          if (hoodieBack) hoodieBack.classList.add('active');
+          if (viewIndicator) viewIndicator.textContent = 'BACK VIEW';
+        } else {
+          if (hoodieFront) hoodieFront.classList.add('active');
+          if (hoodieBack) hoodieBack.classList.remove('active');
+          if (viewIndicator) viewIndicator.textContent = 'FRONT VIEW';
+        }
+
+        if (placementNote && placementNotes[placement]) {
+          placementNote.innerHTML = placementNotes[placement];
+        }
+      });
+    });
+
+    // 4. Scale Sizing
+    const scalePills = document.querySelectorAll('#bespokeSizePills .option-pill');
+    scalePills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        scalePills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const scale = pill.dataset.scale || 'small';
+        hoodieStage.classList.remove('size-small', 'size-medium', 'size-statement');
+        hoodieStage.classList.add(`size-${scale}`);
+      });
+    });
+
+    // 5. High-Tensile Thread Tone
+    const threadPills = document.querySelectorAll('#bespokeThreadPills .option-pill');
+    threadPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        threadPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        const thread = pill.dataset.thread || 'white';
+        hoodieStage.classList.remove('thread-white', 'thread-obsidian', 'thread-custom');
+        hoodieStage.classList.add(`thread-${thread}`);
+      });
+    });
+
+    // 6. Base Garment Size Chips
+    const sizeChips = document.querySelectorAll('#bespokeSizeChips .option-pill');
+    sizeChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        sizeChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
+
+    // 7. Inspiration / Reference File Upload
+    if (fileInput) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          if (filenameDisplay) filenameDisplay.textContent = `Attached: ${file.name}`;
+          if (dropzone) dropzone.classList.add('has-file');
+          if (refBadge) refBadge.style.display = 'inline-flex';
+          if (badgeText) {
+            badgeText.textContent = file.name.length > 14 ? file.name.substring(0, 12) + '…' : file.name;
+          }
+        }
+      });
+    }
+
+    // 8. Quantity Stepper
+    let currentQty = 1;
+    if (qtyMinus && qtyPlus && qtyVal) {
+      qtyMinus.addEventListener('click', () => {
+        if (currentQty > 1) {
+          currentQty--;
+          qtyVal.textContent = currentQty;
+        }
+      });
+      qtyPlus.addEventListener('click', () => {
+        if (currentQty < 20) {
+          currentQty++;
+          qtyVal.textContent = currentQty;
+        }
+      });
+    }
+
+    // 9. Lodge Commission Handler
+    if (submitBtn) {
+      submitBtn.addEventListener('click', () => {
+        const activeTypePill = document.querySelector('#bespokeTypePills .option-pill.active');
+        const activePlacementPill = document.querySelector('#bespokePlacementPills .option-pill.active');
+        const activeScalePill = document.querySelector('#bespokeSizePills .option-pill.active');
+        const activeThreadPill = document.querySelector('#bespokeThreadPills .option-pill.active');
+        const activeSizeChip = document.querySelector('#bespokeSizeChips .option-pill.active');
+
+        const embType = activeTypePill ? activeTypePill.textContent.trim() : 'TEXT';
+        const placement = activePlacementPill ? activePlacementPill.textContent.trim() : 'CHEST';
+        const scale = activeScalePill ? activeScalePill.textContent.trim() : 'SMALL';
+        const thread = activeThreadPill ? activeThreadPill.textContent.trim() : 'WHITE';
+        const size = activeSizeChip ? activeSizeChip.textContent.trim() : 'S';
+        const qty = currentQty;
+        const conceptText = textInput ? (textInput.value.trim() || 'XTICH') : 'XTICH';
+        const file = fileInput?.files?.[0];
+        const fileName = file ? file.name : 'No reference attachment';
+
+        const randId = Math.floor(100 + Math.random() * 900);
+        const refCode = `REQUEST / 00${randId}`;
+
+        if (refCodeEl) refCodeEl.textContent = refCode;
+
+        if (summaryBox) {
+          summaryBox.innerHTML = `
+            <div style="margin-bottom:0.35rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · OBSIDIAN</div>
+            <div style="margin-bottom:0.35rem;"><strong>GARMENT SIZE:</strong> ${size} &nbsp;|&nbsp; <strong>QUANTITY:</strong> ${qty} UNIT(S)</div>
+            <div style="margin-bottom:0.35rem;"><strong>PLACEMENT:</strong> ${placement} &nbsp;|&nbsp; <strong>SCALE:</strong> ${scale}</div>
+            <div style="margin-bottom:0.35rem;"><strong>THREAD TONE:</strong> ${thread}</div>
+            <div style="margin-bottom:0.35rem;"><strong>CONCEPT / MARK:</strong> "${conceptText}" (${embType})</div>
+            <div><strong>ATTACHMENT:</strong> ${fileName}</div>
+          `;
+        }
+
+        if (whatsappBtn) {
+          const waMessage = encodeURIComponent(
+            `Hello XTICH Atelier,\n\n` +
+            `I have lodged a Bespoke Commission:\n` +
+            `• Reference: ${refCode}\n` +
+            `• Base: Obsidian Black 450 GSM Heavyweight Hoodie\n` +
+            `• Size: ${size}\n` +
+            `• Quantity: ${qty}\n` +
+            `• Placement: ${placement}\n` +
+            `• Scale: ${scale}\n` +
+            `• Thread Tone: ${thread}\n` +
+            `• Mark / Text: ${conceptText} (${embType})\n` +
+            `• Reference File: ${fileName}\n\n` +
+            `Please review and confirm next embroidery concept blueprint.`
+          );
+          whatsappBtn.href = `https://wa.me/919535344175?text=${waMessage}`;
+        }
+
+        window.__bespokeSubmitted = true;
+        if (typeof window.__setBespokeStep === 'function') {
+          window.__setBespokeStep(4);
+        } else {
+          const bespokeStepCards = [0, 1, 2, 3, 4].map(n => document.getElementById(`bespokeStep${n}`));
+          bespokeStepCards.forEach((c, idx) => {
+            if (c) c.classList.toggle('active', idx === 4);
+          });
+        }
+
+        const bespokeStage = document.getElementById('bespoke');
+        if (bespokeStage) {
+          const rect = bespokeStage.getBoundingClientRect();
+          const targetY = window.pageYOffset + rect.top + (rect.height * 0.88);
+          if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
+            gsap.to(window, { scrollTo: targetY, duration: 0.8, ease: 'power2.out' });
+          } else if (window.lenis) {
+            window.lenis.scrollTo(targetY, { duration: 0.8 });
+          } else {
+            window.scrollTo({ top: targetY, behavior: 'smooth' });
+          }
+        }
+      });
+    }
+
+    // 10. Reset / Edit Details
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        window.__bespokeSubmitted = false;
+        if (typeof window.__setBespokeStep === 'function') {
+          window.__setBespokeStep(3);
+        } else {
+          const bespokeStepCards = [0, 1, 2, 3, 4].map(n => document.getElementById(`bespokeStep${n}`));
+          bespokeStepCards.forEach((c, idx) => {
+            if (c) c.classList.toggle('active', idx === 3);
+          });
+        }
+      });
+    }
+  }
+
+  /* =========================================================================
      INIT — Wait for GSAP/Lenis to be ready (deferred scripts)
      ========================================================================= */
   function boot() {
     initLenis();
     initSplitText();
     initScrollTriggerScenes();
+    initBespokeAtelier();
     initWebGLCanvas();
     initVelocityParallax();
     initCursor();
