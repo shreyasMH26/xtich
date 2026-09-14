@@ -584,7 +584,7 @@
           'PHASE 02 / 05 · YOUR MARK',
           'PHASE 03 / 05 · PLACEMENT',
           'PHASE 04 / 05 · COMMISSION',
-          'PHASE 05 / 05 · CONFIRMATION'
+          'PHASE 05 / 05 · MADE FOR YOU'
         ];
 
         const setBespokeStep = (stepIdx) => {
@@ -1331,35 +1331,55 @@
      21. XTICH / BESPOKE DIGITAL ATELIER INTERACTIVE LOGIC
      ========================================================================= */
   function initBespokeAtelier() {
-    const hoodieStage    = document.getElementById('bespokeHoodieStage');
-    const hoodieFront    = document.getElementById('bespokeHoodieFront');
-    const hoodieBack     = document.getElementById('bespokeHoodieBack');
-    const viewIndicator  = document.getElementById('bespokeViewIndicator');
-    const embroideryText = document.getElementById('bespokeEmbroideryText');
-    const refBadge       = document.getElementById('bespokeReferenceBadge');
-    const badgeText      = document.getElementById('bespokeBadgeText');
-    const textInput      = document.getElementById('bespokeTextInput');
-    const fileInput      = document.getElementById('bespokeFileInput');
-    const dropzone       = document.getElementById('bespokeDropzone');
-    const filenameDisplay= document.getElementById('bespokeFilename');
-    const placementNote  = document.getElementById('placementDetailNote');
-    const qtyVal         = document.getElementById('bespokeQtyVal');
-    const qtyMinus       = document.getElementById('bespokeQtyMinus');
-    const qtyPlus        = document.getElementById('bespokeQtyPlus');
-    const submitBtn      = document.getElementById('bespokeSubmitBtn');
-    const resetBtn       = document.getElementById('bespokeResetBtn');
-    const refCodeEl      = document.getElementById('bespokeRefCode');
-    const summaryBox     = document.getElementById('bespokeSummaryBox');
-    const whatsappBtn    = document.getElementById('bespokeDirectWhatsappBtn');
+    const hoodieStage      = document.getElementById('bespokeHoodieStage');
+    const hoodieFront      = document.getElementById('bespokeHoodieFront');
+    const hoodieBack       = document.getElementById('bespokeHoodieBack');
+    const viewIndicator    = document.getElementById('bespokeViewIndicator');
+    const embroideryMark   = document.getElementById('bespokeEmbroideryMark');
+    const embroideryText   = document.getElementById('bespokeEmbroideryText');
+    const refBadge         = document.getElementById('bespokeReferenceBadge');
+    const badgeText        = document.getElementById('bespokeBadgeText');
+    const textInput        = document.getElementById('bespokeTextInput');
+    const fileInput        = document.getElementById('bespokeFileInput');
+    const dropzone         = document.getElementById('bespokeDropzone');
+    const uploadIdle       = document.getElementById('uploadIdleState');
+    const uploadSelected   = document.getElementById('uploadSelectedState');
+    const uploadImgThumb   = document.getElementById('uploadImgThumb');
+    const uploadPdfIcon    = document.getElementById('uploadPdfIcon');
+    const uploadRefTitle   = document.getElementById('uploadReferenceTitle');
+    const uploadRefSize    = document.getElementById('uploadReferenceSize');
+    const uploadRemoveBtn  = document.getElementById('uploadRemoveBtn');
+    const placementNote    = document.getElementById('placementDetailNote');
+    const qtyVal           = document.getElementById('bespokeQtyVal');
+    const qtyMinus         = document.getElementById('bespokeQtyMinus');
+    const qtyPlus          = document.getElementById('bespokeQtyPlus');
+    const custNameInput    = document.getElementById('bespokeCustName');
+    const custEmailInput   = document.getElementById('bespokeCustEmail');
+    const nameErrorEl      = document.getElementById('bespokeNameError');
+    const emailErrorEl     = document.getElementById('bespokeEmailError');
+    const instructionsInput= document.getElementById('bespokeInstructions');
+    const charCountEl      = document.getElementById('instructionsCharCount');
+    const submitBtn        = document.getElementById('bespokeSubmitBtn');
+    const globalStatusEl   = document.getElementById('bespokeGlobalStatus');
+    const returnBtn        = document.getElementById('bespokeReturnBtn');
+    const resetBtn         = document.getElementById('bespokeResetBtn');
+    const refCodeEl        = document.getElementById('bespokeRefCode');
+    const summaryBox       = document.getElementById('bespokeSummaryBox');
+    const whatsappBtn      = document.getElementById('bespokeDirectWhatsappBtn');
 
     if (!hoodieStage) return;
 
     // 1. Text & Initial Input Realtime Reflection
-    if (textInput && embroideryText) {
-      textInput.addEventListener('input', () => {
-        const val = textInput.value.trim();
-        embroideryText.textContent = val || 'XTICH';
-      });
+    const syncEmbroideryText = () => {
+      if (!textInput || !embroideryText) return;
+      const val = textInput.value.trim();
+      embroideryText.textContent = val || 'XTICH';
+    };
+
+    if (textInput) {
+      textInput.addEventListener('input', syncEmbroideryText);
+      textInput.addEventListener('keyup', syncEmbroideryText);
+      textInput.addEventListener('paste', () => setTimeout(syncEmbroideryText, 10));
     }
 
     // 2. Embroidery Type Selector
@@ -1384,11 +1404,11 @@
           textInput.placeholder = 'e.g. YOUR CONCEPT OR TITLE';
           textInput.maxLength = 30;
         }
-        if (embroideryText) embroideryText.textContent = textInput.value.trim() || 'XTICH';
+        syncEmbroideryText();
       });
     });
 
-    // 3. Embroidery Placement Switcher (Front/Back Crossfade)
+    // 3. Embroidery Placement Switcher (Front/Back Crossfade, Proportions Preserved)
     const placementPills = document.querySelectorAll('#bespokePlacementPills .option-pill');
     const placementNotes = {
       chest: '<strong>CHEST PLACEMENT</strong> — Minimalist left-breast positioning aligned to drop-shoulder axis.',
@@ -1455,18 +1475,76 @@
       });
     });
 
-    // 7. Inspiration / Reference File Upload
+    // 7. Inspiration / Reference File Upload (Images & PDFs with Preview / Replace / Remove)
+    let selectedReferenceFile = null;
+
+    const formatFileSize = (bytes) => {
+      if (bytes < 1024) return `${bytes} B`;
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    };
+
+    const clearSelectedFile = () => {
+      selectedReferenceFile = null;
+      if (fileInput) fileInput.value = '';
+      if (dropzone) dropzone.classList.remove('has-file');
+      if (uploadSelected) uploadSelected.style.display = 'none';
+      if (uploadIdle) uploadIdle.style.display = 'flex';
+      if (uploadImgThumb) { uploadImgThumb.src = ''; uploadImgThumb.style.display = 'none'; }
+      if (uploadPdfIcon) { uploadPdfIcon.style.display = 'none'; }
+      if (refBadge) refBadge.style.display = 'none';
+    };
+
     if (fileInput) {
       fileInput.addEventListener('change', (e) => {
         const file = e.target.files?.[0];
-        if (file) {
-          if (filenameDisplay) filenameDisplay.textContent = `Attached: ${file.name}`;
-          if (dropzone) dropzone.classList.add('has-file');
-          if (refBadge) refBadge.style.display = 'inline-flex';
-          if (badgeText) {
-            badgeText.textContent = file.name.length > 14 ? file.name.substring(0, 12) + '…' : file.name;
-          }
+        if (!file) return;
+
+        // 10 MB maximum limit
+        if (file.size > 10 * 1024 * 1024) {
+          alert('Reference file exceeds the 10 MB limit. Please select a smaller file.');
+          clearSelectedFile();
+          return;
         }
+
+        selectedReferenceFile = file;
+        if (dropzone) dropzone.classList.add('has-file');
+        if (uploadIdle) uploadIdle.style.display = 'none';
+        if (uploadSelected) uploadSelected.style.display = 'flex';
+
+        if (uploadRefTitle) uploadRefTitle.textContent = `REFERENCE / ${file.name}`;
+        if (uploadRefSize) uploadRefSize.textContent = formatFileSize(file.size);
+
+        // Preview rendering: image thumbnail or PDF icon
+        const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        if (isPdf) {
+          if (uploadImgThumb) uploadImgThumb.style.display = 'none';
+          if (uploadPdfIcon) uploadPdfIcon.style.display = 'flex';
+        } else if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            if (uploadImgThumb) {
+              uploadImgThumb.src = event.target.result;
+              uploadImgThumb.style.display = 'block';
+            }
+            if (uploadPdfIcon) uploadPdfIcon.style.display = 'none';
+          };
+          reader.readAsDataURL(file);
+        }
+
+        // Garment canvas status indicator
+        if (refBadge) refBadge.style.display = 'inline-flex';
+        if (badgeText) {
+          badgeText.textContent = file.name.length > 14 ? file.name.substring(0, 12) + '…' : file.name;
+        }
+      });
+    }
+
+    if (uploadRemoveBtn) {
+      uploadRemoveBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearSelectedFile();
       });
     }
 
@@ -1487,9 +1565,75 @@
       });
     }
 
-    // 9. Lodge Commission Handler
+    // 9. Custom Instructions Character Count
+    if (instructionsInput && charCountEl) {
+      instructionsInput.addEventListener('input', () => {
+        const len = instructionsInput.value.length;
+        charCountEl.textContent = `${len} / 2000`;
+      });
+    }
+
+    // 10. Form Validation Helpers
+    const validateField = (input, errorEl, validator, errorMsg) => {
+      const isValid = validator(input ? input.value : '');
+      if (input) input.classList.toggle('has-error', !isValid);
+      if (errorEl) {
+        errorEl.textContent = isValid ? '' : errorMsg;
+        errorEl.classList.toggle('visible', !isValid);
+      }
+      return isValid;
+    };
+
+    const validateName = () => validateField(
+      custNameInput,
+      nameErrorEl,
+      val => val.trim().length >= 2,
+      'Please enter your full name.'
+    );
+
+    const validateEmail = () => validateField(
+      custEmailInput,
+      emailErrorEl,
+      val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val.trim()),
+      'Please enter a valid email address.'
+    );
+
+    if (custNameInput) {
+      custNameInput.addEventListener('input', () => {
+        if (nameErrorEl && nameErrorEl.classList.contains('visible')) validateName();
+      });
+      custNameInput.addEventListener('blur', validateName);
+    }
+
+    if (custEmailInput) {
+      custEmailInput.addEventListener('input', () => {
+        if (emailErrorEl && emailErrorEl.classList.contains('visible')) validateEmail();
+      });
+      custEmailInput.addEventListener('blur', validateEmail);
+    }
+
+    // Collision-resistant unique request reference generator (REQUEST / XXXXX)
+    const generateUniqueRequestId = () => {
+      const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+      let code = '';
+      for (let i = 0; i < 5; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return `REQUEST / ${code}`;
+    };
+
+    // 11. Lodge Commission Handler (Backend Request + Cloudinary + Resend)
     if (submitBtn) {
-      submitBtn.addEventListener('click', () => {
+      submitBtn.addEventListener('click', async () => {
+        const isNameValid = validateName();
+        const isEmailValid = validateEmail();
+
+        if (!isNameValid || !isEmailValid) {
+          if (!isNameValid && custNameInput) custNameInput.focus();
+          else if (!isEmailValid && custEmailInput) custEmailInput.focus();
+          return;
+        }
+
         const activeTypePill = document.querySelector('#bespokeTypePills .option-pill.active');
         const activePlacementPill = document.querySelector('#bespokePlacementPills .option-pill.active');
         const activeScalePill = document.querySelector('#bespokeSizePills .option-pill.active');
@@ -1503,30 +1647,72 @@
         const size = activeSizeChip ? activeSizeChip.textContent.trim() : 'S';
         const qty = currentQty;
         const conceptText = textInput ? (textInput.value.trim() || 'XTICH') : 'XTICH';
-        const file = fileInput?.files?.[0];
-        const fileName = file ? file.name : 'No reference attachment';
+        const custName = custNameInput ? custNameInput.value.trim() : '';
+        const custEmail = custEmailInput ? custEmailInput.value.trim() : '';
+        const instructions = instructionsInput ? instructionsInput.value.trim().substring(0, 2000) : '';
+        const fileName = selectedReferenceFile ? selectedReferenceFile.name : 'None (Concept text only)';
 
-        const randId = Math.floor(100 + Math.random() * 900);
-        const refCode = `REQUEST / 00${randId}`;
+        const finalRequestId = generateUniqueRequestId();
+        if (refCodeEl) refCodeEl.textContent = finalRequestId;
 
-        if (refCodeEl) refCodeEl.textContent = refCode;
+        // Prepare submission UI state
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'COMMISSIONING...';
+        if (globalStatusEl) globalStatusEl.textContent = 'Transmitting commission to XTICH atelier...';
 
+        // Build FormData payload
+        const formData = new FormData();
+        formData.append('requestId', finalRequestId);
+        formData.append('name', custName);
+        formData.append('email', custEmail);
+        formData.append('size', size);
+        formData.append('quantity', qty);
+        formData.append('embroideryType', embType);
+        formData.append('embroideryPlacement', placement);
+        formData.append('embroideryText', conceptText);
+        formData.append('embroideryScale', scale);
+        formData.append('thread', thread);
+        formData.append('customInstructions', instructions);
+
+        if (selectedReferenceFile) {
+          formData.append('referenceFile', selectedReferenceFile);
+        }
+
+        let cloudinaryUrl = null;
+        try {
+          const response = await fetch('/api/bespoke', {
+            method: 'POST',
+            body: formData
+          });
+          if (response.ok) {
+            const resJson = await response.json();
+            if (resJson.cloudinaryUrl) cloudinaryUrl = resJson.cloudinaryUrl;
+          }
+        } catch (fetchErr) {
+          console.warn('[Bespoke API] Network/offline fallback:', fetchErr);
+        }
+
+        // Populate Step 05 Editorial Confirmation Box
         if (summaryBox) {
           summaryBox.innerHTML = `
-            <div style="margin-bottom:0.35rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · OBSIDIAN</div>
-            <div style="margin-bottom:0.35rem;"><strong>GARMENT SIZE:</strong> ${size} &nbsp;|&nbsp; <strong>QUANTITY:</strong> ${qty} UNIT(S)</div>
-            <div style="margin-bottom:0.35rem;"><strong>PLACEMENT:</strong> ${placement} &nbsp;|&nbsp; <strong>SCALE:</strong> ${scale}</div>
-            <div style="margin-bottom:0.35rem;"><strong>THREAD TONE:</strong> ${thread}</div>
-            <div style="margin-bottom:0.35rem;"><strong>CONCEPT / MARK:</strong> "${conceptText}" (${embType})</div>
-            <div><strong>ATTACHMENT:</strong> ${fileName}</div>
+            <div style="margin-bottom:0.4rem;"><strong>CUSTOMER:</strong> ${custName} · ${custEmail}</div>
+            <div style="margin-bottom:0.4rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · OBSIDIAN</div>
+            <div style="margin-bottom:0.4rem;"><strong>GARMENT SIZE:</strong> ${size} &nbsp;|&nbsp; <strong>QUANTITY:</strong> ${qty} UNIT(S)</div>
+            <div style="margin-bottom:0.4rem;"><strong>PLACEMENT:</strong> ${placement} &nbsp;|&nbsp; <strong>SCALE:</strong> ${scale}</div>
+            <div style="margin-bottom:0.4rem;"><strong>THREAD TONE:</strong> ${thread}</div>
+            <div style="margin-bottom:0.4rem;"><strong>CONCEPT / MARK:</strong> "${conceptText}" (${embType})</div>
+            <div style="margin-bottom:0.4rem;"><strong>REFERENCE:</strong> ${fileName}${cloudinaryUrl ? ' · Attached' : ''}</div>
+            ${instructions ? `<div><strong>INSTRUCTIONS:</strong> "${instructions}"</div>` : ''}
           `;
         }
 
+        // WhatsApp direct link with complete pre-filled editorial payload
         if (whatsappBtn) {
           const waMessage = encodeURIComponent(
             `Hello XTICH Atelier,\n\n` +
             `I have lodged a Bespoke Commission:\n` +
-            `• Reference: ${refCode}\n` +
+            `• Reference: ${finalRequestId}\n` +
+            `• Customer: ${custName} (${custEmail})\n` +
             `• Base: Obsidian Black 450 GSM Heavyweight Hoodie\n` +
             `• Size: ${size}\n` +
             `• Quantity: ${qty}\n` +
@@ -1534,8 +1720,9 @@
             `• Scale: ${scale}\n` +
             `• Thread Tone: ${thread}\n` +
             `• Mark / Text: ${conceptText} (${embType})\n` +
-            `• Reference File: ${fileName}\n\n` +
-            `Please review and confirm next embroidery concept blueprint.`
+            `• Reference File: ${fileName}\n` +
+            (instructions ? `• Custom Instructions: ${instructions}\n` : '') +
+            `\nPlease review and confirm the next embroidery concept blueprint.`
           );
           whatsappBtn.href = `https://wa.me/919535344175?text=${waMessage}`;
         }
@@ -1553,7 +1740,7 @@
         const bespokeStage = document.getElementById('bespoke');
         if (bespokeStage) {
           const rect = bespokeStage.getBoundingClientRect();
-          const targetY = window.pageYOffset + rect.top + (rect.height * 0.88);
+          const targetY = window.pageYOffset + rect.top + (rect.height * 0.90);
           if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
             gsap.to(window, { scrollTo: targetY, duration: 0.8, ease: 'power2.out' });
           } else if (window.lenis) {
@@ -1562,10 +1749,29 @@
             window.scrollTo({ top: targetY, behavior: 'smooth' });
           }
         }
+
+        // Reset submit button state
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'BEGIN YOUR PIECE →';
+        if (globalStatusEl) globalStatusEl.textContent = '';
       });
     }
 
-    // 10. Reset / Edit Details
+    // 12. Return to XTICH Button
+    if (returnBtn) {
+      returnBtn.addEventListener('click', () => {
+        const heroStage = document.getElementById('hero') || document.body;
+        if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
+          gsap.to(window, { scrollTo: 0, duration: 1.0, ease: 'power2.inOut' });
+        } else if (window.lenis) {
+          window.lenis.scrollTo(0, { duration: 1.0 });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    }
+
+    // 13. Reset / Edit Details
     if (resetBtn) {
       resetBtn.addEventListener('click', () => {
         window.__bespokeSubmitted = false;

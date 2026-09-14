@@ -686,15 +686,32 @@
                 </div>
 
                 <div class="bespoke-upload-section">
-                  <label class="bespoke-upload-dropzone" id="bespokeDropzone" for="bespokeFileInput">
-                    <input type="file" id="bespokeFileInput" class="bespoke-file-input" accept="image/*,.pdf">
-                    <div class="upload-icon-wrap">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  <div class="bespoke-upload-dropzone" id="bespokeDropzone">
+                    <input type="file" id="bespokeFileInput" class="bespoke-file-input" accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf">
+                    
+                    <div class="upload-idle-state" id="uploadIdleState">
+                      <div class="upload-icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      </div>
+                      <span class="upload-main-text">UPLOAD YOUR IDEA</span>
+                      <span class="upload-sub-text">JPG / PNG / WEBP / PDF<br>MAX 10 MB</span>
                     </div>
-                    <span class="upload-main-text">UPLOAD YOUR IDEA</span>
-                    <span class="upload-sub-text">Sketch, handwriting, symbol, photo, or embroidery inspiration</span>
-                    <span class="upload-active-filename" id="bespokeFilename"></span>
-                  </label>
+
+                    <div class="upload-selected-state" id="uploadSelectedState" style="display:none;">
+                      <div class="upload-preview-thumb-wrap" id="uploadPreviewWrap">
+                        <img id="uploadImgThumb" class="upload-img-thumb" src="" alt="Reference thumbnail" style="display:none;">
+                        <div id="uploadPdfIcon" class="upload-pdf-icon" style="display:none;">
+                          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                          <span class="pdf-tag">PDF</span>
+                        </div>
+                      </div>
+                      <div class="upload-meta-info">
+                        <div class="upload-reference-title" id="uploadReferenceTitle">REFERENCE / file.pdf</div>
+                        <div class="upload-reference-size" id="uploadReferenceSize">2.4 MB</div>
+                      </div>
+                      <button type="button" class="upload-remove-btn" id="uploadRemoveBtn" aria-label="Remove reference file">[ REMOVE ]</button>
+                    </div>
+                  </div>
                   <p class="upload-disclaimer">XTICH will review and interpret your uploaded idea into an architectural embroidery blueprint.</p>
                 </div>
               </div>
@@ -740,13 +757,15 @@
                 </div>
               </div>
 
-              <!-- STEP 04: COMMISSION SPEC & INTERPRETATION -->
-              <div class="bespoke-step-card" data-step="3" id="bespokeStep3">
-                <span class="step-num-eyebrow">04 / COMMISSION SPEC</span>
-                <h3 class="step-title">Finalize Your Commission.</h3>
+              <!-- STEP 04: COMMISSION SPEC & BREATHING ROOM -->
+              <div class="bespoke-step-card bespoke-step-scrollable" data-step="3" id="bespokeStep3">
+                <span class="step-num-eyebrow">04 / COMMISSION</span>
+                <h3 class="step-title">FINALIZE YOUR PIECE.</h3>
+                <p class="step-desc">Specify size, volume, customer details, and individual instructions.</p>
 
+                <!-- SIZE -->
                 <div class="bespoke-option-group">
-                  <span class="option-group-label">HOODIE SIZE</span>
+                  <span class="option-group-label">SIZE</span>
                   <div class="option-pill-row size-pills-row" id="bespokeSizeChips">
                     <button type="button" class="option-pill" data-size="XS">XS</button>
                     <button type="button" class="option-pill active" data-size="S">S</button>
@@ -757,6 +776,7 @@
                   </div>
                 </div>
 
+                <!-- QUANTITY -->
                 <div class="bespoke-qty-row">
                   <span class="option-group-label">QUANTITY</span>
                   <div class="qty-stepper">
@@ -764,6 +784,32 @@
                     <span class="qty-val" id="bespokeQtyVal">1</span>
                     <button type="button" class="qty-btn" id="bespokeQtyPlus" aria-label="Increase quantity">+</button>
                   </div>
+                </div>
+
+                <!-- CUSTOMER DETAILS (NAME & EMAIL) -->
+                <div class="bespoke-customer-details-block">
+                  <span class="option-group-label">YOUR DETAILS</span>
+                  <div class="bespoke-fields-duo">
+                    <div class="bespoke-field-item">
+                      <label for="bespokeCustName" class="bespoke-subfield-label">NAME</label>
+                      <input type="text" id="bespokeCustName" class="bespoke-text-input" placeholder="Your full name" autocomplete="name" required>
+                      <span class="field-error-msg" id="bespokeNameError"></span>
+                    </div>
+                    <div class="bespoke-field-item">
+                      <label for="bespokeCustEmail" class="bespoke-subfield-label">EMAIL</label>
+                      <input type="email" id="bespokeCustEmail" class="bespoke-text-input" placeholder="your@email.com" autocomplete="email" required>
+                      <span class="field-error-msg" id="bespokeEmailError"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- CUSTOM INSTRUCTIONS (MAX 2000 CHARACTERS) -->
+                <div class="bespoke-instructions-block">
+                  <div class="instructions-header-row">
+                    <label for="bespokeInstructions" class="option-group-label">CUSTOM INSTRUCTIONS</label>
+                    <span class="instructions-char-count" id="instructionsCharCount">0 / 2000</span>
+                  </div>
+                  <textarea id="bespokeInstructions" class="bespoke-textarea-input" placeholder="Tell us what you have in mind..." maxlength="2000" rows="3"></textarea>
                 </div>
 
                 <!-- THE IMPORTANT DIFFERENTIATOR -->
@@ -786,16 +832,18 @@
                   <div class="proc-step"><span>05</span> MADE FOR YOU</div>
                 </div>
 
+                <!-- PRIMARY CTA (VISUALLY DOMINANT) -->
                 <div class="bespoke-action-box">
                   <button type="button" class="bespoke-primary-cta" id="bespokeSubmitBtn">BEGIN YOUR PIECE →</button>
                   <span class="cta-micro-copy">REQUEST YOUR CUSTOM HOODIE · REVIEWED PERSONALLY BY XTICH</span>
+                  <span class="commission-global-status" id="bespokeGlobalStatus"></span>
                 </div>
               </div>
 
-              <!-- STEP 05: CONFIRMATION & BESPOKE ARCHIVE -->
-              <div class="bespoke-step-card" data-step="4" id="bespokeStep4">
+              <!-- STEP 05: MADE FOR YOU & BESPOKE ARCHIVE -->
+              <div class="bespoke-step-card bespoke-step-scrollable" data-step="4" id="bespokeStep4">
                 
-                <!-- Dynamic Confirmation Panel -->
+                <!-- Dynamic Confirmation Panel (Monochrome Luxury, No Green) -->
                 <div class="bespoke-confirmation-card" id="bespokeConfirmationCard">
                   <div class="conf-badge-pill">COMMISSION INITIATED</div>
                   <h2 class="conf-headline">YOUR PIECE<br>HAS BEGUN.</h2>
@@ -803,7 +851,7 @@
                   
                   <div class="conf-reference-strip">
                     <span class="ref-label">COMMISSION REFERENCE</span>
-                    <span class="ref-code" id="bespokeRefCode">REQUEST / 00127</span>
+                    <span class="ref-code" id="bespokeRefCode">REQUEST / XXXXX</span>
                   </div>
 
                   <p class="conf-message">Your idea has been received. XTICH will review the details and develop the next step with you.</p>
@@ -813,8 +861,9 @@
                   </div>
 
                   <div class="conf-cta-row">
+                    <button type="button" class="conf-return-btn" id="bespokeReturnBtn">RETURN TO XTICH →</button>
                     <a href="https://wa.me/919535344175" id="bespokeDirectWhatsappBtn" target="_blank" rel="noopener noreferrer" class="conf-whatsapp-btn">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                       <span>Confirm Directly with Founders</span>
                     </a>
                     <button type="button" class="conf-reset-btn" id="bespokeResetBtn">Edit Commission Details</button>

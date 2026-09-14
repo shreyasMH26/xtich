@@ -1871,8 +1871,8 @@ button {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 6px rgba(74, 222, 128, 0.6);
+  background: var(--paper-100);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.45);
 }
 
 .canvas-spec-bar {
@@ -2156,6 +2156,7 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  min-height: 84px;
 }
 
 .bespoke-upload-dropzone:hover {
@@ -2164,8 +2165,8 @@ button {
 }
 
 .bespoke-upload-dropzone.has-file {
-  border-color: #4ade80;
-  background: rgba(74, 222, 128, 0.05);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .bespoke-file-input {
@@ -2175,6 +2176,101 @@ button {
   width: 100%;
   height: 100%;
   cursor: pointer;
+  z-index: 2;
+}
+
+.upload-idle-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+}
+
+.upload-selected-state {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  width: 100%;
+  position: relative;
+  z-index: 3;
+}
+
+.upload-preview-thumb-wrap {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-img-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-pdf-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper-100);
+}
+
+.pdf-tag {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+}
+
+.upload-meta-info {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.upload-reference-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--paper-100);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.04em;
+}
+
+.upload-reference-size {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--ash-400);
+  margin-top: 2px;
+}
+
+.upload-remove-btn {
+  background: transparent;
+  border: none;
+  color: var(--ash-400);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  padding: 0.35rem 0.5rem;
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.upload-remove-btn:hover {
+  color: var(--paper-100);
 }
 
 .upload-icon-wrap {
@@ -2193,19 +2289,10 @@ button {
 
 .upload-sub-text {
   font-family: var(--font-sans);
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   color: var(--ash-400);
   max-width: 320px;
   line-height: 1.35;
-}
-
-.upload-active-filename {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  color: #4ade80;
-  margin-top: 0.35rem;
-  font-weight: 500;
-  display: block;
 }
 
 .upload-disclaimer {
@@ -2228,7 +2315,26 @@ button {
   line-height: 1.4;
 }
 
-/* Quantity & Step 04 & 05 */
+/* ── Scrollable Breathing Room for Step 04 & 05 ───────────────────────── */
+.bespoke-step-scrollable {
+  max-height: calc(100vh - 140px);
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.bespoke-step-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bespoke-step-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* Quantity & Step 04 Details */
 .bespoke-qty-row {
   display: flex;
   align-items: center;
@@ -2276,6 +2382,94 @@ button {
   text-align: center;
 }
 
+/* Customer Details (Name & Email) */
+.bespoke-customer-details-block {
+  margin-bottom: 1rem;
+}
+
+.bespoke-fields-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+}
+
+.bespoke-field-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.bespoke-subfield-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ash-400);
+  margin-bottom: 0.3rem;
+  text-transform: uppercase;
+}
+
+.field-error-msg {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #ff9999;
+  letter-spacing: 0.05em;
+  margin-top: 0.25rem;
+  min-height: 12px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.field-error-msg.visible {
+  opacity: 1;
+}
+
+.bespoke-text-input.has-error {
+  border-color: rgba(255, 120, 120, 0.7);
+  background: rgba(255, 120, 120, 0.04);
+}
+
+/* Custom Instructions (Max 2000 chars) */
+.bespoke-instructions-block {
+  margin-bottom: 1.15rem;
+}
+
+.instructions-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+.instructions-char-count {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ash-400);
+  letter-spacing: 0.08em;
+}
+
+.bespoke-textarea-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--paper-100);
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  padding: 0.65rem 0.8rem;
+  border-radius: 2px;
+  outline: none;
+  resize: vertical;
+  min-height: 70px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.bespoke-textarea-input:focus {
+  border-color: var(--paper-100);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .bespoke-interpretation-block {
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -2315,7 +2509,7 @@ button {
   align-items: center;
   flex-wrap: wrap;
   gap: 0.3rem;
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.15rem;
   font-family: var(--font-mono);
   font-size: 0.58rem;
   color: var(--ash-400);
@@ -2345,19 +2539,37 @@ button {
   color: var(--ink-950);
   border: 1px solid var(--paper-100);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  padding: 0.8rem 1.2rem;
+  letter-spacing: 0.14em;
+  padding: 0.88rem 1.25rem;
   border-radius: 2px;
   cursor: pointer;
   text-transform: uppercase;
   transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
 }
 
 .bespoke-primary-cta:hover {
   background: transparent;
   color: var(--paper-100);
+  box-shadow: none;
+}
+
+.bespoke-primary-cta:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.commission-global-status {
+  display: block;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--ash-400);
+  letter-spacing: 0.06em;
+  margin-top: 0.4rem;
+  min-height: 14px;
 }
 
 .cta-micro-copy {
@@ -2370,11 +2582,11 @@ button {
   margin-top: 0.45rem;
 }
 
-/* ── Step 05: Confirmation & Archive Teaser ─────────────────────────── */
+/* ── Step 05: Confirmation & Archive Teaser (Monochrome, No Green) ────── */
 .bespoke-confirmation-card {
   background: #121215;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  padding: 1.25rem 1.35rem;
+  padding: 1.35rem 1.45rem;
   border-radius: 2px;
   margin-bottom: 1.1rem;
   position: relative;
@@ -2386,12 +2598,13 @@ button {
   font-size: 0.58rem;
   font-weight: 700;
   letter-spacing: 0.16em;
-  background: rgba(74, 222, 128, 0.15);
-  color: #4ade80;
-  border: 1px solid rgba(74, 222, 128, 0.3);
-  padding: 0.2rem 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--paper-100);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.25rem 0.6rem;
   border-radius: 2px;
-  margin-bottom: 0.65rem;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
 }
 
 .conf-headline {
@@ -2418,10 +2631,10 @@ button {
   justify-content: space-between;
   align-items: center;
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 0.75rem;
   font-family: var(--font-mono);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.85rem;
   border-radius: 2px;
 }
 
@@ -2440,28 +2653,49 @@ button {
 
 .conf-message {
   font-family: var(--font-sans);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   color: var(--ash-300);
   line-height: 1.45;
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.95rem;
 }
 
 .conf-summary-box {
   background: rgba(0, 0, 0, 0.35);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 0.7rem;
+  padding: 0.75rem;
   font-family: var(--font-mono);
   font-size: 0.68rem;
   color: var(--ash-300);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.15rem;
   border-radius: 2px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .conf-cta-row {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
+  gap: 0.5rem;
+}
+
+.conf-return-btn {
+  width: 100%;
+  background: var(--paper-100);
+  color: var(--ink-950);
+  border: 1px solid var(--paper-100);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.8rem 1.2rem;
+  border-radius: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.25s ease;
+}
+
+.conf-return-btn:hover {
+  background: transparent;
+  color: var(--paper-100);
 }
 
 .conf-whatsapp-btn {
@@ -2469,26 +2703,28 @@ button {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: #25d366;
-  color: #000;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--paper-100);
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   padding: 0.7rem 1rem;
   border-radius: 2px;
   text-decoration: none;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
 .conf-whatsapp-btn:hover {
-  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .conf-reset-btn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--ash-300);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--ash-400);
   font-family: var(--font-mono);
   font-size: 0.65rem;
   letter-spacing: 0.06em;
@@ -4605,6 +4841,16 @@ button {
 
   .bespoke-confirmation-card {
     padding: 1rem;
+  }
+
+  .bespoke-fields-duo {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .upload-selected-state {
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
   /* Lookbook Pinned Scene Mobile Layout */
