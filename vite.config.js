@@ -27,6 +27,8 @@ export default defineConfig({
               const {
                 name = 'Client',
                 email = 'client@example.com',
+                hoodieColor = 'Obsidian',
+                hoodieColorCode = '01 / OBSIDIAN',
                 size = 'S',
                 quantity = '1',
                 embroideryType = 'TEXT',
@@ -65,7 +67,7 @@ export default defineConfig({
                   from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
                   to: [process.env.XTICH_NOTIFICATION_EMAIL || 'shreyasmh26@gmail.com'],
                   subject: `[XTICH Bespoke] Commission ${finalRequestId} — ${name}`,
-                  text: `New Bespoke Commission:\nID: ${finalRequestId}\nName: ${name}\nEmail: ${email}\nSize: ${size}\nQuantity: ${quantity}\nType: ${embroideryType}\nPlacement: ${embroideryPlacement}\nText: ${embroideryText}\nScale: ${embroideryScale}\nThread: ${thread}\nInstructions: ${customInstructions}\nFile: ${req.file ? req.file.originalname : 'None'}`
+                  text: `New Bespoke Commission:\nID: ${finalRequestId}\nName: ${name}\nEmail: ${email}\nColor: ${hoodieColorCode} (${hoodieColor})\nSize: ${size}\nQuantity: ${quantity}\nType: ${embroideryType}\nPlacement: ${embroideryPlacement}\nText: ${embroideryText}\nScale: ${embroideryScale}\nThread: ${thread}\nInstructions: ${customInstructions}\nFile: ${req.file ? req.file.originalname : 'None'}`
                 });
               }
 

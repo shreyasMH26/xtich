@@ -1369,6 +1369,100 @@
 
     if (!hoodieStage) return;
 
+    // 0. Hoodie Color Selector (5 Colors: Obsidian, Bone, Stone, Graphite, Deep Navy)
+    const colorButtons     = document.querySelectorAll('#bespokeColorSwatches .color-swatch-btn');
+    const colorCurrentVal  = document.getElementById('bespokeColorCurrentVal');
+    const colorCaptionCode = document.querySelector('#bespokeColorMetaCaption .caption-code');
+    const colorCaptionDesc = document.querySelector('#bespokeColorMetaCaption .caption-desc');
+    const colorCaptionHex  = document.querySelector('#bespokeColorMetaCaption .caption-hex');
+    const specDetail       = document.getElementById('bespokeSpecDetail');
+    const calloutTitle     = document.getElementById('bespokeCalloutTitle');
+
+    const colorSpecs = {
+      'obsidian': {
+        code: '01 / OBSIDIAN',
+        name: 'Obsidian Black',
+        shortName: 'Obsidian',
+        hex: '#0A0A0A',
+        desc: 'Deep black',
+        specLabel: '450 GSM Cotton-Poly Fleece · Obsidian Black'
+      },
+      'bone': {
+        code: '02 / BONE',
+        name: 'Bone',
+        shortName: 'Bone',
+        hex: '#E8E4DC',
+        desc: 'Warm off-white',
+        specLabel: '450 GSM Cotton-Poly Fleece · Bone'
+      },
+      'stone': {
+        code: '03 / STONE',
+        name: 'Stone',
+        shortName: 'Stone',
+        hex: '#A7A39B',
+        desc: 'Soft neutral grey',
+        specLabel: '450 GSM Cotton-Poly Fleece · Stone'
+      },
+      'graphite': {
+        code: '04 / GRAPHITE',
+        name: 'Graphite',
+        shortName: 'Graphite',
+        hex: '#343434',
+        desc: 'Dark charcoal',
+        specLabel: '450 GSM Cotton-Poly Fleece · Graphite'
+      },
+      'deep-navy': {
+        code: '05 / DEEP NAVY',
+        name: 'Deep Navy',
+        shortName: 'Deep Navy',
+        hex: '#111923',
+        desc: 'Very dark muted navy',
+        specLabel: '450 GSM Cotton-Poly Fleece · Deep Navy'
+      }
+    };
+
+    let selectedHoodieColor = 'obsidian';
+
+    const setHoodieColor = (colorKey) => {
+      const spec = colorSpecs[colorKey] || colorSpecs['obsidian'];
+      selectedHoodieColor = colorKey;
+
+      colorButtons.forEach(btn => {
+        const isActive = btn.dataset.color === colorKey;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+      });
+
+      hoodieStage.classList.remove(
+        'color-obsidian',
+        'color-bone',
+        'color-stone',
+        'color-graphite',
+        'color-deep-navy'
+      );
+      hoodieStage.classList.add(`color-${colorKey}`);
+
+      if (colorCurrentVal) colorCurrentVal.textContent = spec.code;
+      if (colorCaptionCode) colorCaptionCode.textContent = spec.code;
+      if (colorCaptionDesc) colorCaptionDesc.textContent = spec.desc;
+      if (colorCaptionHex) colorCaptionHex.textContent = spec.hex;
+
+      if (specDetail) {
+        specDetail.textContent = spec.specLabel;
+      }
+
+      if (calloutTitle) {
+        calloutTitle.textContent = `HEAVYWEIGHT HOODIE · 450 GSM · ${spec.shortName.toUpperCase()}`;
+      }
+    };
+
+    colorButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const color = btn.dataset.color;
+        if (color) setHoodieColor(color);
+      });
+    });
+
     // 1. Text & Initial Input Realtime Reflection
     const syncEmbroideryText = () => {
       if (!textInput || !embroideryText) return;
@@ -1660,11 +1754,16 @@
         submitBtn.textContent = 'COMMISSIONING...';
         if (globalStatusEl) globalStatusEl.textContent = 'Transmitting commission to XTICH atelier...';
 
+        const activeColorSpec = colorSpecs[selectedHoodieColor] || colorSpecs['obsidian'];
+
         // Build FormData payload
         const formData = new FormData();
         formData.append('requestId', finalRequestId);
         formData.append('name', custName);
         formData.append('email', custEmail);
+        formData.append('hoodieColor', activeColorSpec.shortName);
+        formData.append('hoodieColorCode', activeColorSpec.code);
+        formData.append('hoodieColorHex', activeColorSpec.hex);
         formData.append('size', size);
         formData.append('quantity', qty);
         formData.append('embroideryType', embType);
@@ -1696,7 +1795,8 @@
         if (summaryBox) {
           summaryBox.innerHTML = `
             <div style="margin-bottom:0.4rem;"><strong>CUSTOMER:</strong> ${custName} · ${custEmail}</div>
-            <div style="margin-bottom:0.4rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · OBSIDIAN</div>
+            <div style="margin-bottom:0.4rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · ${activeColorSpec.shortName.toUpperCase()}</div>
+            <div style="margin-bottom:0.4rem;"><strong>HOODIE COLOR:</strong> ${activeColorSpec.code} · ${activeColorSpec.desc} (${activeColorSpec.hex})</div>
             <div style="margin-bottom:0.4rem;"><strong>GARMENT SIZE:</strong> ${size} &nbsp;|&nbsp; <strong>QUANTITY:</strong> ${qty} UNIT(S)</div>
             <div style="margin-bottom:0.4rem;"><strong>PLACEMENT:</strong> ${placement} &nbsp;|&nbsp; <strong>SCALE:</strong> ${scale}</div>
             <div style="margin-bottom:0.4rem;"><strong>THREAD TONE:</strong> ${thread}</div>
@@ -1713,7 +1813,8 @@
             `I have lodged a Bespoke Commission:\n` +
             `• Reference: ${finalRequestId}\n` +
             `• Customer: ${custName} (${custEmail})\n` +
-            `• Base: Obsidian Black 450 GSM Heavyweight Hoodie\n` +
+            `• Model: Heavyweight 450 GSM Hoodie · ${activeColorSpec.shortName}\n` +
+            `• Color: ${activeColorSpec.code} · ${activeColorSpec.desc} (${activeColorSpec.hex})\n` +
             `• Size: ${size}\n` +
             `• Quantity: ${qty}\n` +
             `• Placement: ${placement}\n` +

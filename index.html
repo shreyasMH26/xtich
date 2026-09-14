@@ -603,11 +603,12 @@
                 </div>
 
                 <!-- Live Hoodie Visual Stage with Dynamic Embroidery Overlay -->
-                <div class="bespoke-hoodie-stage placement-chest thread-white size-small" id="bespokeHoodieStage">
+                <div class="bespoke-hoodie-stage placement-chest thread-white size-small color-obsidian" id="bespokeHoodieStage">
                   
                   <div class="hoodie-layer-wrap">
                     <img src="assets/hoodie-black-front-hr.jpg" id="bespokeHoodieFront" class="bespoke-hoodie-img active" alt="XTICH Bespoke Hoodie Front View">
                     <img src="assets/hoodie-black-back.jpg" id="bespokeHoodieBack" class="bespoke-hoodie-img" alt="XTICH Bespoke Hoodie Back View">
+                    <div class="hoodie-color-overlay" id="bespokeHoodieOverlay" aria-hidden="true"></div>
                   </div>
 
                   <!-- Live Embroidery Mark Overlay (Moves dynamically based on placement) -->
@@ -628,7 +629,7 @@
                 <div class="canvas-spec-bar">
                   <div class="spec-left">
                     <span class="spec-name">HEAVYWEIGHT HOODIE</span>
-                    <span class="spec-detail">450 GSM Cotton-Poly Fleece · Obsidian Black</span>
+                    <span class="spec-detail" id="bespokeSpecDetail">450 GSM Cotton-Poly Fleece · Obsidian Black</span>
                   </div>
                   <div class="spec-right">
                     <span class="spec-badge">BASE ARCHITECTURE</span>
@@ -647,13 +648,52 @@
                 <h2 class="bespoke-headline">A PIECE THAT<br>EXISTS ONCE.</h2>
                 <p class="bespoke-lead">Your idea. Our craft.<br>Made specifically for you.</p>
                 <p class="bespoke-desc">Every bespoke XTICH piece begins with an idea. Share your concept, choose your placement and details, and our team develops it into an embroidery concept made specifically for you.</p>
+
+                <!-- HOODIE COLOR SELECTOR -->
+                <div class="bespoke-option-block bespoke-color-block">
+                  <div class="option-header-row">
+                    <label class="option-label">HOODIE COLOR</label>
+                    <span class="option-current-value" id="bespokeColorCurrentVal">01 / OBSIDIAN</span>
+                  </div>
+                  
+                  <div class="bespoke-color-swatches" id="bespokeColorSwatches" role="radiogroup" aria-label="Hoodie Color">
+                    <button type="button" class="color-swatch-btn active" data-color="obsidian" data-code="01 / OBSIDIAN" data-name="Obsidian" data-hex="#0A0A0A" data-desc="Deep black" aria-label="01 Obsidian - Deep black" aria-checked="true">
+                      <span class="swatch-indicator" style="background-color: #0A0A0A;" aria-hidden="true"></span>
+                      <span class="swatch-name">01 OBSIDIAN</span>
+                    </button>
+                    <button type="button" class="color-swatch-btn" data-color="bone" data-code="02 / BONE" data-name="Bone" data-hex="#E8E4DC" data-desc="Warm off-white" aria-label="02 Bone - Warm off-white" aria-checked="false">
+                      <span class="swatch-indicator" style="background-color: #E8E4DC;" aria-hidden="true"></span>
+                      <span class="swatch-name">02 BONE</span>
+                    </button>
+                    <button type="button" class="color-swatch-btn" data-color="stone" data-code="03 / STONE" data-name="Stone" data-hex="#A7A39B" data-desc="Soft neutral grey" aria-label="03 Stone - Soft neutral grey" aria-checked="false">
+                      <span class="swatch-indicator" style="background-color: #A7A39B;" aria-hidden="true"></span>
+                      <span class="swatch-name">03 STONE</span>
+                    </button>
+                    <button type="button" class="color-swatch-btn" data-color="graphite" data-code="04 / GRAPHITE" data-name="Graphite" data-hex="#343434" data-desc="Dark charcoal" aria-label="04 Graphite - Dark charcoal" aria-checked="false">
+                      <span class="swatch-indicator" style="background-color: #343434;" aria-hidden="true"></span>
+                      <span class="swatch-name">04 GRAPHITE</span>
+                    </button>
+                    <button type="button" class="color-swatch-btn" data-color="deep-navy" data-code="05 / DEEP NAVY" data-name="Deep Navy" data-hex="#111923" data-desc="Very dark muted navy" aria-label="05 Deep Navy - Very dark muted navy" aria-checked="false">
+                      <span class="swatch-indicator" style="background-color: #111923;" aria-hidden="true"></span>
+                      <span class="swatch-name">05 DEEP NAVY</span>
+                    </button>
+                  </div>
+
+                  <div class="color-meta-caption" id="bespokeColorMetaCaption">
+                    <span class="caption-code">01 / OBSIDIAN</span>
+                    <span class="caption-separator">·</span>
+                    <span class="caption-desc">Deep black</span>
+                    <span class="caption-separator">·</span>
+                    <span class="caption-hex">#0A0A0A</span>
+                  </div>
+                </div>
                 
                 <div class="bespoke-base-callout">
                   <div class="callout-header">
                     <span class="callout-label">THE FOUNDATION STANDARD</span>
                     <span class="callout-status">VERIFIED 300 DAYS</span>
                   </div>
-                  <h4>HEAVYWEIGHT HOODIE · 450 GSM · OBSIDIAN BLACK</h4>
+                  <h4 id="bespokeCalloutTitle">HEAVYWEIGHT HOODIE · 450 GSM · OBSIDIAN BLACK</h4>
                   <p>Engineered with our signature double-layer hood, reinforced drop-shoulder pattern, and 180+ wash-tested fleece. This is the architectural canvas. Now make it yours.</p>
                 </div>
                 

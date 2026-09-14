@@ -129,7 +129,8 @@ async function sendBespokeNotification(data) {
 
         <div class="row"><span class="label">Customer Name</span><span class="value">${data.name}</span></div>
         <div class="row"><span class="label">Customer Email</span><span class="value">${data.email}</span></div>
-        <div class="row"><span class="label">Base Garment</span><span class="value">Heavyweight 450 GSM Hoodie (Obsidian)</span></div>
+        <div class="row"><span class="label">Base Garment</span><span class="value">Heavyweight 450 GSM Hoodie</span></div>
+        <div class="row"><span class="label">Hoodie Color</span><span class="value">${data.hoodieColorCode || data.hoodieColor || '01 / OBSIDIAN'} (${data.hoodieColorHex || '#0A0A0A'})</span></div>
         <div class="row"><span class="label">Garment Size</span><span class="value">${data.size}</span></div>
         <div class="row"><span class="label">Quantity</span><span class="value">${data.quantity} Unit(s)</span></div>
         <div class="row"><span class="label">Embroidery Type</span><span class="value">${data.embroideryType}</span></div>
@@ -180,6 +181,9 @@ app.post('/api/bespoke', upload.single('referenceFile'), async (req, res) => {
     const {
       name,
       email,
+      hoodieColor = 'Obsidian',
+      hoodieColorCode = '01 / OBSIDIAN',
+      hoodieColorHex = '#0A0A0A',
       size = 'S',
       quantity = '1',
       embroideryType = 'TEXT',
@@ -223,7 +227,10 @@ app.post('/api/bespoke', upload.single('referenceFile'), async (req, res) => {
       requestId: finalRequestId,
       name: name.trim(),
       email: email.trim(),
-      hoodie: 'Heavyweight 450 GSM Hoodie (Obsidian Black)',
+      hoodie: `Heavyweight 450 GSM Hoodie (${hoodieColor.trim()})`,
+      hoodieColor: hoodieColor.trim(),
+      hoodieColorCode: hoodieColorCode.trim(),
+      hoodieColorHex: hoodieColorHex.trim(),
       size: size.toUpperCase(),
       quantity: parseInt(quantity, 10) || 1,
       embroideryType: embroideryType.toUpperCase(),
