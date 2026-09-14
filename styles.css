@@ -51,6 +51,202 @@
   display: block;
 }
 
+/* ==========================================================================
+   XTICH QUANTUM ORBITAL PARTICLE LOADER
+   Haute Atelier Micro-Physics System
+   ========================================================================== */
+.xtich-quantum-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  overflow: visible;
+  position: relative;
+}
+
+.quantum-orbital-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 176px;
+  height: 80px;
+  isolation: isolate;
+}
+
+.quantum-center-glyph {
+  position: absolute;
+  z-index: 20;
+  font-family: var(--font-mono, 'Space Mono', monospace);
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  color: rgba(250, 248, 245, 0.35);
+  pointer-events: none;
+  user-select: none;
+}
+
+.quantum-particle {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.quantum-particle .q-dot {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* 01 / Fast inner stitch (Bone ivory) */
+.q-stitch {
+  z-index: 30;
+  width: 14px;
+  height: 14px;
+  animation: quantum-red 3.8s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+.q-stitch .q-dot {
+  background: #FAF8F5;
+  box-shadow: 0 0 14px rgba(250, 248, 245, 0.9), 0 0 28px rgba(250, 248, 245, 0.4);
+}
+
+/* 02 / Large outer atmosphere (Champagne gold) */
+.q-gold {
+  z-index: 10;
+  width: 20px;
+  height: 20px;
+  animation: quantum-blue 5.6s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+.q-gold .q-dot {
+  background: #C5A880;
+  box-shadow: 0 0 18px rgba(197, 168, 128, 0.75), 0 0 36px rgba(197, 168, 128, 0.3);
+}
+
+/* 03 / Center nucleus (Warm ivory) */
+.q-nucleus {
+  z-index: 40;
+  width: 16px;
+  height: 16px;
+  animation: quantum-yellow 3.1s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+}
+.q-nucleus .q-dot {
+  background: #E8E4DC;
+  box-shadow: 0 0 14px rgba(232, 228, 220, 0.85), 0 0 26px rgba(232, 228, 220, 0.35);
+}
+
+/* 04 / Slow orbital periphery (Stone mist) */
+.q-mist {
+  z-index: 5;
+  width: 12px;
+  height: 12px;
+  animation: quantum-green 6.4s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+}
+.q-mist .q-dot {
+  background: #A7A39B;
+  box-shadow: 0 0 12px rgba(167, 163, 155, 0.6), 0 0 24px rgba(167, 163, 155, 0.2);
+}
+
+/* Orbital trajectory curves */
+@keyframes quantum-red {
+  0% {
+    transform: translate3d(-46px, 7px, 0) scale(0.72);
+    opacity: 0.45;
+  }
+  25% {
+    transform: translate3d(-23px, -7px, 0) scale(0.95);
+    opacity: 0.78;
+  }
+  50% {
+    transform: translate3d(46px, 0, 0) scale(1.18);
+    opacity: 1;
+  }
+  75% {
+    transform: translate3d(23px, 7px, 0) scale(0.95);
+    opacity: 0.78;
+  }
+  100% {
+    transform: translate3d(-46px, 7px, 0) scale(0.72);
+    opacity: 0.45;
+  }
+}
+
+@keyframes quantum-blue {
+  0% {
+    transform: translate3d(38px, -4px, 0) scale(1);
+    opacity: 0.95;
+  }
+  25% {
+    transform: translate3d(19px, 7px, 0) scale(0.88);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translate3d(-38px, 3px, 0) scale(0.68);
+    opacity: 0.42;
+  }
+  75% {
+    transform: translate3d(-19px, -7px, 0) scale(0.88);
+    opacity: 0.72;
+  }
+  100% {
+    transform: translate3d(38px, -4px, 0) scale(1);
+    opacity: 0.95;
+  }
+}
+
+@keyframes quantum-yellow {
+  0% {
+    transform: translate3d(-27px, 2px, 0) scale(0.82);
+    opacity: 0.65;
+  }
+  20% {
+    transform: translate3d(-17px, -5px, 0) scale(0.94);
+    opacity: 0.82;
+  }
+  50% {
+    transform: translate3d(27px, 0, 0) scale(1.08);
+    opacity: 1;
+  }
+  80% {
+    transform: translate3d(17px, 5px, 0) scale(0.94);
+    opacity: 0.82;
+  }
+  100% {
+    transform: translate3d(-27px, 2px, 0) scale(0.82);
+    opacity: 0.65;
+  }
+}
+
+@keyframes quantum-green {
+  0% {
+    transform: translate3d(64px, 6px, 0) scale(0.52);
+    opacity: 0.25;
+  }
+  20% {
+    transform: translate3d(43px, -5px, 0) scale(0.68);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(0, 3px, 0) scale(1);
+    opacity: 0.9;
+  }
+  80% {
+    transform: translate3d(-43px, -5px, 0) scale(0.68);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(-64px, 6px, 0) scale(0.52);
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q-stitch,
+  .q-gold,
+  .q-nucleus,
+  .q-mist {
+    animation: none !important;
+  }
+}
+
 .loader-progress-bar {
   width: clamp(140px, 28vw, 260px);
   height: 1px;
