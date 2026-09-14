@@ -2865,32 +2865,72 @@ button {
   color: var(--ash-400);
 }
 
+/* ==========================================================================
+   XTICH TACTILE ATELIER BUTTON (Brushed Metal & Bevel Specular Craft)
+   ========================================================================== */
 .bespoke-primary-cta {
+  position: relative;
   width: 100%;
-  background: var(--paper-100);
-  color: var(--ink-950);
-  border: 1px solid var(--paper-100);
+  background: linear-gradient(180deg, #FAF8F5 0%, #E8E4DC 55%, #D6D0C7 100%);
+  color: #0A0A0A;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   font-family: var(--font-mono);
   font-size: 0.84rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
-  padding: 0.88rem 1.25rem;
-  border-radius: 2px;
+  letter-spacing: 0.16em;
+  padding: 0.95rem 1.4rem;
+  border-radius: 4px;
   cursor: pointer;
   text-transform: uppercase;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.15),
+    0 4px 14px rgba(0, 0, 0, 0.25),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.95),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.25),
+    inset 0 0 8px rgba(255, 255, 255, 0.3);
+  transform-origin: center center;
+  overflow: hidden;
+}
+
+.bespoke-primary-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .bespoke-primary-cta:hover {
-  background: transparent;
-  color: var(--paper-100);
-  box-shadow: none;
+  filter: brightness(1.04);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(232, 228, 220, 0.25),
+    inset 1px 1px 1px rgba(255, 255, 255, 1),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.bespoke-primary-cta:hover::before {
+  opacity: 0.25;
+}
+
+.bespoke-primary-cta:active {
+  transform: translateY(2px) scale(0.985);
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.25),
+    inset 1px 2px 3px rgba(0, 0, 0, 0.3);
+  filter: brightness(0.98);
 }
 
 .bespoke-primary-cta:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.5);
 }
 
 .commission-global-status {
@@ -5393,7 +5433,7 @@ button {
     padding: 0.72rem 0.85rem !important;
   }
 
-  /* Floating Mobile Quick-Preview Anchor */
+  /* Floating Mobile Quick-Preview Anchor (Liquid Glass Specular Finish) */
   .bespoke-floating-preview-pill {
     position: fixed !important;
     bottom: 1.25rem !important;
@@ -5401,20 +5441,26 @@ button {
     transform: translateX(-50%) translateY(80px) !important;
     opacity: 0 !important;
     pointer-events: none !important;
-    background: rgba(14, 14, 16, 0.94) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-    color: var(--paper-100) !important;
-    padding: 0.52rem 1.1rem !important;
+    background: rgba(10, 10, 12, 0.75) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: #FAF8F5 !important;
+    padding: 0.58rem 1.25rem !important;
     border-radius: 999px !important;
     font-family: var(--font-mono) !important;
     font-size: 0.68rem !important;
-    letter-spacing: 0.12em !important;
+    letter-spacing: 0.14em !important;
     text-transform: uppercase !important;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65) !important;
+    box-shadow: 
+      0 0 8px rgba(0, 0, 0, 0.05),
+      0 4px 16px rgba(0, 0, 0, 0.6),
+      inset 2px 2px 1px -1px rgba(255, 255, 255, 0.4),
+      inset -2px -2px 1px -1px rgba(255, 255, 255, 0.6),
+      inset 0 0 8px 2px rgba(255, 255, 255, 0.08),
+      0 0 16px rgba(255, 255, 255, 0.1) !important;
     z-index: 850 !important;
-    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease !important;
+    transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, filter 0.2s ease !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
@@ -5428,8 +5474,12 @@ button {
     transform: translateX(-50%) translateY(0) !important;
   }
 
+  .bespoke-floating-preview-pill:hover {
+    filter: brightness(1.12) !important;
+  }
+
   .bespoke-floating-preview-pill:active {
-    transform: translateX(-50%) scale(0.96) !important;
+    transform: translateX(-50%) translateY(2px) scale(0.97) !important;
   }
 
   .bespoke-option-duo {
@@ -5612,3 +5662,81 @@ button {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
 }
+
+/* ==========================================================================
+   XTICH LIQUID GLASS & TACTILE METAL BUTTON UTILITIES
+   ========================================================================== */
+.btn-liquid-glass {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 12, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FAF8F5;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  box-shadow: 
+    0 0 8px rgba(0, 0, 0, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.5),
+    inset 2px 2px 1px -1px rgba(255, 255, 255, 0.35),
+    inset -2px -2px 1px -1px rgba(255, 255, 255, 0.65),
+    inset 0 0 8px 2px rgba(255, 255, 255, 0.08),
+    0 0 16px rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+}
+
+.btn-liquid-glass:hover {
+  filter: brightness(1.12);
+  transform: scale(1.03);
+}
+
+.btn-liquid-glass:active {
+  transform: translateY(2px) scale(0.97);
+}
+
+.btn-metal-gold {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #FFEBA1 0%, #D4AF37 50%, #9B873F 100%);
+  color: #1A1400;
+  border: 1px solid rgba(255, 240, 170, 0.6);
+  padding: 0.75rem 1.6rem;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 0 rgba(255, 255, 230, 0.8);
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.25),
+    inset 1px 1px 1px rgba(255, 255, 255, 0.9),
+    inset -1px -1px 1px rgba(0, 0, 0, 0.3),
+    0 0 16px rgba(212, 175, 55, 0.25);
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.1, 0.4, 0.2, 1);
+}
+
+.btn-metal-gold:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+  box-shadow: 
+    0 4px 14px rgba(0, 0, 0, 0.35),
+    inset 1px 1px 1px rgba(255, 255, 255, 1),
+    0 0 20px rgba(212, 175, 55, 0.35);
+}
+
+.btn-metal-gold:active {
+  transform: translateY(2px) scale(0.98);
+}
+
