@@ -270,7 +270,7 @@ button {
 
 /* Official Logo Asset Inversion (Crisp White on Dark Backgrounds, NO Red Marks) */
 .nav-logo-img {
-  height: 26px;
+  height: 42px;
   width: auto;
   filter: invert(1) brightness(1.1);
   display: block;
@@ -3123,7 +3123,7 @@ button {
   }
 
   .nav-logo-img {
-    height: 18px;
+    height: 28px;
     width: auto;
   }
 
