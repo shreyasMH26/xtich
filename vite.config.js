@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { Resend } from 'resend';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -9,6 +14,11 @@ const upload = multer({
 });
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './')
+    }
+  },
   plugins: [
     {
       name: 'bespoke-api-dev-handler',
