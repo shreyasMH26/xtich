@@ -1,11 +1,28 @@
-import CloudLoader from "@/components/ui/quantum-cloud-loader";
+import React from 'react';
+import Component from '@/components/ui/text-marque';
 
-export default function Page() {
+function ComponentDemo() {
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-white dark:bg-black transition-colors duration-300">
-      <div className="w-full max-w-xl px-4">
-        <CloudLoader />
+    <>
+      <div className='h-[500px] grid place-content-center'>
+        <Component
+          delay={500}
+          baseVelocity={-3}
+          clasname='font-bold tracking-[-0.07em] leading-[90%]'
+        >
+          Star the repo if you like it
+        </Component>
+        <Component
+          delay={500}
+          baseVelocity={3}
+          clasname='font-bold tracking-[-0.07em] leading-[90%]'
+        >
+          Share it if you like it
+        </Component>
       </div>
-    </div>
+    </>
   );
 }
+
+export { ComponentDemo as DemoOne };
+export default ComponentDemo;
