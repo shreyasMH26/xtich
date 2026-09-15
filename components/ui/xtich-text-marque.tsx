@@ -4,84 +4,74 @@ import React from 'react';
 import TextMarquee from './text-marque';
 import { cn } from '@/lib/utils';
 
-export interface XtichMarqueeSectionProps {
-  /**
-   * Editorial visual theme
-   */
-  variant?: 'atelier' | 'monochrome' | 'ghost';
-  /**
-   * First line track copy
-   */
-  primaryTrackText?: string;
-  /**
-   * Second line counter-track copy
-   */
-  secondaryTrackText?: string;
+/**
+ * All 20 XTICH Brand Manifesto Statements
+ */
+export const XTICH_BRAND_STATEMENTS = [
+  'EXISTS ONCE. BUILT TO LAST.',
+  'MADE WITH INTENT. BUILT TO LAST.',
+  'BUILT WITH PURPOSE. WORN WITH INTENT.',
+  'MADE TO EXIST. BUILT TO ENDURE.',
+  'BUILT DIFFERENT. MADE TO LAST.',
+  'FORMED WITH INTENT. BUILT FOR TIME.',
+  'MADE FOR NOW. BUILT FOR ALWAYS.',
+  'CUT WITH PURPOSE. BUILT TO LAST.',
+  'BUILT FROM SCRATCH. MADE TO ENDURE.',
+  'BORN FROM FRICTION. BUILT WITH PURPOSE.',
+  'MADE SLOW. WORN OFTEN.',
+  'BUILT HEAVY. MADE TO ENDURE.',
+  'NO SHORTCUTS. ONLY CRAFT.',
+  'LESS NOISE. MORE INTENT.',
+  'FORM. FUNCTION. ENDURANCE.',
+  'BUILT FOR BUILDERS. MADE TO ENDURE.',
+  'WEAR THE WORK. CARRY THE CRAFT.',
+  'THE EVERYDAY. RECONSIDERED.',
+  'ORDINARY FORM. UNCOMMON INTENT.',
+  'NOT MORE. JUST BETTER.',
+] as const;
+
+/**
+ * Continuous horizontal sequence separated by restrained bullet •
+ */
+export const XTICH_MANIFESTO_SEQUENCE =
+  XTICH_BRAND_STATEMENTS.join('  •  ') + '  •  ';
+
+export interface XtichTextMarqueeProps {
+  baseVelocity?: number;
+  scrollDependent?: boolean;
   className?: string;
+  textClassName?: string;
 }
 
 /**
- * XTICH Haute Atelier Kinetic Marquee
- * Features dual-direction scroll-velocity responsive typography
+ * XTICH Brand Manifesto Kinetic Marquee
+ * Continuous, oversized horizontal manifesto moving seamlessly through the page.
+ * Pure monochrome, heavy, architectural typography without decorative borders, cards, or colors.
  */
 export function XtichTextMarquee({
-  variant = 'atelier',
-  primaryTrackText = 'XTICH · A PIECE THAT EXISTS ONCE · HAUTE EMBROIDERY DIGITALE · 450 GSM COTTON FLEECE ·',
-  secondaryTrackText = 'DAVANGERE 2023 · ARCHITECTURAL COUNTER-STANDARD · CRAFTED FOR BUILDERS · EDITION VOL. 01 ·',
+  baseVelocity = -2.5,
+  scrollDependent = true,
   className = '',
-}: XtichMarqueeSectionProps) {
-  const isAtelier = variant === 'atelier';
-  const isGhost = variant === 'ghost';
-
-  const primaryStyle = isAtelier
-    ? 'font-serif uppercase tracking-[0.18em] text-[#FAF8F5] drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]'
-    : isGhost
-    ? 'font-serif uppercase tracking-[0.22em] text-[#FAF8F5]/15'
-    : 'font-mono uppercase tracking-[0.14em] text-[#E8E4DC]';
-
-  const secondaryStyle = isAtelier
-    ? 'font-mono uppercase tracking-[0.24em] text-[#C5A880]/80 text-[4vw]'
-    : isGhost
-    ? 'font-mono uppercase tracking-[0.28em] text-[#FAF8F5]/10 text-[4vw]'
-    : 'font-mono uppercase tracking-[0.20em] text-[#A7A39B]/60 text-[4vw]';
-
+  textClassName = '',
+}: XtichTextMarqueeProps) {
   return (
     <section
       className={cn(
-        'relative flex w-full flex-col justify-center gap-6 overflow-hidden border-y border-[#FAF8F5]/10 bg-[#050504] py-14 select-none',
+        'relative flex w-full max-w-[100vw] overflow-hidden bg-[#050504] py-12 md:py-20 select-none contain-paint',
         className
       )}
-      aria-label="XTICH Atelier Kinetic Marquee"
+      aria-label="XTICH Brand Manifesto"
     >
-      {/* Top Editorial Telemetry Tag */}
-      <div className="flex w-full items-center justify-between px-8 font-mono text-[9px] uppercase tracking-[0.25em] text-[#FAF8F5]/30">
-        <span>XTICH / KINETIC ARCHIVE</span>
-        <span>VELOCITY-DRIVEN TYPOGRAPHY</span>
-      </div>
-
-      {/* Primary Track (Forward Velocity) */}
       <TextMarquee
-        baseVelocity={-2.8}
-        scrollDependent={true}
-        clasname={primaryStyle}
+        baseVelocity={baseVelocity}
+        scrollDependent={scrollDependent}
+        clasname={cn(
+          'font-display font-extrabold uppercase tracking-[0.16em] text-[#FAF8F5] text-[6vw] md:text-[4.5vw] leading-none whitespace-nowrap',
+          textClassName
+        )}
       >
-        {primaryTrackText}
+        {XTICH_MANIFESTO_SEQUENCE}
       </TextMarquee>
-
-      {/* Secondary Track (Reverse Counter-Velocity) */}
-      <TextMarquee
-        baseVelocity={2.8}
-        scrollDependent={true}
-        clasname={secondaryStyle}
-      >
-        {secondaryTrackText}
-      </TextMarquee>
-
-      {/* Bottom Subtle Rule */}
-      <div className="flex w-full items-center justify-between px-8 font-mono text-[9px] uppercase tracking-[0.25em] text-[#FAF8F5]/20">
-        <span>DAVANGERE · BENGALURU</span>
-        <span>EDITION 2026</span>
-      </div>
     </section>
   );
 }

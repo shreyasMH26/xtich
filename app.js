@@ -984,6 +984,57 @@
   }
 
   /* =========================================================================
+     7b. XTICH BRAND MANIFESTO MARQUEE (Scroll Velocity Responsive Engine)
+     ========================================================================= */
+  function initMarquee() {
+    const track = document.getElementById('marqueeContent');
+    if (!track || prefersReduced) return;
+
+    const firstSeq = track.querySelector('.marquee-sequence');
+    if (!firstSeq) return;
+
+    let currentX = 0;
+    const baseVelocity = -1.2;
+    let smoothVelocity = 0;
+    let prevScrollY = window.pageYOffset || document.documentElement.scrollTop;
+    let lastTime = performance.now();
+
+    // Disable CSS fallback so RAF loop has full hardware control
+    track.style.animation = 'none';
+
+    function tick(now) {
+      const delta = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      const currentScrollY = state.lenisScrollY || window.pageYOffset || document.documentElement.scrollTop;
+      const scrollDiff = currentScrollY - prevScrollY;
+      prevScrollY = currentScrollY;
+
+      // Real velocity with spring-like dampening
+      const instantVel = state.scrollVelocity !== undefined && Math.abs(state.scrollVelocity) > 0.01
+        ? state.scrollVelocity
+        : (scrollDiff / (delta * 60));
+
+      smoothVelocity += (instantVel - smoothVelocity) * 0.12;
+
+      // Combine base continuous motion with scroll velocity factor
+      const move = (baseVelocity + (smoothVelocity * -0.4)) * (delta / 0.016);
+      currentX += move;
+
+      const halfWidth = firstSeq.offsetWidth;
+      if (halfWidth > 0) {
+        // Seamless modulo wrap
+        currentX = ((currentX % halfWidth) - halfWidth) % halfWidth;
+        track.style.transform = `translate3d(${currentX}px, 0, 0)`;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  /* =========================================================================
      8. NAVIGATION
      ========================================================================= */
   const siteNav    = document.getElementById('siteNav');
@@ -2056,6 +2107,7 @@
     initBespokeAtelier();
     initWebGLCanvas();
     initVelocityParallax();
+    initMarquee();
     initCursor();
     initProgressLine();
     initRevealFallbacks();

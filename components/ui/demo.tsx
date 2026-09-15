@@ -1,26 +1,19 @@
 import React from 'react';
 import Component from '@/components/ui/text-marque';
+import { XTICH_MANIFESTO_SEQUENCE } from '@/components/ui/xtich-text-marque';
 
 function ComponentDemo() {
   return (
-    <>
-      <div className='h-[500px] grid place-content-center'>
-        <Component
-          delay={500}
-          baseVelocity={-3}
-          clasname='font-bold tracking-[-0.07em] leading-[90%]'
-        >
-          Star the repo if you like it
-        </Component>
-        <Component
-          delay={500}
-          baseVelocity={3}
-          clasname='font-bold tracking-[-0.07em] leading-[90%]'
-        >
-          Share it if you like it
-        </Component>
-      </div>
-    </>
+    <div className="flex min-h-[500px] w-full flex-col justify-center bg-[#050504] py-16 text-[#FAF8F5]">
+      <Component
+        delay={200}
+        baseVelocity={-2.5}
+        scrollDependent={true}
+        clasname="font-extrabold uppercase tracking-[0.16em] text-[#FAF8F5] text-[5vw]"
+      >
+        {XTICH_MANIFESTO_SEQUENCE}
+      </Component>
+    </div>
   );
 }
 
