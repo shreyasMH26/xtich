@@ -657,15 +657,41 @@
           });
 
           const canvasCard = document.getElementById('bespokeCanvasCard');
+          const headerBar = document.querySelector('.bespoke-header-bar');
           if (canvasCard) {
             bespokeTl.fromTo(canvasCard,
-              { y: 22, scale: 0.98 },
-              { y: 0, scale: 1.0, ease: 'none', duration: 0.5 }
+              { rotateX: 20, scale: 0.94, y: 36, transformPerspective: 1000 },
+              { rotateX: 0, scale: 1.0, y: 0, ease: 'power2.out', duration: 0.55 },
+              0
+            );
+          }
+          if (headerBar) {
+            bespokeTl.fromTo(headerBar,
+              { y: 0 },
+              { y: -16, ease: 'none', duration: 0.55 },
+              0
             );
           }
         } else {
           // MOBILE: Single-column continuous document flow
           // Steps 0-3 are all visible in normal flow
+          const canvasCard = document.getElementById('bespokeCanvasCard');
+          if (canvasCard) {
+            gsap.fromTo(canvasCard,
+              { rotateX: 16, scale: 0.92, transformPerspective: 1000 },
+              {
+                rotateX: 0,
+                scale: 1.0,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: canvasCard,
+                  start: 'top 90%',
+                  end: 'top 35%',
+                  scrub: 1
+                }
+              }
+            );
+          }
           bespokeStepCards.slice(0, 4).forEach((card, idx) => {
             if (!card) return;
             card.classList.add('active');
@@ -1685,10 +1711,10 @@
     // 3. Embroidery Placement Switcher (Front/Back Crossfade, Proportions Preserved)
     const placementPills = document.querySelectorAll('#bespokePlacementPills .option-pill');
     const placementNotes = {
-      chest: '<strong>CHEST PLACEMENT</strong> — Minimalist left-breast positioning aligned to drop-shoulder axis.',
-      sleeve: '<strong>SLEEVE PLACEMENT</strong> — Precision alignment along the left forearm seam.',
-      back: '<strong>BACK PLACEMENT</strong> — Bold horizontal statement centered across upper shoulder blades.',
-      hood: '<strong>HOOD PLACEMENT</strong> — Subtle tone-on-tone embroidery across the outer hood crown.'
+      chest: '<strong>CHEST</strong> — Left-breast mark aligned to shoulder seam.',
+      sleeve: '<strong>SLEEVE</strong> — Direct alignment along the forearm seam.',
+      back: '<strong>BACK</strong> — Centered across the upper shoulder blades.',
+      hood: '<strong>HOOD</strong> — Positioned along the outer hood crown.'
     };
 
     placementPills.forEach(pill => {
