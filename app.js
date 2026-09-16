@@ -1209,18 +1209,24 @@
      ========================================================================= */
   function initRevealFallbacks() {
     const targets = document.querySelectorAll(
-      '.collection-section-header, .shop-header-row, .finale-lead-text'
+      '.collection-section-header, .shop-header-row, .finale-lead-text, .bespoke-sketch-plate'
     );
     targets.forEach(el => {
-      el.style.opacity   = '0';
-      el.style.transform = 'translateY(26px)';
-      el.style.transition = 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)';
+      if (!el.classList.contains('bespoke-sketch-plate')) {
+        el.style.opacity   = '0';
+        el.style.transform = 'translateY(26px)';
+        el.style.transition = 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)';
+      }
     });
     const obs = new IntersectionObserver(entries => {
       entries.forEach(e => {
         if (e.isIntersecting) {
-          e.target.style.opacity   = '1';
-          e.target.style.transform = 'none';
+          if (e.target.classList.contains('bespoke-sketch-plate')) {
+            e.target.classList.add('is-revealed');
+          } else {
+            e.target.style.opacity   = '1';
+            e.target.style.transform = 'none';
+          }
           obs.unobserve(e.target);
         }
       });
