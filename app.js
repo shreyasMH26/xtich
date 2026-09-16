@@ -38,19 +38,19 @@
   const PRODUCTS = {
     hoodie: {
       id: 'hoodie', title: 'The Heavyweight Hoodie', series: 'Versity Series',
-      spec: '450 GSM Cotton-Poly Fleece · Obsidian Black',
+      spec: '450 GSM Cotton Fleece · Obsidian Black',
       image: 'assets/hoodie-black-front-hr.jpg', imageBack: 'assets/hoodie-black-back.jpg',
-      desc: 'Engineered to solve the institutional uniform crisis. High-density long-staple cotton-poly blend tested across 300 consecutive days of daily wear and 180+ laundry cycles.',
-      specs: ['450 GSM heavyweight brushed fleece','Long-staple cotton blended with high-tensile poly fibers','Double-layered structured hood with drawstring elimination','Elastic-ribbed cuffs and waistband engineered against sagging'],
-      testing: '300+ days continuous prototype wear test, 180+ machine wash cycles.'
+      desc: 'High-density 450 GSM fleece. Double-layer hood without drawstrings. Tested across 300 days of daily wear.',
+      specs: ['450 GSM heavyweight brushed fleece','Long-staple cotton with high-tensile poly fibers','Drawstring-free double-layer structured hood','Elastic-ribbed cuffs and waist engineered against sagging'],
+      testing: 'Tested across 300 days and 180+ machine wash cycles.'
     },
     sweatshirt: {
       id: 'sweatshirt', title: 'The Versity Sweatshirt', series: 'Versity Series',
-      spec: '450 GSM Cotton-Poly Fleece · Obsidian Black',
+      spec: '450 GSM Cotton Fleece · Obsidian Black',
       image: 'assets/sweatshirt-black-front-hr.jpg', imageBack: 'assets/sweatshirt-black-front-hr.jpg',
-      desc: 'Architectural crewneck silhouette with heavy-ribbed collar, relaxed drop-shoulder drape, and breathable thermal retention.',
-      specs: ['450 GSM heavyweight thermal fleece knit','Thick 2x2 ribbed collar, cuffs, and bottom waistband','Ergonomic drop-shoulder patterning','Reinforced twin-needle stitching'],
-      testing: 'Built under the same Delhi manufacturing and fabric testing protocol as the flagship 300-day prototype.'
+      desc: 'Architectural crewneck silhouette. Heavy-ribbed collar and dropped shoulders for high-frequency wear.',
+      specs: ['450 GSM thermal fleece knit','Thick 2x2 ribbed collar, cuffs, and waistband','Ergonomic drop-shoulder patterning','Reinforced twin-needle construction'],
+      testing: 'Tested under the same 300-day prototype endurance protocol.'
     }
   };
 
@@ -1360,43 +1360,84 @@
   const modalProductDesc  = document.getElementById('modalProductDesc');
   const modalSizeGroup    = document.getElementById('modalSizeGroup');
   const modalReserveBtn   = document.getElementById('modalReserveBtn');
+  const modalQtyMinus     = document.getElementById('modalQtyMinus');
+  const modalQtyPlus      = document.getElementById('modalQtyPlus');
+  const modalQtyVal       = document.getElementById('modalQtyVal');
   let   activeModalProduct= 'hoodie';
+  let   modalQty          = 1;
+  let   lastModalTrigger  = null;
 
-  function openProductModal(id) {
+  function openProductModal(id, triggerEl = null) {
     const p = PRODUCTS[id] || PRODUCTS.hoodie;
     activeModalProduct = id;
+    lastModalTrigger = triggerEl;
+    modalQty = 1;
+    if (modalQtyVal) modalQtyVal.textContent = '1';
+
     if (modalProductImg)     modalProductImg.src          = p.image;
     if (modalProductSeries)  modalProductSeries.textContent= p.series;
     if (modalProductTitle)   modalProductTitle.textContent = p.title;
     if (modalProductSpec)    modalProductSpec.textContent  = p.spec;
     if (modalProductDesc)    modalProductDesc.textContent  = p.desc;
     modalSizeGroup?.querySelectorAll('.size-chip').forEach((b, i) => b.classList.toggle('active', i === 0));
+    
     productModal?.classList.add('open');
     productModal?.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     if (lenis) lenis.stop();
+
+    // Focus close button or first focusable
+    setTimeout(() => modalCloseBtn?.focus(), 50);
   }
+
   function closeProductModal() {
     productModal?.classList.remove('open');
     productModal?.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     if (lenis) lenis.start();
+    lastModalTrigger?.focus?.();
   }
 
   modalCloseBtn?.addEventListener('click', closeProductModal);
   productModal?.addEventListener('click', e => { if (e.target === productModal) closeProductModal(); });
-  document.querySelectorAll('[data-open-product]').forEach(t => {
-    t.addEventListener('click', e => { e.preventDefault(); openProductModal(t.dataset.openProduct); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && productModal?.classList.contains('open')) {
+      closeProductModal();
+    }
   });
+
+  modalQtyMinus?.addEventListener('click', () => {
+    if (modalQty > 1) {
+      modalQty--;
+      if (modalQtyVal) modalQtyVal.textContent = modalQty;
+    }
+  });
+
+  modalQtyPlus?.addEventListener('click', () => {
+    if (modalQty < 10) {
+      modalQty++;
+      if (modalQtyVal) modalQtyVal.textContent = modalQty;
+    }
+  });
+
+  document.querySelectorAll('[data-open-product]').forEach(t => {
+    t.addEventListener('click', e => {
+      e.preventDefault();
+      openProductModal(t.dataset.openProduct, t);
+    });
+  });
+
   modalSizeGroup?.addEventListener('click', e => {
     const b = e.target.closest('.size-chip');
     if (!b) return;
     modalSizeGroup.querySelectorAll('.size-chip').forEach(x => x.classList.remove('active'));
     b.classList.add('active');
   });
+
   modalReserveBtn?.addEventListener('click', () => {
     const sz = modalSizeGroup?.querySelector('.size-chip.active')?.textContent.trim() || 'S';
-    addToBag(activeModalProduct, sz, 1);
+    addToBag(activeModalProduct, sz, modalQty);
     closeProductModal();
     openBag();
   });

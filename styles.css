@@ -3871,15 +3871,16 @@ button {
   position: fixed;
   inset: 0;
   z-index: 1200;
-  background: rgba(8, 8, 7, 0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(5, 5, 6, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: clamp(1rem, 3vw, 2rem);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.35s var(--ease-editorial);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-overlay.open {
@@ -3888,21 +3889,23 @@ button {
 }
 
 .modal-box {
-  background: var(--ink-800);
-  border: 1px solid var(--rule-dark);
-  border-radius: 8px;
+  background: #111114;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
   width: 100%;
   max-width: 960px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
-  transform: translateY(20px);
-  transition: transform 0.35s var(--ease-editorial);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transform: scale(0.94) translateY(16px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal-overlay.open .modal-box {
-  transform: translateY(0);
+  transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
 .modal-close-btn {
@@ -4029,21 +4032,211 @@ button {
   margin-top: 0.5rem;
 }
 
+.modal-selection-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.modal-field-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--ash-400);
+  margin-bottom: 0.4rem;
+}
+
 .modal-confirm-btn {
   width: 100%;
-  padding: 1rem;
+  padding: 0.95rem;
   background: var(--paper-100);
   color: var(--ink-900);
-  font-size: 0.88rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   border-radius: 4px;
+  cursor: pointer;
   transition: all 0.25s ease;
 }
 
 .modal-confirm-btn:hover {
-  background: var(--paper-200);
+  background: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.15);
+}
+
+/* ── Morphing Dialog UI Primitives ──────────────────────────────────────── */
+.morph-trigger-card {
+  cursor: pointer;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.28s ease !important;
+  position: relative;
+}
+
+.morph-trigger-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.65) !important;
+}
+
+.morph-trigger-btn {
+  position: absolute;
+  bottom: 0.85rem;
+  right: 0.85rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(12, 12, 14, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #fff;
+  transition: all 0.22s ease;
+  z-index: 4;
+}
+
+.morph-trigger-card:hover .morph-trigger-btn {
+  background: #ffffff;
+  color: #000000;
+  transform: scale(1.12);
+  border-color: #ffffff;
+}
+
+.morph-callout {
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0.85rem 1.15rem !important;
+  background: rgba(18, 18, 20, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 6px !important;
+  margin-bottom: 0.6rem !important;
+  transition: all 0.25s ease !important;
+}
+
+.morph-callout:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  transform: translateX(4px) !important;
+}
+
+.callout-plus-icon {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--ash-400);
+  transition: all 0.2s ease;
+  margin-left: 0.5rem;
+}
+
+.morph-callout:hover .callout-plus-icon {
+  color: #ffffff;
+  transform: scale(1.18);
+}
+
+.callout-hint {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--ash-400);
+  letter-spacing: 0.04em;
+  margin-top: 0.2rem;
+}
+
+.cinema-inspect-bar {
+  margin-top: 0.85rem;
+}
+
+.cinema-inspect-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #FAF8F5;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.cinema-inspect-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
+}
+
+.card-action-bar-minimal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.15em;
+  color: var(--ash-400);
+  transition: color 0.2s ease;
+}
+
+.morph-trigger-card:hover .card-action-bar-minimal {
+  color: #ffffff;
+}
+
+.card-item-sub {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--ash-400);
+  margin-top: 0.25rem;
+}
+
+.item-summary-minimal {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ash-400);
+  line-height: 1.4;
+  margin: 0.35rem 0 0.85rem;
+}
+
+.shop-reserve-action-row {
+  margin-top: auto;
+}
+
+.shop-morph-cta-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 0.95rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #FAF8F5;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.shop-morph-cta-btn:hover {
+  background: #ffffff;
+  color: #000000;
+  border-color: #ffffff;
 }
 
 /* ==========================================================================

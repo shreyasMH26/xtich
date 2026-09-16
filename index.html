@@ -546,31 +546,41 @@
             </div>
           </div>
 
-          <!-- Pinned Anatomical Callouts Deck -->
+          <!-- Anatomical Morphing Triggers Deck -->
           <div class="cinema-anatomy-deck" id="cinemaAnatomyDeck">
             
-            <div class="anatomy-callout-item" data-callout="1">
+            <div class="anatomy-callout-item morph-callout" data-open-product="hoodie" data-callout="1" role="button" tabindex="0">
               <div class="callout-idx">01</div>
               <div class="callout-body">
-                <h4>Double-Layered Hood</h4>
-                <p>Engineered without uncomfortable metallic eyelets or loose drawstrings. Retains its architectural drape standing or resting.</p>
+                <h4>Double-Layer Hood</h4>
+                <span class="callout-hint">Drawstring-free · Retains structured drape</span>
               </div>
+              <div class="callout-plus-icon">+</div>
             </div>
 
-            <div class="anatomy-callout-item" data-callout="2">
+            <div class="anatomy-callout-item morph-callout" data-open-product="hoodie" data-callout="2" role="button" tabindex="0">
               <div class="callout-idx">02</div>
               <div class="callout-body">
-                <h4>Reinforced Drop-Shoulder</h4>
-                <p>Patterned for active ergonomic freedom while maintaining an intentional, boxy streetwear profile.</p>
+                <h4>Drop-Shoulder Pattern</h4>
+                <span class="callout-hint">Ergonomic boxy streetwear profile</span>
               </div>
+              <div class="callout-plus-icon">+</div>
             </div>
 
-            <div class="anatomy-callout-item" data-callout="3">
+            <div class="anatomy-callout-item morph-callout" data-open-product="hoodie" data-callout="3" role="button" tabindex="0">
               <div class="callout-idx">03</div>
               <div class="callout-body">
-                <h4>High-Elasticity Ribbed Cuffs</h4>
-                <p>Dense elastane-threaded ribbing prevents sagging or cuff deformation after 180+ machine wash cycles.</p>
+                <h4>High-Tensile Ribs</h4>
+                <span class="callout-hint">Anti-sag elastane · 180+ wash tested</span>
               </div>
+              <div class="callout-plus-icon">+</div>
+            </div>
+
+            <div class="cinema-inspect-bar">
+              <button type="button" class="cinema-inspect-btn" data-open-product="hoodie">
+                <span>INSPECT GARMENT SPECIFICATIONS</span>
+                <span class="btn-icon">+</span>
+              </button>
             </div>
 
           </div>
@@ -589,59 +599,51 @@
         <div class="collection-section-header">
           <span class="section-label">Active Lineup</span>
           <h2 class="collection-main-title">The Versity Series</h2>
-          <p class="collection-main-desc">Two signature heavyweight silhouettes developed for high-frequency wear. No unnecessary trims. Pure textile integrity.</p>
+          <p class="collection-main-desc">Two signature heavyweight silhouettes. Tap to inspect specifications and reserve.</p>
         </div>
 
         <div class="collection-duo-grid">
           
-          <!-- Card 1: Heavyweight Hoodie -->
-          <article class="garment-card" data-product="hoodie">
-            <div class="garment-card-media" data-open-product="hoodie">
+          <!-- Card 1: Heavyweight Hoodie (Morphing Dialog Trigger) -->
+          <article class="garment-card morph-trigger-card" data-open-product="hoodie" role="button" tabindex="0" aria-label="Inspect The Heavyweight Hoodie">
+            <div class="garment-card-media">
               <img src="assets/hoodie-black-front-hr.jpg" alt="XTICH Heavyweight Hoodie in obsidian black">
-              <div class="garment-tag">Heavyweight · 450 GSM</div>
+              <div class="garment-tag">450 GSM · FLEECE</div>
+              <div class="morph-trigger-btn" aria-hidden="true">+</div>
             </div>
             <div class="garment-card-content">
               <div class="card-meta-line">
-                <span class="series-name">Versity Series</span>
+                <span class="series-name">Versity Series · Piece 01</span>
                 <span class="status-badge">In Production</span>
               </div>
-              <h3 class="card-item-title" data-open-product="hoodie">The Heavyweight Hoodie</h3>
-              <p class="card-item-desc">Structured oversized fit, double-layer hood, reinforced drop-shoulder seam, and fleece density engineered to withstand 180+ washes.</p>
+              <h3 class="card-item-title">The Heavyweight Hoodie</h3>
+              <p class="card-item-sub">Obsidian Black · Double-Layer Structured Hood</p>
               
-              <div class="card-action-bar">
-                <div class="size-chip-group" data-size-group="hoodie">
-                  <button class="size-chip active">S</button>
-                  <button class="size-chip">M</button>
-                  <button class="size-chip">L</button>
-                  <button class="size-chip">XL</button>
-                </div>
-                <button class="card-reserve-btn" data-reserve-btn="hoodie">Reserve Size</button>
+              <div class="card-action-bar-minimal">
+                <span class="card-action-label">INSPECT &amp; RESERVE</span>
+                <span class="card-action-arrow">→</span>
               </div>
             </div>
           </article>
 
-          <!-- Card 2: Versity Sweatshirt -->
-          <article class="garment-card" data-product="sweatshirt">
-            <div class="garment-card-media" data-open-product="sweatshirt">
+          <!-- Card 2: Versity Sweatshirt (Morphing Dialog Trigger) -->
+          <article class="garment-card morph-trigger-card" data-open-product="sweatshirt" role="button" tabindex="0" aria-label="Inspect The Versity Sweatshirt">
+            <div class="garment-card-media">
               <img src="assets/sweatshirt-black-front-hr.jpg" alt="XTICH Versity Crewneck Sweatshirt in obsidian black">
-              <div class="garment-tag">Heavyweight · 450 GSM</div>
+              <div class="garment-tag">450 GSM · FLEECE</div>
+              <div class="morph-trigger-btn" aria-hidden="true">+</div>
             </div>
             <div class="garment-card-content">
               <div class="card-meta-line">
-                <span class="series-name">Versity Series</span>
+                <span class="series-name">Versity Series · Piece 02</span>
                 <span class="status-badge">In Production</span>
               </div>
-              <h3 class="card-item-title" data-open-product="sweatshirt">The Versity Sweatshirt</h3>
-              <p class="card-item-desc">Architectural crewneck silhouette with heavy-ribbed collar, relaxed drop-shoulder drape, and breathable thermal retention.</p>
+              <h3 class="card-item-title">The Versity Sweatshirt</h3>
+              <p class="card-item-sub">Obsidian Black · Heavy-Ribbed Crewneck</p>
               
-              <div class="card-action-bar">
-                <div class="size-chip-group" data-size-group="sweatshirt">
-                  <button class="size-chip active">S</button>
-                  <button class="size-chip">M</button>
-                  <button class="size-chip">L</button>
-                  <button class="size-chip">XL</button>
-                </div>
-                <button class="card-reserve-btn" data-reserve-btn="sweatshirt">Reserve Size</button>
+              <div class="card-action-bar-minimal">
+                <span class="card-action-label">INSPECT &amp; RESERVE</span>
+                <span class="card-action-arrow">→</span>
               </div>
             </div>
           </article>
@@ -1160,79 +1162,53 @@
             <span class="section-label">Garment Archive</span>
             <h2 class="shop-title">Reserve Your Piece</h2>
           </div>
-          <p class="shop-sub-info">Official ecommerce checkout opens with the upcoming academic batch launch. Reserve a size now to guarantee priority allocation.</p>
+          <p class="shop-sub-info">Priority allocation for the upcoming academic batch launch. Zero upfront payment required today.</p>
         </div>
 
         <div class="shop-cards-grid">
           
-          <!-- Product 1: Hoodie -->
-          <div class="shop-item-card">
-            <div class="shop-item-thumb" data-open-product="hoodie">
+          <!-- Product 1: Hoodie (Morphing Dialog Trigger) -->
+          <div class="shop-item-card morph-trigger-card" data-open-product="hoodie" role="button" tabindex="0" aria-label="Reserve The Heavyweight Hoodie">
+            <div class="shop-item-thumb">
               <img src="assets/hoodie-black-front-hr.jpg" alt="The Heavyweight Hoodie">
               <span class="thumb-pill">450 GSM</span>
+              <div class="morph-trigger-btn" aria-hidden="true">+</div>
             </div>
             <div class="shop-item-body">
               <div class="item-title-row">
                 <h3>The Heavyweight Hoodie</h3>
                 <span class="item-color">Obsidian Black</span>
               </div>
-              <p class="item-summary">Double-layer hood, reinforced cuffs, dropped shoulders. Stress-tested across 300 days and 180+ washes.</p>
+              <p class="item-summary-minimal">Structured double-layer hood. Tested across 180+ laundry cycles.</p>
               
-              <div class="item-selection-form">
-                <div class="form-group">
-                  <label class="form-label">Select Size</label>
-                  <div class="size-chip-group" data-shop-size="hoodie">
-                    <button class="size-chip active">S</button>
-                    <button class="size-chip">M</button>
-                    <button class="size-chip">L</button>
-                    <button class="size-chip">XL</button>
-                  </div>
-                </div>
-
-                <div class="form-action-row">
-                  <div class="qty-stepper-box" data-qty-picker="hoodie">
-                    <button class="qty-btn" data-qty-act="dec" aria-label="Decrease quantity">−</button>
-                    <span class="qty-val" data-qty-display>1</span>
-                    <button class="qty-btn" data-qty-act="inc" aria-label="Increase quantity">+</button>
-                  </div>
-                  <button class="shop-add-btn" data-add-to-bag="hoodie">Reserve Allocation</button>
-                </div>
+              <div class="shop-reserve-action-row">
+                <button type="button" class="shop-morph-cta-btn" data-open-product="hoodie">
+                  <span>SELECT SIZE &amp; RESERVE</span>
+                  <span class="cta-plus">+</span>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- Product 2: Sweatshirt -->
-          <div class="shop-item-card">
-            <div class="shop-item-thumb" data-open-product="sweatshirt">
+          <!-- Product 2: Sweatshirt (Morphing Dialog Trigger) -->
+          <div class="shop-item-card morph-trigger-card" data-open-product="sweatshirt" role="button" tabindex="0" aria-label="Reserve The Versity Sweatshirt">
+            <div class="shop-item-thumb">
               <img src="assets/sweatshirt-black-front-hr.jpg" alt="The Versity Sweatshirt">
               <span class="thumb-pill">450 GSM</span>
+              <div class="morph-trigger-btn" aria-hidden="true">+</div>
             </div>
             <div class="shop-item-body">
               <div class="item-title-row">
                 <h3>The Versity Sweatshirt</h3>
                 <span class="item-color">Obsidian Black</span>
               </div>
-              <p class="item-summary">Heavy-ribbed crewneck, ergonomic sleeve patterning, dense fleece knit retaining shape through recurring laundry cycles.</p>
+              <p class="item-summary-minimal">Heavy-ribbed crewneck with ergonomic drop-shoulder drape.</p>
               
-              <div class="item-selection-form">
-                <div class="form-group">
-                  <label class="form-label">Select Size</label>
-                  <div class="size-chip-group" data-shop-size="sweatshirt">
-                    <button class="size-chip active">S</button>
-                    <button class="size-chip">M</button>
-                    <button class="size-chip">L</button>
-                    <button class="size-chip">XL</button>
-                  </div>
-                </div>
-
-                <div class="form-action-row">
-                  <div class="qty-stepper-box" data-qty-picker="sweatshirt">
-                    <button class="qty-btn" data-qty-act="dec" aria-label="Decrease quantity">−</button>
-                    <span class="qty-val" data-qty-display>1</span>
-                    <button class="qty-btn" data-qty-act="inc" aria-label="Increase quantity">+</button>
-                  </div>
-                  <button class="shop-add-btn" data-add-to-bag="sweatshirt">Reserve Allocation</button>
-                </div>
+              <div class="shop-reserve-action-row">
+                <button type="button" class="shop-morph-cta-btn" data-open-product="sweatshirt">
+                  <span>SELECT SIZE &amp; RESERVE</span>
+                  <span class="cta-plus">+</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1385,7 +1361,7 @@
           <div class="modal-spec-badge" id="modalProductSpec">450 GSM Cotton-Poly Fleece · Obsidian Black</div>
           
           <p class="modal-product-desc" id="modalProductDesc">
-            Engineered specifically to solve the institutional uniform crisis. High-density long-staple cotton-poly blend tested across 300 consecutive days of daily wear and 180+ laundry cycles.
+            High-density 450 GSM fleece. Double-layer hood without drawstrings. Tested across 300 days of daily wear.
           </p>
 
           <div class="modal-specs-accordion-list">
@@ -1417,13 +1393,26 @@
           </div>
 
           <div class="modal-actions-area">
-            <div class="size-chip-group" id="modalSizeGroup">
-              <button class="size-chip active">S</button>
-              <button class="size-chip">M</button>
-              <button class="size-chip">L</button>
-              <button class="size-chip">XL</button>
+            <div class="modal-selection-row">
+              <div class="modal-size-block">
+                <span class="modal-field-label">SELECT SIZE</span>
+                <div class="size-chip-group" id="modalSizeGroup">
+                  <button type="button" class="size-chip active">S</button>
+                  <button type="button" class="size-chip">M</button>
+                  <button type="button" class="size-chip">L</button>
+                  <button type="button" class="size-chip">XL</button>
+                </div>
+              </div>
+              <div class="modal-qty-block">
+                <span class="modal-field-label">QUANTITY</span>
+                <div class="qty-stepper-box" id="modalQtyPicker">
+                  <button type="button" class="qty-btn" id="modalQtyMinus" aria-label="Decrease quantity">−</button>
+                  <span class="qty-val" id="modalQtyVal">1</span>
+                  <button type="button" class="qty-btn" id="modalQtyPlus" aria-label="Increase quantity">+</button>
+                </div>
+              </div>
             </div>
-            <button class="modal-confirm-btn" id="modalReserveBtn">Add to Reservation Bag</button>
+            <button type="button" class="modal-confirm-btn" id="modalReserveBtn">RESERVE ALLOCATION →</button>
           </div>
 
         </div>
