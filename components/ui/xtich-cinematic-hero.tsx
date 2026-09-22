@@ -162,7 +162,6 @@ export function XTICHHero({
       <video
         ref={videoRef}
         src={videoSrc}
-        poster="assets/editorial_hoodie_campaign.jpg"
         muted
         autoPlay
         playsInline
