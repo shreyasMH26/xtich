@@ -2171,9 +2171,97 @@
   }
 
   /* =========================================================================
+     XTICH VIDEO SEAMLESS RAF FADE LOOP (NO CSS TRANSITIONS)
+     ========================================================================= */
+  function initHeroVideoFadeLoop() {
+    const video = document.getElementById('heroVideoMedia');
+    if (!video) return;
+
+    let animFrame = null;
+    let fadingOut = false;
+    let currentOpacity = 0;
+
+    function fadeTo(targetOpacity, duration, onComplete) {
+      if (animFrame !== null) {
+        cancelAnimationFrame(animFrame);
+        animFrame = null;
+      }
+
+      const startOpacity = currentOpacity;
+      const delta = targetOpacity - startOpacity;
+
+      if (Math.abs(delta) < 0.001 || duration <= 0) {
+        currentOpacity = targetOpacity;
+        video.style.opacity = targetOpacity;
+        if (onComplete) onComplete();
+        return;
+      }
+
+      const startTime = performance.now();
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        currentOpacity = startOpacity + delta * progress;
+        video.style.opacity = currentOpacity;
+
+        if (progress < 1) {
+          animFrame = requestAnimationFrame(tick);
+        } else {
+          animFrame = null;
+          if (onComplete) onComplete();
+        }
+      }
+
+      animFrame = requestAnimationFrame(tick);
+    }
+
+    function fadeIn() {
+      fadingOut = false;
+      fadeTo(1, 500);
+    }
+
+    function fadeOut() {
+      fadingOut = true;
+      fadeTo(0, 500);
+    }
+
+    video.addEventListener('timeupdate', () => {
+      if (!video.duration || isNaN(video.duration)) return;
+      const remaining = video.duration - video.currentTime;
+      if (remaining <= 0.55 && !fadingOut) {
+        fadeOut();
+      }
+    });
+
+    video.addEventListener('ended', () => {
+      if (animFrame !== null) {
+        cancelAnimationFrame(animFrame);
+        animFrame = null;
+      }
+      currentOpacity = 0;
+      video.style.opacity = 0;
+
+      setTimeout(() => {
+        video.currentTime = 0;
+        video.play().then(() => fadeIn()).catch(() => {});
+      }, 100);
+    });
+
+    video.addEventListener('loadeddata', () => {
+      video.play().then(() => fadeIn()).catch(() => {});
+    });
+
+    if (video.readyState >= 2) {
+      video.play().then(() => fadeIn()).catch(() => {});
+    }
+  }
+
+  /* =========================================================================
      INIT — Wait for GSAP/Lenis to be ready (deferred scripts)
      ========================================================================= */
   function boot() {
+    initHeroVideoFadeLoop();
     initLenis();
     initSplitText();
     initScrollTriggerScenes();
