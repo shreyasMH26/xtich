@@ -174,6 +174,110 @@ async function sendBespokeNotification(data) {
 }
 
 /**
+ * Send allocation subscriber notification via Resend
+ */
+async function sendAllocationNotification(email) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const recipient = process.env.XTICH_NOTIFICATION_EMAIL || 'shreyasmh26@gmail.com';
+  const fromAddress = process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>';
+
+  if (!apiKey) {
+    console.log(`[XTICH Subscriber] New allocation subscriber: ${email}`);
+    return { success: true, simulated: true };
+  }
+
+  const resend = new Resend(apiKey);
+  try {
+    const res = await resend.emails.send({
+      from: fromAddress,
+      to: [recipient],
+      subject: `[XTICH Allocation] New Priority Subscriber: ${email}`,
+      html: `
+        <div style="font-family: monospace; background: #0c0c0d; color: #fbfaf6; padding: 32px; border-radius: 6px;">
+          <h2 style="color: #ffffff; letter-spacing: 0.1em; text-transform: uppercase;">New Priority Allocation Subscriber</h2>
+          <p style="font-size: 16px; margin: 16px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #4ade80;">${email}</a></p>
+          <p style="font-size: 13px; color: #888;"><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+          <p style="font-size: 13px; color: #888;"><strong>Source:</strong> Hero Drop Bar (Built for the curious)</p>
+          <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 24px 0;" />
+          <p style="font-size: 11px; color: #666;">XTICH DIGITAL ATELIER · PRIORITY SUBSCRIBER ALERT</p>
+        </div>
+      `
+    });
+    return { success: true, res };
+  } catch (err) {
+    console.error('[Resend] Subscriber notification error:', err);
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Hero allocation / newsletter subscription endpoint
+ */
+app.post('/api/subscribe', async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email.trim())) {
+      return res.status(400).json({ error: 'Valid email address is required.' });
+    }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const subscribersFile = path.join(__dirname, 'subscribers.json');
+
+    let subscribers = [];
+    try {
+      if (fs.existsSync(subscribersFile)) {
+        subscribers = JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
+      }
+    } catch (_) {
+      subscribers = [];
+    }
+
+    const alreadySubscribed = subscribers.some(s => s.email === cleanEmail);
+    if (!alreadySubscribed) {
+      subscribers.push({
+        email: cleanEmail,
+        timestamp: new Date().toISOString(),
+        source: 'hero_allocation_bar'
+      });
+      try {
+        fs.writeFileSync(subscribersFile, JSON.stringify(subscribers, null, 2), 'utf8');
+      } catch (fErr) {
+        console.warn('[Subscribers File] Write skipped:', fErr.message);
+      }
+    }
+
+    // Trigger instant email alert to store owner (shreyasmh26@gmail.com)
+    sendAllocationNotification(cleanEmail).catch(err => {
+      console.error('[Notification Error]', err);
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: 'Priority allocation confirmed.',
+      email: cleanEmail
+    });
+  } catch (err) {
+    console.error('[/api/subscribe error]', err);
+    return res.status(500).json({ error: 'Failed to record subscription.' });
+  }
+});
+
+/**
+ * View priority subscriber list (for store owner)
+ */
+app.get('/api/subscribers', (req, res) => {
+  const subscribersFile = path.join(__dirname, 'subscribers.json');
+  try {
+    if (fs.existsSync(subscribersFile)) {
+      const data = JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
+      return res.status(200).json(data);
+    }
+  } catch (_) {}
+  return res.status(200).json([]);
+});
+
+/**
  * Bespoke commission submission endpoint
  */
 app.post('/api/bespoke', upload.single('referenceFile'), async (req, res) => {

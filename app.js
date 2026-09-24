@@ -2298,6 +2298,15 @@
           localStorage.setItem('xtich_subscriber_email', email);
         } catch (_) {}
 
+        // Send to backend API so store receives it instantly
+        fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        }).catch((apiErr) => {
+          console.warn('[Subscriber Sync]', apiErr);
+        });
+
         if (btn) {
           btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
           btn.style.background = '#4ade80';

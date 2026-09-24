@@ -94,6 +94,24 @@ export default defineConfig({
             }
           });
         });
+
+        server.middlewares.use('/api/subscribe', (req, res, next) => {
+          if (req.method !== 'POST') return next();
+          let body = '';
+          req.on('data', chunk => { body += chunk; });
+          req.on('end', () => {
+            try {
+              const { email } = JSON.parse(body || '{}');
+              console.log(`[Dev Server] New allocation subscriber: ${email}`);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true, email, message: 'Subscriber received.' }));
+            } catch (err) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+            }
+          });
+        });
       }
     }
   ]
