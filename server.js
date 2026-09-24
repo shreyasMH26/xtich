@@ -267,14 +267,13 @@ app.post('/api/subscribe', async (req, res) => {
     }
 
     // Trigger instant email alert to store owner (xtichalt@gmail.com)
-    sendAllocationNotification(cleanEmail).catch(err => {
-      console.error('[Notification Error]', err);
-    });
+    const notificationResult = await sendAllocationNotification(cleanEmail);
 
     return res.status(200).json({
       success: true,
       message: 'Priority allocation confirmed.',
-      email: cleanEmail
+      email: cleanEmail,
+      notified: Boolean(notificationResult?.success && !notificationResult?.simulated)
     });
   } catch (err) {
     console.error('[/api/subscribe error]', err);
@@ -387,21 +386,65 @@ app.post('/api/bespoke', upload.single('referenceFile'), async (req, res) => {
   }
 });
 
+/**
+ * Health check endpoint for cloud monitoring and Render Web Service probes
+ */
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'xtich-atelier-web-service',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Security: Disallow direct access to server-side source or environment files
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (
+    p.startsWith('/.') ||
+    p.includes('.env') ||
+    p.includes('server.js') ||
+    p.includes('subscribers.json') ||
+    p.includes('package.json')
+  ) {
+    return res.status(403).json({ error: 'Access forbidden.' });
+  }
+  next();
+});
+
 // Serve static assets: prefer 'dist' if built, otherwise root directory
 const distDir = path.join(__dirname, 'dist');
+const publicDir = path.join(__dirname, 'public');
+
 if (fs.existsSync(distDir) && fs.existsSync(path.join(distDir, 'index.html'))) {
+  console.log('[Server] Production mode: Serving compiled assets from dist/');
   app.use(express.static(distDir));
-  app.use((req, res) => {
-    res.sendFile(path.join(distDir, 'index.html'));
+  if (fs.existsSync(publicDir)) {
+    app.use(express.static(publicDir));
+  }
+  // Client routing fallback (serves dist/index.html for any GET route)
+  app.use((req, res, next) => {
+    if (req.method === 'GET' || req.method === 'HEAD') {
+      return res.sendFile(path.join(distDir, 'index.html'));
+    }
+    next();
   });
 } else {
+  console.log('[Server] Development fallback: Serving assets from root');
   app.use(express.static(__dirname));
-  app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
-  app.use((req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+  if (fs.existsSync(publicDir)) {
+    app.use(express.static(publicDir));
+  }
+  app.use('/assets', express.static(path.join(__dirname, 'assets')));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' || req.method === 'HEAD') {
+      return res.sendFile(path.join(__dirname, 'index.html'));
+    }
+    next();
   });
 }
 
+// Bind strictly to 0.0.0.0 and process.env.PORT as required by Render Web Service
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`XTICH Digital Atelier running on port ${PORT}`);
+  console.log(`XTICH Digital Atelier running on 0.0.0.0:${PORT}`);
 });
