@@ -75,7 +75,7 @@ export default defineConfig({
                 const resend = new Resend(process.env.RESEND_API_KEY);
                 await resend.emails.send({
                   from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
-                  to: [process.env.XTICH_NOTIFICATION_EMAIL || 'shreyasmh26@gmail.com'],
+                  to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
                   subject: `[XTICH Bespoke] Commission ${finalRequestId} — ${name}`,
                   text: `New Bespoke Commission:\nID: ${finalRequestId}\nName: ${name}\nEmail: ${email}\nColor: ${hoodieColorCode} (${hoodieColor})\nSize: ${size}\nQuantity: ${quantity}\nType: ${embroideryType}\nPlacement: ${embroideryPlacement}\nText: ${embroideryText}\nScale: ${embroideryScale}\nThread: ${thread}\nInstructions: ${customInstructions}\nFile: ${req.file ? req.file.originalname : 'None'}`
                 });

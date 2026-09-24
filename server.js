@@ -9,6 +9,13 @@ import { Resend } from 'resend';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Load local .env if available
+try {
+  if (typeof process.loadEnvFile === 'function' && fs.existsSync(path.join(__dirname, '.env'))) {
+    process.loadEnvFile(path.join(__dirname, '.env'));
+  }
+} catch (_) {}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -98,7 +105,7 @@ async function sendBespokeNotification(data) {
   }
 
   const resend = new Resend(apiKey);
-  const recipient = process.env.XTICH_NOTIFICATION_EMAIL || 'shreyasmh26@gmail.com';
+  const recipient = process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com';
   const fromAddress = process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>';
 
   const htmlContent = `
@@ -178,7 +185,7 @@ async function sendBespokeNotification(data) {
  */
 async function sendAllocationNotification(email) {
   const apiKey = process.env.RESEND_API_KEY;
-  const recipient = process.env.XTICH_NOTIFICATION_EMAIL || 'shreyasmh26@gmail.com';
+  const recipient = process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com';
   const fromAddress = process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>';
 
   if (!apiKey) {
@@ -247,7 +254,7 @@ app.post('/api/subscribe', async (req, res) => {
       }
     }
 
-    // Trigger instant email alert to store owner (shreyasmh26@gmail.com)
+    // Trigger instant email alert to store owner (xtichalt@gmail.com)
     sendAllocationNotification(cleanEmail).catch(err => {
       console.error('[Notification Error]', err);
     });
