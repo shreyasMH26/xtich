@@ -2328,8 +2328,8 @@
             btn.style.color = '#000000';
           }
           if (msg) {
-            msg.textContent = 'Tested across 300 days of daily wear and 180+ wash cycles. Priority academic batch allocation.';
-            msg.style.color = 'rgba(255, 255, 255, 0.72)';
+            msg.textContent = 'Tested across 300 days of daily wear • Crafted from heavy 480 GSM French Terry Cotton • Designed for the restless few';
+            msg.style.color = 'rgba(255, 255, 255, 0.6)';
           }
         }, 4500);
       });
