@@ -393,6 +393,7 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'xtich-atelier-web-service',
+    port: PORT,
     timestamp: new Date().toISOString()
   });
 });
@@ -401,7 +402,6 @@ app.get('/api/health', (req, res) => {
 app.use((req, res, next) => {
   const p = req.path.toLowerCase();
   if (
-    p.startsWith('/.') ||
     p.includes('.env') ||
     p.includes('server.js') ||
     p.includes('subscribers.json') ||
@@ -412,37 +412,67 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve static assets: prefer 'dist' if built, otherwise root directory
-const distDir = path.join(__dirname, 'dist');
-const publicDir = path.join(__dirname, 'public');
+// Absolute paths based on server location (never relative to current working directory)
+const distDir = path.resolve(__dirname, 'dist');
+const publicDir = path.resolve(__dirname, 'public');
 
-if (fs.existsSync(distDir) && fs.existsSync(path.join(distDir, 'index.html'))) {
-  console.log('[Server] Production mode: Serving compiled assets from dist/');
-  app.use(express.static(distDir));
-  if (fs.existsSync(publicDir)) {
-    app.use(express.static(publicDir));
+/**
+ * Robust HTML index delivery helper with stream fallback
+ */
+function serveIndex(req, res) {
+  const distIndex = path.resolve(distDir, 'index.html');
+  const rootIndex = path.resolve(__dirname, 'index.html');
+  const targetFile = fs.existsSync(distIndex) ? distIndex : rootIndex;
+
+  if (!fs.existsSync(targetFile)) {
+    console.error('[Server Error] index.html not found at', targetFile);
+    return res.status(500).send('Production build not found. Please run npm run build.');
   }
-  // Client routing fallback (serves dist/index.html for any GET route)
-  app.use((req, res, next) => {
-    if (req.method === 'GET' || req.method === 'HEAD') {
-      return res.sendFile(path.join(distDir, 'index.html'));
+
+  res.sendFile(targetFile, { dotfiles: 'allow' }, (err) => {
+    if (err && !res.headersSent) {
+      console.warn('[Server Fallback] res.sendFile failed, piping stream directly:', err.message);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      fs.createReadStream(targetFile).pipe(res);
     }
-    next();
-  });
-} else {
-  console.log('[Server] Development fallback: Serving assets from root');
-  app.use(express.static(__dirname));
-  if (fs.existsSync(publicDir)) {
-    app.use(express.static(publicDir));
-  }
-  app.use('/assets', express.static(path.join(__dirname, 'assets')));
-  app.use((req, res, next) => {
-    if (req.method === 'GET' || req.method === 'HEAD') {
-      return res.sendFile(path.join(__dirname, 'index.html'));
-    }
-    next();
   });
 }
+
+// 1. Serve static files from compiled dist directory if it exists
+if (fs.existsSync(distDir)) {
+  console.log(`[Server] Production mode: Serving compiled assets from ${distDir}`);
+  app.use(express.static(distDir, { dotfiles: 'allow', index: false }));
+  app.use('/assets', express.static(path.resolve(distDir, 'assets'), { dotfiles: 'allow' }));
+} else {
+  console.log(`[Server] Development mode: Serving from root ${__dirname}`);
+  app.use(express.static(__dirname, { dotfiles: 'allow', index: false }));
+}
+
+// 2. Fallback static paths for public and asset directories
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir, { dotfiles: 'allow', index: false }));
+}
+app.use('/assets', express.static(path.resolve(__dirname, 'assets'), { dotfiles: 'allow' }));
+
+// 3. Explicit Root Route: GET / returns dist/index.html
+app.get('/', (req, res) => {
+  serveIndex(req, res);
+});
+
+// 4. SPA Client-side Navigation Fallback (Express 5 compatible, placed AFTER all API routes)
+app.use((req, res, next) => {
+  // Never intercept API endpoints that were not matched
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: `API endpoint '${req.path}' not found.` });
+  }
+
+  // Serve index.html for all GET / HEAD navigation routes
+  if (req.method === 'GET' || req.method === 'HEAD') {
+    return serveIndex(req, res);
+  }
+
+  next();
+});
 
 // Bind strictly to 0.0.0.0 and process.env.PORT as required by Render Web Service
 app.listen(PORT, '0.0.0.0', () => {
