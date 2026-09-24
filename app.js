@@ -428,17 +428,10 @@
           }
         });
 
-        if (isMobile) {
-          heroTl.fromTo(heroVisualLayer,
-            { scale: 0.95, opacity: 0.88 },
-            { scale: 1.0, opacity: 1, ease: 'none' }, 0
-          );
-        } else {
-          heroTl.fromTo(heroVisualLayer,
-            { clipPath: 'inset(14% 20% 14% 20%)', opacity: 0.88 },
-            { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, ease: 'none' }, 0
-          );
-        }
+        heroTl.fromTo(heroVisualLayer,
+          { opacity: 0.92 },
+          { opacity: 1, ease: 'none' }, 0
+        );
 
         heroTl
         .fromTo('.hero-visual-media',
@@ -2177,6 +2170,12 @@
     const video = document.getElementById('heroVideoMedia');
     if (!video) return;
 
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('playsinline', '');
+    video.setAttribute('muted', '');
+
     let animFrame = null;
     let fadingOut = false;
     let currentOpacity = 0;
@@ -2248,12 +2247,97 @@
       }, 100);
     });
 
-    video.addEventListener('loadeddata', () => {
-      video.play().then(() => fadeIn()).catch(() => {});
-    });
+    const attemptPlay = () => {
+      video.muted = true;
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => fadeIn()).catch((err) => {
+          console.warn('[XTICH Video] Autoplay deferred until interaction:', err);
+          const resume = () => {
+            video.muted = true;
+            video.play().then(() => fadeIn()).catch(() => {});
+            ['click', 'touchstart', 'scroll'].forEach(evt => window.removeEventListener(evt, resume));
+          };
+          ['click', 'touchstart', 'scroll'].forEach(evt => window.addEventListener(evt, resume, { once: true, passive: true }));
+        });
+      }
+    };
+
+    video.addEventListener('loadeddata', attemptPlay, { once: true });
+    video.addEventListener('canplay', attemptPlay, { once: true });
 
     if (video.readyState >= 2) {
-      video.play().then(() => fadeIn()).catch(() => {});
+      attemptPlay();
+    }
+  }
+
+  /* =========================================================================
+     XTICH HERO EMAIL ALLOCATION & INTERACTION ENGINE
+     ========================================================================= */
+  function initHeroEmailForm() {
+    const form = document.getElementById('heroAllocationForm');
+    const input = document.getElementById('heroEmailInput');
+    const btn = document.getElementById('heroSubmitBtn');
+    const msg = document.getElementById('heroEmailSubMsg');
+    const manifestoBtn = document.getElementById('heroManifestoBtn');
+
+    if (form && input) {
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = input.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !emailRegex.test(email)) {
+          if (msg) {
+            msg.textContent = 'Please enter a valid email address.';
+            msg.style.color = '#f87171';
+          }
+          return;
+        }
+
+        try {
+          localStorage.setItem('xtich_subscriber_email', email);
+        } catch (_) {}
+
+        if (btn) {
+          btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+          btn.style.background = '#4ade80';
+          btn.style.color = '#000000';
+        }
+
+        if (msg) {
+          msg.textContent = '✓ Priority allocation confirmed. We will notify you for the next drop.';
+          msg.style.color = '#4ade80';
+        }
+
+        input.value = '';
+        input.blur();
+
+        setTimeout(() => {
+          if (btn) {
+            btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+            btn.style.background = '#ffffff';
+            btn.style.color = '#000000';
+          }
+          if (msg) {
+            msg.textContent = 'Tested across 300 days of daily wear and 180+ wash cycles. Priority academic batch allocation.';
+            msg.style.color = 'rgba(255, 255, 255, 0.72)';
+          }
+        }, 4500);
+      });
+    }
+
+    if (manifestoBtn) {
+      manifestoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = document.getElementById('story');
+        if (target) {
+          if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+            window.lenis.scrollTo(target);
+          } else {
+            target.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      });
     }
   }
 
@@ -2262,6 +2346,7 @@
      ========================================================================= */
   function boot() {
     initHeroVideoFadeLoop();
+    initHeroEmailForm();
     initLenis();
     initSplitText();
     initScrollTriggerScenes();

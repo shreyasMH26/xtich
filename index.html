@@ -199,18 +199,18 @@
           <!-- Top Monospaced Metadata Bar -->
           <div class="hero-top-meta" id="heroTopMeta">
             <div class="meta-col-left">
-              <span class="meta-tag" data-split-word>Vol. 01 — Edition 2026</span>
+              <span class="meta-tag">Vol. 01 — Edition 2026</span>
               <span class="meta-separator">/</span>
-              <span class="meta-tag" data-split-word>Davangere → Delhi</span>
+              <span class="meta-tag">Davangere → Delhi</span>
             </div>
             <div class="meta-col-right">
-              <span class="meta-tag" data-split-word>An Independent Fashion Brand</span>
+              <span class="meta-tag">An Independent Fashion Brand</span>
             </div>
           </div>
 
           <!-- Central Dominant Brand Wordmark & Liquid Glass Experience -->
           <div class="hero-center-brand" id="heroBrandBlock">
-            <span class="hero-editorial-label" id="heroEditorialLabel" data-split-word>The Digital Editorial</span>
+            <span class="hero-editorial-label" id="heroEditorialLabel">The Digital Editorial</span>
             <div class="hero-logo-wrap">
               <img src="assets/xtich-logo-transparent.png" alt="XTICH" class="hero-logo-img" id="heroLogoImg">
             </div>
@@ -218,18 +218,29 @@
             <h1 class="hero-curious-heading" style="font-family: 'Instrument Serif', Georgia, serif;">Built for the curious</h1>
 
             <div class="hero-liquid-cta-group">
-              <form class="hero-liquid-email-bar liquid-glass" id="heroAllocationForm" onsubmit="event.preventDefault(); const msg=document.getElementById('heroEmailSubMsg'); if(msg){ msg.textContent='✓ Priority allocation confirmed. We will reach out.'; setTimeout(()=>{ msg.textContent='Tested across 300 days of daily wear and 180+ wash cycles. Priority academic batch allocation.'; }, 3500); } this.reset();">
-                <input type="email" placeholder="Enter your email for allocation drops" class="hero-liquid-input" id="heroEmailInput" required />
-                <button type="submit" class="hero-liquid-submit-btn" aria-label="Submit allocation request">
+              <form class="hero-liquid-email-bar liquid-glass" id="heroAllocationForm">
+                <input
+                  type="email"
+                  placeholder="Enter your email for priority allocation"
+                  class="hero-liquid-input"
+                  id="heroEmailInput"
+                  autocomplete="email"
+                  required
+                />
+                <button type="submit" class="hero-liquid-submit-btn" id="heroSubmitBtn" aria-label="Submit allocation request">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
               </form>
               <p class="hero-liquid-subtext" id="heroEmailSubMsg">Tested across 300 days of daily wear and 180+ wash cycles. Priority academic batch allocation.</p>
+              
               <div class="hero-liquid-manifesto-wrap">
-                <a href="#story" class="hero-liquid-manifesto-btn liquid-glass">Manifesto ↓</a>
+                <a href="#story" class="hero-liquid-manifesto-btn liquid-glass" id="heroManifestoBtn">Manifesto ↓</a>
               </div>
             </div>
+          </div>
 
+          <!-- Bottom Editorial Reveal & Social Bar -->
+          <div class="hero-bottom-grid" id="heroBottomGrid">
             <div class="hero-liquid-socials">
               <a href="https://www.instagram.com/xtich.in/" target="_blank" rel="noopener noreferrer" class="hero-liquid-social-btn liquid-glass" aria-label="Instagram">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -238,17 +249,20 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
               </a>
               <a href="#shop" class="hero-liquid-social-btn liquid-glass" aria-label="Archive">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
               </a>
             </div>
-          </div>
 
-          <!-- Bottom Editorial Reveal & Narrative -->
-          <div class="hero-bottom-grid" id="heroBottomGrid">
+            <div class="hero-scroll-cue" id="heroScrollCue">
+              <span class="cue-label">Scroll to Explore</span>
+              <div class="cue-indicator-bar">
+                <div class="cue-indicator-dot"></div>
+              </div>
+            </div>
 
-            <div class="hero-narrative-block" id="heroNarrativeBlock">
+            <div class="hero-narrative-block" id="heroNarrativeBlock" style="display: none;" aria-hidden="true">
               <span class="statement-eyebrow">The Origin</span>
-              <h2 class="hero-statement-title" data-split-line>&ldquo;An independent fashion brand born out of a real uniform problem.&rdquo;</h2>
+              <h2 class="hero-statement-title">&ldquo;An independent fashion brand born out of a real uniform problem.&rdquo;</h2>
               <p class="hero-statement-desc">Two students set out to fix apparel that never fit right. Tested through 300 consecutive days of wear and 180+ wash cycles before it ever carried a label.</p>
               <div class="hero-spec-pills">
                 <span class="spec-pill">450 GSM Fleece</span>
@@ -256,14 +270,6 @@
                 <span class="spec-pill">180+ Wash Proven</span>
               </div>
             </div>
-
-            <div class="hero-scroll-cue" id="heroScrollCue">
-              <span class="cue-label">Scroll to Explore Editorial</span>
-              <div class="cue-indicator-bar">
-                <div class="cue-indicator-dot"></div>
-              </div>
-            </div>
-
           </div>
 
         </div>
