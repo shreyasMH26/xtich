@@ -99,16 +99,31 @@ export default defineConfig({
           if (req.method !== 'POST') return next();
           let body = '';
           req.on('data', chunk => { body += chunk; });
-          req.on('end', () => {
+          req.on('end', async () => {
             try {
               const { email } = JSON.parse(body || '{}');
               console.log(`[Dev Server] New allocation subscriber: ${email}`);
+
+              if (process.env.RESEND_API_KEY) {
+                const resend = new Resend(process.env.RESEND_API_KEY);
+                await resend.emails.send({
+                  from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
+                  to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
+                  subject: `[XTICH Allocation] New Priority Subscriber: ${email}`,
+                  text: `New Priority Allocation Subscriber:\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}`
+                });
+                console.log(`[Dev Server] Resend notification delivered to ${process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'}`);
+              } else {
+                console.warn('[Dev Server] RESEND_API_KEY not set in environment. Email simulated.');
+              }
+
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ success: true, email, message: 'Subscriber received.' }));
             } catch (err) {
+              console.error('[Dev Server] Subscribe error:', err.message);
               res.statusCode = 400;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: 'Invalid JSON payload' }));
+              res.end(JSON.stringify({ error: err.message || 'Invalid JSON payload' }));
             }
           });
         });

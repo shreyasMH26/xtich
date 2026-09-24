@@ -173,6 +173,10 @@ async function sendBespokeNotification(data) {
       subject: `[XTICH Bespoke] Commission ${data.requestId} — ${data.name}`,
       html: htmlContent
     });
+    if (res.error) {
+      console.error('[Resend] Bespoke email dispatch returned error:', res.error);
+      return { success: false, error: res.error.message };
+    }
     return { success: true, res };
   } catch (err) {
     console.error('[Resend] Email dispatch error:', err);
@@ -189,7 +193,8 @@ async function sendAllocationNotification(email) {
   const fromAddress = process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>';
 
   if (!apiKey) {
-    console.log(`[XTICH Subscriber] New allocation subscriber: ${email}`);
+    console.warn(`[XTICH Subscriber] Received subscriber: ${email}`);
+    console.warn(`[XTICH Email Alert] Notice: RESEND_API_KEY is not set in .env. Email dispatch to ${recipient} was skipped (simulated mode).`);
     return { success: true, simulated: true };
   }
 
@@ -210,6 +215,13 @@ async function sendAllocationNotification(email) {
         </div>
       `
     });
+
+    if (res.error) {
+      console.error('[Resend] Email dispatch returned error:', res.error);
+      return { success: false, error: res.error.message };
+    }
+
+    console.log(`[Resend] Successfully delivered notification for ${email} to ${recipient}`);
     return { success: true, res };
   } catch (err) {
     console.error('[Resend] Subscriber notification error:', err);
