@@ -3,4 +3,5 @@ dist
 .DS_Store
 subscribers.json
 .env
-
+supabase/.env
+*.local

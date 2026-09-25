@@ -2,11 +2,10 @@ import { defineConfig } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import { v2 as cloudinary } from 'cloudinary';
 import { Resend } from 'resend';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname  = path.dirname(__filename);
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -21,8 +20,12 @@ export default defineConfig({
   },
   plugins: [
     {
-      name: 'bespoke-api-dev-handler',
+      name: 'xtich-api-dev-handler',
       configureServer(server) {
+
+        // ------------------------------------------------------------------
+        // POST /api/bespoke — dev mock
+        // ------------------------------------------------------------------
         server.middlewares.use('/api/bespoke', (req, res, next) => {
           if (req.method !== 'POST') return next();
 
@@ -35,66 +38,65 @@ export default defineConfig({
 
             try {
               const {
-                name = 'Client',
-                email = 'client@example.com',
-                hoodieColor = 'Obsidian',
-                hoodieColorCode = '01 / OBSIDIAN',
-                size = 'S',
-                quantity = '1',
-                embroideryType = 'TEXT',
+                name              = 'Client',
+                email             = 'client@example.com',
+                hoodieColorCode   = '01 / OBSIDIAN',
+                size              = 'M',
+                quantity          = '1',
+                embroideryType    = 'TEXT',
                 embroideryPlacement = 'CHEST',
-                embroideryText = 'XTICH',
-                embroideryScale = 'SMALL',
-                thread = 'WHITE',
+                embroideryText    = 'XTICH',
+                embroideryScale   = 'SMALL',
+                thread            = 'WHITE',
                 customInstructions = '',
                 requestId
               } = req.body || {};
 
-              const finalRequestId = requestId || `REQUEST / ${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-              let uploadedReferenceUrl = null;
+              const year      = new Date().getFullYear();
+              const suffix    = Math.random().toString(36).substring(2, 7).toUpperCase();
+              const reference = requestId && requestId.startsWith('XT-')
+                ? requestId
+                : `XT-${year}-${suffix}`;
 
-              if (req.file) {
-                const config = cloudinary.config();
-                const isConfigured = Boolean(config.cloud_name && (process.env.CLOUDINARY_URL || config.api_key));
-                if (isConfigured) {
-                  const isPdf = req.file.mimetype === 'application/pdf' || req.file.originalname.toLowerCase().endsWith('.pdf');
-                  const uploadResult = await new Promise((resolve, reject) => {
-                    const stream = cloudinary.uploader.upload_stream(
-                      { folder: 'xtich/bespoke', resource_type: isPdf ? 'raw' : 'auto' },
-                      (uErr, uRes) => (uErr ? reject(uErr) : resolve(uRes))
-                    );
-                    stream.end(req.file.buffer);
-                  });
-                  uploadedReferenceUrl = uploadResult.secure_url;
-                } else {
-                  uploadedReferenceUrl = `https://res.cloudinary.com/xtich/image/upload/xtich/bespoke/${Date.now()}_${req.file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
-                }
-              }
-
+              // Simulate Resend notification in dev
               if (process.env.RESEND_API_KEY) {
-                const resend = new Resend(process.env.RESEND_API_KEY);
-                await resend.emails.send({
-                  from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
-                  to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
-                  subject: `[XTICH Bespoke] Commission ${finalRequestId} — ${name}`,
-                  text: `New Bespoke Commission:\nID: ${finalRequestId}\nName: ${name}\nEmail: ${email}\nColor: ${hoodieColorCode} (${hoodieColor})\nSize: ${size}\nQuantity: ${quantity}\nType: ${embroideryType}\nPlacement: ${embroideryPlacement}\nText: ${embroideryText}\nScale: ${embroideryScale}\nThread: ${thread}\nInstructions: ${customInstructions}\nFile: ${req.file ? req.file.originalname : 'None'}`
-                });
+                try {
+                  const resend = new Resend(process.env.RESEND_API_KEY);
+                  await resend.emails.send({
+                    from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
+                    to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
+                    subject: `[DEV] [XTICH Bespoke] Commission ${reference} — ${name}`,
+                    text: [
+                      `Commission: ${reference}`,
+                      `Name: ${name}`, `Email: ${email}`,
+                      `Color: ${hoodieColorCode}`, `Size: ${size}`,
+                      `Quantity: ${quantity}`, `Type: ${embroideryType}`,
+                      `Placement: ${embroideryPlacement}`, `Text: ${embroideryText}`,
+                      `Scale: ${embroideryScale}`, `Thread: ${thread}`,
+                      `Instructions: ${customInstructions}`,
+                      `File: ${req.file ? req.file.originalname : 'None'}`
+                    ].join('\n')
+                  });
+                } catch (_) {}
               }
 
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({
                 success: true,
-                requestId: finalRequestId,
-                cloudinaryUrl: uploadedReferenceUrl
+                reference,
+                message: 'Bespoke commission lodged successfully. (dev mode)'
               }));
             } catch (apiErr) {
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: apiErr.message }));
+              res.end(JSON.stringify({ error: 'Dev server error.' }));
             }
           });
         });
 
+        // ------------------------------------------------------------------
+        // POST /api/subscribe — dev mock
+        // ------------------------------------------------------------------
         server.middlewares.use('/api/subscribe', (req, res, next) => {
           if (req.method !== 'POST') return next();
           let body = '';
@@ -102,31 +104,46 @@ export default defineConfig({
           req.on('end', async () => {
             try {
               const { email } = JSON.parse(body || '{}');
-              console.log(`[Dev Server] New allocation subscriber: ${email}`);
+              const emailRe   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+              if (!email || !emailRe.test(email.trim())) {
+                res.statusCode = 400;
+                res.setHeader('Content-Type', 'application/json');
+                return res.end(JSON.stringify({ error: 'Valid email address is required.' }));
+              }
+
+              const cleanEmail = email.trim().toLowerCase();
+              console.log(`[Dev] New allocation subscriber: ${cleanEmail}`);
 
               if (process.env.RESEND_API_KEY) {
-                const resend = new Resend(process.env.RESEND_API_KEY);
-                await resend.emails.send({
-                  from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
-                  to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
-                  subject: `[XTICH Allocation] New Priority Subscriber: ${email}`,
-                  text: `New Priority Allocation Subscriber:\nEmail: ${email}\nTimestamp: ${new Date().toISOString()}`
-                });
-                console.log(`[Dev Server] Resend notification delivered to ${process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'}`);
+                try {
+                  const resend = new Resend(process.env.RESEND_API_KEY);
+                  await resend.emails.send({
+                    from: process.env.RESEND_FROM_EMAIL || 'XTICH Atelier <onboarding@resend.dev>',
+                    to: [process.env.XTICH_NOTIFICATION_EMAIL || 'xtichalt@gmail.com'],
+                    subject: `[DEV] [XTICH Allocation] New Priority Subscriber: ${cleanEmail}`,
+                    text: `New Priority Allocation Subscriber\nEmail: ${cleanEmail}\nTimestamp: ${new Date().toISOString()}`
+                  });
+                } catch (_) {}
               } else {
-                console.warn('[Dev Server] RESEND_API_KEY not set in environment. Email simulated.');
+                console.warn('[Dev] RESEND_API_KEY not set — email simulated.');
               }
 
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ success: true, email, message: 'Subscriber received.' }));
+              res.end(JSON.stringify({
+                success: true,
+                email: cleanEmail,
+                message: 'Priority allocation confirmed.',
+                notified: Boolean(process.env.RESEND_API_KEY)
+              }));
             } catch (err) {
-              console.error('[Dev Server] Subscribe error:', err.message);
               res.statusCode = 400;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: err.message || 'Invalid JSON payload' }));
+              res.end(JSON.stringify({ error: 'Invalid request.' }));
             }
           });
         });
+
       }
     }
   ]
