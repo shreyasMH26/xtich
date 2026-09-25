@@ -2018,23 +2018,56 @@
           formData.append('referenceFile', selectedReferenceFile);
         }
 
-        let cloudinaryUrl = null;
+        // -----------------------------------------------------------------------
+        // Submit to server — only advance to success step on confirmed 2xx
+        // -----------------------------------------------------------------------
+        let serverReference = null;
+        let submissionOk    = false;
+        let serverError     = null;
+
         try {
           const response = await fetch('/api/bespoke', {
             method: 'POST',
-            body: formData
+            body:   formData
           });
-          if (response.ok) {
-            const resJson = await response.json();
-            if (resJson.cloudinaryUrl) cloudinaryUrl = resJson.cloudinaryUrl;
+
+          const resJson = await response.json().catch(() => ({}));
+
+          if (response.ok && resJson.success) {
+            submissionOk     = true;
+            serverReference  = resJson.reference || finalRequestId;
+          } else {
+            // Server returned 4xx or 5xx — surface the error message
+            serverError = resJson.error || `Server error (HTTP ${response.status}). Please try again.`;
+            console.error('[Bespoke] Server returned error:', response.status, serverError);
           }
         } catch (fetchErr) {
-          console.warn('[Bespoke API] Network/offline fallback:', fetchErr);
+          // Network failure or offline
+          serverError = 'Network error. Please check your connection and try again.';
+          console.error('[Bespoke] Network/fetch error:', fetchErr);
         }
+
+        // -----------------------------------------------------------------------
+        // Error path — surface the failure, restore submit button, don't advance
+        // -----------------------------------------------------------------------
+        if (!submissionOk) {
+          submitBtn.disabled    = false;
+          submitBtn.textContent = 'BEGIN YOUR PIECE →';
+          if (globalStatusEl) {
+            globalStatusEl.textContent = serverError || 'Submission failed. Please try again.';
+            globalStatusEl.style.color = '#ff6b6b';
+          }
+          return; // ← stop here, do not advance to step 4
+        }
+
+        // -----------------------------------------------------------------------
+        // Success path — only reached when server confirmed 200 + success:true
+        // -----------------------------------------------------------------------
 
         // Populate Step 05 Editorial Confirmation Box
         if (summaryBox) {
           summaryBox.innerHTML = `
+            <div style="margin-bottom:0.4rem;"><strong>COMMISSION:</strong> ${serverReference}</div>
             <div style="margin-bottom:0.4rem;"><strong>CUSTOMER:</strong> ${custName} · ${custEmail}</div>
             <div style="margin-bottom:0.4rem;"><strong>MODEL:</strong> HEAVYWEIGHT 450 GSM HOODIE · ${activeColorSpec.shortName.toUpperCase()}</div>
             <div style="margin-bottom:0.4rem;"><strong>HOODIE COLOR:</strong> ${activeColorSpec.code} · ${activeColorSpec.desc} (${activeColorSpec.hex})</div>
@@ -2042,17 +2075,20 @@
             <div style="margin-bottom:0.4rem;"><strong>PLACEMENT:</strong> ${placement} &nbsp;|&nbsp; <strong>SCALE:</strong> ${scale}</div>
             <div style="margin-bottom:0.4rem;"><strong>THREAD TONE:</strong> ${thread}</div>
             <div style="margin-bottom:0.4rem;"><strong>CONCEPT / MARK:</strong> "${conceptText}" (${embType})</div>
-            <div style="margin-bottom:0.4rem;"><strong>REFERENCE:</strong> ${fileName}${cloudinaryUrl ? ' · Attached' : ''}</div>
+            <div style="margin-bottom:0.4rem;"><strong>REFERENCE:</strong> ${fileName}</div>
             ${instructions ? `<div><strong>INSTRUCTIONS:</strong> "${instructions}"</div>` : ''}
           `;
         }
 
-        // WhatsApp direct link with complete pre-filled editorial payload
+        // Update displayed commission reference to server's canonical value
+        if (refCodeEl) refCodeEl.textContent = serverReference;
+
+        // WhatsApp direct link
         if (whatsappBtn) {
           const waMessage = encodeURIComponent(
             `Hello XTICH Atelier,\n\n` +
             `I have lodged a Bespoke Commission:\n` +
-            `• Reference: ${finalRequestId}\n` +
+            `• Reference: ${serverReference}\n` +
             `• Customer: ${custName} (${custEmail})\n` +
             `• Model: Heavyweight 450 GSM Hoodie · ${activeColorSpec.shortName}\n` +
             `• Color: ${activeColorSpec.code} · ${activeColorSpec.desc} (${activeColorSpec.hex})\n` +
@@ -2081,7 +2117,7 @@
 
         const bespokeStage = document.getElementById('bespoke');
         if (bespokeStage) {
-          const rect = bespokeStage.getBoundingClientRect();
+          const rect   = bespokeStage.getBoundingClientRect();
           const targetY = window.pageYOffset + rect.top + (rect.height * 0.90);
           if (window.gsap && gsap.plugins && gsap.plugins.scrollTo) {
             gsap.to(window, { scrollTo: targetY, duration: 0.8, ease: 'power2.out' });
@@ -2093,11 +2129,15 @@
         }
 
         // Reset submit button state
-        submitBtn.disabled = false;
+        submitBtn.disabled    = false;
         submitBtn.textContent = 'BEGIN YOUR PIECE →';
-        if (globalStatusEl) globalStatusEl.textContent = '';
+        if (globalStatusEl) {
+          globalStatusEl.textContent = '';
+          globalStatusEl.style.color = '';
+        }
       });
     }
+
 
     // 12. Return to XTICH Button
     if (returnBtn) {
