@@ -5,6 +5,7 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { v2 as cloudinary } from 'cloudinary';
 import { Resend } from 'resend';
+import { createClient } from '@supabase/supabase-js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -15,6 +16,86 @@ try {
     process.loadEnvFile(path.join(__dirname, '.env'));
   }
 } catch (_) {}
+
+// ---------------------------------------------------------------------------
+// Supabase client — initialised only when credentials are present.
+// Falls back to flat-file subscribers.json if Supabase is not configured.
+// ---------------------------------------------------------------------------
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+  console.log('[Supabase] Client initialised. Subscriber storage: Supabase.');
+} else {
+  console.warn('[Supabase] SUPABASE_URL or SUPABASE_ANON_KEY not set. Falling back to local subscribers.json.');
+}
+
+/**
+ * Add a subscriber. Prefers Supabase; falls back to local JSON file.
+ * Returns { isNew: boolean }.
+ */
+async function addSubscriber(email) {
+  if (supabase) {
+    // Supabase path — unique constraint on email prevents duplicates
+    const { error } = await supabase
+      .from('subscribers')
+      .insert({ email, source: 'hero_allocation_bar' });
+
+    if (error) {
+      if (error.code === '23505') {
+        // Unique violation — already subscribed, not an error
+        return { isNew: false };
+      }
+      throw new Error(`Supabase insert error: ${error.message}`);
+    }
+    return { isNew: true };
+  }
+
+  // Flat-file fallback
+  const subscribersFile = path.join(__dirname, 'subscribers.json');
+  let subscribers = [];
+  try {
+    if (fs.existsSync(subscribersFile)) {
+      subscribers = JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
+    }
+  } catch (_) {
+    subscribers = [];
+  }
+
+  const alreadySubscribed = subscribers.some(s => s.email === email);
+  if (alreadySubscribed) return { isNew: false };
+
+  subscribers.push({ email, timestamp: new Date().toISOString(), source: 'hero_allocation_bar' });
+  try {
+    fs.writeFileSync(subscribersFile, JSON.stringify(subscribers, null, 2), 'utf8');
+  } catch (fErr) {
+    console.warn('[Subscribers File] Write skipped:', fErr.message);
+  }
+  return { isNew: true };
+}
+
+/**
+ * Fetch all subscribers. Prefers Supabase; falls back to local JSON file.
+ */
+async function getSubscribers() {
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('subscribers')
+      .select('id, email, created_at, source')
+      .order('created_at', { ascending: false });
+
+    if (error) throw new Error(`Supabase fetch error: ${error.message}`);
+    return data || [];
+  }
+
+  // Flat-file fallback
+  const subscribersFile = path.join(__dirname, 'subscribers.json');
+  try {
+    if (fs.existsSync(subscribersFile)) {
+      return JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
+    }
+  } catch (_) {}
+  return [];
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -241,37 +322,24 @@ app.post('/api/subscribe', async (req, res) => {
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    const subscribersFile = path.join(__dirname, 'subscribers.json');
 
-    let subscribers = [];
+    let isNew = false;
     try {
-      if (fs.existsSync(subscribersFile)) {
-        subscribers = JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
-      }
-    } catch (_) {
-      subscribers = [];
+      const result = await addSubscriber(cleanEmail);
+      isNew = result.isNew;
+    } catch (subErr) {
+      console.error('[Subscriber Storage Error]', subErr.message);
     }
 
-    const alreadySubscribed = subscribers.some(s => s.email === cleanEmail);
-    if (!alreadySubscribed) {
-      subscribers.push({
-        email: cleanEmail,
-        timestamp: new Date().toISOString(),
-        source: 'hero_allocation_bar'
-      });
-      try {
-        fs.writeFileSync(subscribersFile, JSON.stringify(subscribers, null, 2), 'utf8');
-      } catch (fErr) {
-        console.warn('[Subscribers File] Write skipped:', fErr.message);
-      }
-    }
+    const alreadySubscribed = !isNew;
 
     // Trigger instant email alert to store owner (xtichalt@gmail.com)
+    // Always notify even for duplicates (owner may want to know of re-submissions)
     const notificationResult = await sendAllocationNotification(cleanEmail);
 
     return res.status(200).json({
       success: true,
-      message: 'Priority allocation confirmed.',
+      message: alreadySubscribed ? 'Already on the priority list.' : 'Priority allocation confirmed.',
       email: cleanEmail,
       notified: Boolean(notificationResult?.success && !notificationResult?.simulated)
     });
@@ -282,17 +350,17 @@ app.post('/api/subscribe', async (req, res) => {
 });
 
 /**
- * View priority subscriber list (for store owner)
+ * View priority subscriber list (for store owner).
+ * Returns from Supabase when configured, otherwise reads local subscribers.json.
  */
-app.get('/api/subscribers', (req, res) => {
-  const subscribersFile = path.join(__dirname, 'subscribers.json');
+app.get('/api/subscribers', async (req, res) => {
   try {
-    if (fs.existsSync(subscribersFile)) {
-      const data = JSON.parse(fs.readFileSync(subscribersFile, 'utf8'));
-      return res.status(200).json(data);
-    }
-  } catch (_) {}
-  return res.status(200).json([]);
+    const data = await getSubscribers();
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error('[/api/subscribers error]', err);
+    return res.status(500).json({ error: 'Failed to fetch subscribers.' });
+  }
 });
 
 /**
