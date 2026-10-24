@@ -674,9 +674,12 @@ app.use('/assets', express.static(path.resolve(__dirname, 'assets'), { dotfiles:
 // Explicit root route
 app.get('/', (req, res) => serveIndex(req, res));
 
-// Founder profile pages (served from public/founders/)
+// Founder profile pages (served from dist/founders/ or public/founders/)
 app.get('/founders/shreyas-mh', (_req, res) => {
-  const founderPage = path.resolve(__dirname, 'public', 'founders', 'shreyas-mh.html');
+  const distFounder   = path.resolve(distDir, 'founders', 'shreyas-mh.html');
+  const publicFounder = path.resolve(publicDir, 'founders', 'shreyas-mh.html');
+  const founderPage   = fs.existsSync(distFounder) ? distFounder : publicFounder;
+
   if (fs.existsSync(founderPage)) {
     return res.sendFile(founderPage, { dotfiles: 'allow' }, (err) => {
       if (err && !res.headersSent) {
