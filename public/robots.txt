@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://xtich.onrender.com/sitemap.xml
+
+# Block build artifacts
+Disallow: /dist/

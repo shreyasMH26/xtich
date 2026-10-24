@@ -674,7 +674,21 @@ app.use('/assets', express.static(path.resolve(__dirname, 'assets'), { dotfiles:
 // Explicit root route
 app.get('/', (req, res) => serveIndex(req, res));
 
-// SPA catch-all — must be after all API routes
+// Founder profile pages (served from public/founders/)
+app.get('/founders/shreyas-mh', (_req, res) => {
+  const founderPage = path.resolve(__dirname, 'public', 'founders', 'shreyas-mh.html');
+  if (fs.existsSync(founderPage)) {
+    return res.sendFile(founderPage, { dotfiles: 'allow' }, (err) => {
+      if (err && !res.headersSent) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        fs.createReadStream(founderPage).pipe(res);
+      }
+    });
+  }
+  res.status(404).send('Page not found.');
+});
+
+// SPA catch-all — must be after all API routes and named static routes
 app.use((req, res, next) => {
   if (req.path.startsWith('/api/')) {
     return res.status(404).json({ error: `API endpoint '${req.path}' not found.` });
