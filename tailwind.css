@@ -1,0 +1,13 @@
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080807;
+  --foreground: #fbfaf6;
+  --card: #10100e;
+  --card-foreground: #fbfaf6;
+  --muted: #181815;
+  --muted-foreground: #a5a297;
+  --border: rgba(251, 250, 246, 0.12);
+  --ring: rgba(251, 250, 246, 0.35);
+}
