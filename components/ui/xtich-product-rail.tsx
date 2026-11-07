@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useRef } from "react";
 import ClothingRailHero, { type RailGarment } from "@/components/ui/product-rail-gallery";
 
 export const XTICH_RAIL_GARMENTS: RailGarment[] = [
@@ -92,40 +92,215 @@ export interface XTICHProductRailProps {
 }
 
 export function XTICHProductRail({ className = "", autoplay = true }: XTICHProductRailProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [spotlight, setSpotlight] = useState({ x: 50, y: 25, active: false });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
+    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
+    setSpotlight({ x, y, active: true });
+  };
+
+  const handleMouseLeave = () => {
+    setSpotlight((prev) => ({ ...prev, active: false }));
+  };
+
   return (
     <div
+      ref={containerRef}
       data-xtich-rail
-      className={`relative w-full border-y border-white/10 bg-[#090909] text-white py-12 md:py-16 ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`relative w-full overflow-hidden border-y border-white/15 bg-[#050505] text-white py-14 md:py-20 select-none ${className}`}
     >
-      <ClothingRailHero
-        items={XTICH_RAIL_GARMENTS}
-        hanger="matte"
-        eyebrow="ATELIER ARCHIVE · THE RAIL EXPERIENCE"
-        heading="Inspect The Architecture."
-        caption="Slide along the rail to inspect garment drape, turn pieces in real-time, or unhook to examine reverse construction."
-        autoplay={autoplay}
-        className="bg-transparent text-white"
-        action={
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
-              href="#bespoke"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white px-6 py-2.5 text-xs font-semibold tracking-wider uppercase text-black transition-all hover:bg-neutral-200 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white/40"
-            >
-              Commission Bespoke
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12" />
-                <polyline points="12 5 19 12 12 19" />
-              </svg>
-            </a>
-            <a
-              href="#shop"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/40"
-            >
-              Reserve Batch Piece
-            </a>
-          </div>
-        }
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 1: Architectural Blueprint Drafting Grid & Laser Coordinates
+          ───────────────────────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 opacity-40"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+            linear-gradient(to right, rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.09) 1px, transparent 1px)
+          `,
+          backgroundSize: "24px 24px, 24px 24px, 120px 120px, 120px 120px",
+          backgroundPosition: "-1px -1px",
+        }}
       />
+
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 2: Precision Intersection Crosshairs (+)
+          ───────────────────────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 opacity-25"
+        style={{
+          backgroundImage: `radial-gradient(circle 1.5px at center, rgba(255, 255, 255, 0.8) 100%, transparent 100%)`,
+          backgroundSize: "120px 120px",
+          backgroundPosition: "0 0",
+        }}
+      />
+
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 3: Interactive Gallery Spotlight & Overhead Tungsten Beam
+          ───────────────────────────────────────────────────────────── */}
+      {/* Permanent overhead soft gallery floodlight */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 z-0 transition-opacity duration-1000"
+        style={{
+          background: `
+            radial-gradient(ellipse 95% 45% at 50% 0%, rgba(255, 250, 235, 0.12) 0%, rgba(220, 210, 195, 0.04) 45%, transparent 75%),
+            radial-gradient(ellipse 70% 30% at 50% 35%, rgba(255, 255, 255, 0.06) 0%, transparent 70%)
+          `,
+        }}
+      />
+
+      {/* Dynamic interactive spotlight tracking visitor cursor */}
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 z-0 transition-opacity duration-500 ${
+          spotlight.active ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          background: `radial-gradient(circle 420px at ${spotlight.x}% ${spotlight.y}%, rgba(255, 252, 242, 0.14) 0%, rgba(215, 205, 185, 0.05) 50%, transparent 80%)`,
+        }}
+      />
+
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 4: Studio Horizon Backlit Halo behind the rail bar
+          ───────────────────────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 z-0 top-[28%] md:top-[26%] h-[70px] -translate-y-1/2 blur-2xl opacity-60"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.04) 15%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.04) 85%, transparent 100%)",
+        }}
+      />
+
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 5: Perspective Atelier Floor & Contact Shadows
+          ───────────────────────────────────────────────────────────── */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-[38%] opacity-80"
+        style={{
+          background: `
+            linear-gradient(to bottom, transparent 0%, rgba(10, 10, 10, 0.4) 40%, rgba(0, 0, 0, 0.95) 100%),
+            radial-gradient(ellipse 90% 40% at 50% 85%, rgba(0, 0, 0, 0.95) 0%, transparent 80%)
+          `,
+        }}
+      />
+
+      {/* Perspective floor grid line */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-[14%] z-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-[6%] z-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"
+      />
+
+      {/* ─────────────────────────────────────────────────────────────
+          LAYER 6: Technical Calibration Badges & Corner Framing
+          ───────────────────────────────────────────────────────────── */}
+      {/* Top Left Technical Tag */}
+      <div className="pointer-events-none absolute top-4 left-4 md:top-6 md:left-8 z-10 hidden sm:flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.25em] text-white/45">
+        <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400/80 animate-pulse" />
+        <span>RIG // XTICH-ARCHIVE-01</span>
+        <span className="text-white/20">|</span>
+        <span>ELEVATION: +1850MM</span>
+      </div>
+
+      {/* Top Right Technical Tag */}
+      <div className="pointer-events-none absolute top-4 right-4 md:top-6 md:right-8 z-10 hidden sm:flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.25em] text-white/45">
+        <span>3D CLOTH PHYSICS: ACTIVE</span>
+        <span className="text-white/20">|</span>
+        <span>SCALE: 1:1 ATELIER SPEC</span>
+      </div>
+
+      {/* Bottom Left Fabrication Tag */}
+      <div className="pointer-events-none absolute bottom-4 left-4 md:bottom-6 md:left-8 z-10 hidden md:flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">
+        <span>COORDINATES [28°38'N 77°13'E]</span>
+        <span className="text-white/20">·</span>
+        <span>DELHI ATELIER PRODUCTION</span>
+      </div>
+
+      {/* Bottom Right Interaction Hint */}
+      <div className="pointer-events-none absolute bottom-4 right-4 md:bottom-6 md:right-8 z-10 hidden md:flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-white/35">
+        <span>INTERACTION: SLIDE &amp; UNHOOK</span>
+        <span className="text-white/20">·</span>
+        <span>360° ROTATION</span>
+      </div>
+
+      {/* Hairline Corner Brackets */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-3 left-3 h-3 w-3 border-t border-l border-white/30"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-3 right-3 h-3 w-3 border-t border-r border-white/30"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-3 left-3 h-3 w-3 border-b border-l border-white/30"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-3 right-3 h-3 w-3 border-b border-r border-white/30"
+      />
+
+      {/* ─────────────────────────────────────────────────────────────
+          CORE CONTENT: Clothing Rail Engine
+          ───────────────────────────────────────────────────────────── */}
+      <div className="relative z-10">
+        <ClothingRailHero
+          items={XTICH_RAIL_GARMENTS}
+          hanger="matte"
+          eyebrow="ATELIER ARCHIVE · THE RAIL EXPERIENCE"
+          heading="Inspect The Architecture."
+          caption="Slide along the rail to inspect garment drape, turn pieces in real-time, or unhook to examine reverse construction."
+          autoplay={autoplay}
+          className="bg-transparent text-white"
+          action={
+            <div className="flex flex-wrap items-center justify-center gap-3 mt-1">
+              <a
+                href="#bespoke"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white px-6 py-2.5 text-xs font-semibold tracking-wider uppercase text-black transition-all hover:bg-neutral-200 hover:shadow-[0_0_24px_rgba(255,255,255,0.25)] focus:outline-none focus:ring-2 focus:ring-white/40"
+              >
+                Commission Bespoke
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </a>
+              <a
+                href="#shop"
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-semibold tracking-wider uppercase text-white backdrop-blur-md transition-all hover:bg-white/10 hover:border-white/40 focus:outline-none focus:ring-2 focus:ring-white/40"
+              >
+                Reserve Batch Piece
+              </a>
+            </div>
+          }
+        />
+      </div>
     </div>
   );
 }
