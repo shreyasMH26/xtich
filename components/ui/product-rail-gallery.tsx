@@ -558,7 +558,7 @@ export function ClothingRailHero({
   const returnFocus = React.useRef(null as number | null);
   const pendingOpen = React.useRef(-1);
   const pointer = React.useRef({ id: -1, index: -1, x: 0, y: 0, t: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 });
-  const sideWidths = React.useMemo(() => items.map((item) => (item.image ? (item.sideImage ? 0.3 : 0.4) : SIDE[item.kind ?? "tee"].width)), [items]);
+  const sideWidths = React.useMemo(() => items.map((item) => (item.sideImage ? 0.3 : SIDE[item.kind ?? "tee"].width)), [items]);
   const live = React.useRef({ active: null as number | null, size, reduced, count, openIndex: null as number | null, carouselIndex: 0, sideWidths });
   live.current = { ...live.current, active, size, reduced, count, openIndex, sideWidths };
 
@@ -623,7 +623,7 @@ export function ClothingRailHero({
     const sd = sides.current[i];
     if (tu) {
       tu.style.transform = `perspective(${PERSPECTIVE}px) rotateY(${angle.toFixed(2)}deg)`;
-      tu.style.opacity = sd ? clamp((e - 0.44) / 0.12, 0, 1).toFixed(3) : "1";
+      tu.style.opacity = clamp((e - 0.44) / 0.12, 0, 1).toFixed(3);
     }
     if (sd) {
       sd.style.opacity = clamp((0.56 - e) / 0.12, 0, 1).toFixed(3);
@@ -989,13 +989,11 @@ export function ClothingRailHero({
                 <span aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ filter: `blur(${Math.max(3, h * 0.022).toFixed(1)}px)` }}>
                   <span ref={(node) => { shadows.current[i] = node; }} className={`absolute block bg-black opacity-[0.16] dark:opacity-60 ${item.image ? photoBox : "inset-0"}`} style={{ WebkitMask: `${mask} top center / contain no-repeat`, mask: `${mask} top center / contain no-repeat` }} />
                 </span>
-                {(item.sideImage || !item.image) && (
-                  <span ref={(node) => { sides.current[i] = node; }} data-face="side" className="absolute inset-0" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(0deg)` }}>
-                    <SideHanger uid={uid} material={hanger} />
-                    {item.sideImage ? <Photo src={item.sideImage} alt="" full={hanger === "none"} /> : <SideArt uid={uid} kind={kind} color={color} trim={trim} />}
-                  </span>
-                )}
-                <span ref={(node) => { turns.current[i] = node; }} data-turn className="absolute inset-0 rounded-lg [transform-style:preserve-3d]" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(${REST}deg)`, opacity: item.image && !item.sideImage ? 1 : 0 }}>
+                <span ref={(node) => { sides.current[i] = node; }} data-face="side" className="absolute inset-0" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(0deg)` }}>
+                  <SideHanger uid={uid} material={hanger} />
+                  {item.sideImage ? <Photo src={item.sideImage} alt="" full={hanger === "none"} /> : <SideArt uid={uid} kind={kind} color={color} trim={trim} />}
+                </span>
+                <span ref={(node) => { turns.current[i] = node; }} data-turn className="absolute inset-0 rounded-lg [transform-style:preserve-3d]" style={{ transform: `perspective(${PERSPECTIVE}px) rotateY(${REST}deg)`, opacity: 0 }}>
                   {(["front", "back"] as const).map((side) => (
                     <span key={side} data-face={side} className="absolute inset-0 [backface-visibility:hidden]" style={{ transform: side === "back" ? "rotateY(180deg)" : undefined, ["--garment-color" as string]: color, ["--garment-under" as string]: mix(color, -0.42) }}>
                       <Hanger uid={uid} side={side} kind={item.image ? null : kind} material={hanger} />
